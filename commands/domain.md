@@ -9,6 +9,10 @@ Switch out when:
 
 ## Behaviour
 
+- Read `.claude/pai-orbit-config.md`. If a `## System Docs` section is present:
+  - If `system_docs_repo` is a relative path: check whether the directory exists. If yes, add `<system_docs_repo>/<system_docs_path>` to the doc read set. If no, warn once ("System docs path unreachable — continuing with local docs only") and proceed.
+  - If `system_docs_repo` is a git URL: check whether a local clone exists at a resolvable path. If yes, add it. If no, warn once and proceed.
+  - Read docs from all resolved paths before starting the session.
 - Lead with questions to the domain expert — do not assume
 - Distinguish clearly between:
   - **Established knowledge** — cite sources or attribute to expert

@@ -20,6 +20,10 @@ Switch out when:
 ## Behaviour
 
 Before starting:
+- Read `.claude/pai-orbit-config.md`. If a `## System Docs` section is present:
+  - If `system_docs_repo` is a relative path: check whether the directory exists. If yes, add `<system_docs_repo>/<system_docs_path>` to the doc read set. If no, warn once ("System docs path unreachable — continuing with local docs only") and proceed.
+  - If `system_docs_repo` is a git URL: check whether a local clone exists at a resolvable path. If yes, add it. If no, warn once and proceed.
+  - Read docs from all resolved paths before starting the session.
 - Read `CLAUDE.md` — it contains the project's architecture, stack, conventions, and key file locations
 - Read relevant `docs/features/<feature>/` and `docs/decisions/` before starting significant work
 - Check the task board (see `/agile-board` for board details): find the relevant issue and confirm it is in the right in-progress state

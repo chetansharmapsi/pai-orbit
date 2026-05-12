@@ -114,3 +114,17 @@ Sync: outbound only
 Workspace: {{NOTION_WORKSPACE}}
 Sync: outbound only
 <!-- END NOTION -->
+
+---
+
+## System Docs
+<!-- Optional — omit this entire section for single-repo projects -->
+<!-- Include when this service repo is part of a multi-repo project and a separate repo holds system-level docs -->
+<!-- (cross-cutting ADRs, epics spanning services, system-wide domain knowledge) -->
+
+system_docs_repo: {{SYSTEM_DOCS_REPO}}
+<!-- Accepts a relative path (e.g. ../project-system) or a git URL (e.g. https://github.com/org/project-system) -->
+<!-- Relative paths are resolved from this repo's root. Git URLs must be cloned locally before use. -->
+
+system_docs_path: ./docs
+<!-- Path within system_docs_repo where docs live. Default: ./docs -->
