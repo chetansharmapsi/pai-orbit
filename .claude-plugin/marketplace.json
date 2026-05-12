@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "local-pai-orbit",
+  "description": "Local PAI-Orbit plugin marketplace",
+  "owner": {
+    "name": "Pratham Software (PSI)",
+    "email": "pai-orbit@thepsi.com"
+  },
+  "plugins": [
+    {
+      "name": "PAI-Orbit",
+      "description": "Structured developer methodology harness — working modes, team practices, and project workflow for any software team",
+      "author": {
+        "name": "Pratham Sofware (PSI)"
+      },
+      "source": ".",
+      "category": "development",
+      "homepage": "https://github.com/the-psi/pai-orbit"
+    }
+  ]
+}

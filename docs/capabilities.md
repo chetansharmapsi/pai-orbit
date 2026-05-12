@@ -1,6 +1,6 @@
 # Capabilities
 
-Reference for every mode, skill, and agent in `modo`.
+Reference for every mode, skill, and agent in PAI-Orbit.
 
 ---
 
@@ -89,21 +89,34 @@ Shows query before running. Prefers read-only. Flags data quality issues explici
 
 Skills are invoked with a slash command and perform a defined operation.
 
+### `/epic`
+
+Epic lifecycle management — create, load, update, and list epics in `docs/epics/`. An epic is a container for related features sharing a goal and success metric.
+
+- `/epic create <name>` — scaffolds `docs/epics/<name>/EPIC.md` from template, prompts for owner and summary, then opens a board item via `/board`
+- `/epic load <name>` — reads the epic, scans `docs/features/` for linked features, and refreshes the Features table
+- `/epic update <name>` — reviews session history, proposes a diff, writes on confirmation
+- `/epic list` — prints all epics with Status, Owner, and Last Updated
+
+Features link to an epic via the `## Epic` field in `requirements.md`. `/plan` reads `docs/epics/` for multi-feature sequencing.
+
+---
+
 ### `/setup`
 
-First-time project configuration. Discovers repo structure and tech stack, asks targeted questions, generates `.claude/modo-config.md`, `.claude/team.md`, CLAUDE.md stub, stack-specific agents, lint hooks, and docs scaffold. Re-run when the stack or team changes significantly.
+First-time project configuration. Discovers repo structure and tech stack, asks targeted questions, generates `.claude/pai-orbit-config.md`, `.claude/team.md`, CLAUDE.md stub, stack-specific agents, lint hooks, and docs scaffold. Re-run when the stack or team changes significantly.
 
 ---
 
 ### `/git`
 
-Git operations following the project's configured branching model. Covers commit conventions, branch naming, PR process, and safety rules (no force-push, no bulk staging, no hook bypass). Reads from `.claude/modo-config.md → ## Git`.
+Git operations following the project's configured branching model. Covers commit conventions, branch naming, PR process, and safety rules (no force-push, no bulk staging, no hook bypass). Reads from `.claude/pai-orbit-config.md → ## Git`.
 
 ---
 
 ### `/board`
 
-Task management — create issues, move cards, assign work, close on ship. Reads board config from `.claude/modo-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, Linear, and Jira.
+Task management — create issues, move cards, assign work, close on ship. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, Linear, and Jira.
 
 ---
 
@@ -151,7 +164,7 @@ Code simplification pass — reviews recently changed code for over-engineering,
 
 ### `/deploy`
 
-Guided deployment with preflight (auth, project guard, dirty working tree check) and post-deploy health check. Reads deployment targets from `.claude/modo-config.md → ## Deploy`. Stops on first failure; never silently continues.
+Guided deployment with preflight (auth, project guard, dirty working tree check) and post-deploy health check. Reads deployment targets from `.claude/pai-orbit-config.md → ## Deploy`. Stops on first failure; never silently continues.
 
 ---
 

@@ -1,12 +1,12 @@
-# modo
+# PAI-Orbit
 
 A structured developer methodology harness for Claude Code.
 
-`modo` gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
+PAI-Orbit gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
 
 ## What it is
 
-Software teams waste context constantly: half-designed features get built, build sessions derail into planning debates, agronomic (or domain) questions get answered with guesses. `modo` imposes a light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved. Nothing important lives only in a conversation.
+Software teams waste context constantly: half-designed features get built, build sessions derail into planning debates, agronomic (or domain) questions get answered with guesses. PAI-Orbit imposes a light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved. Nothing important lives only in a conversation.
 
 ```
 Backlog
@@ -43,27 +43,30 @@ Planning and maintenance
 
 ## Install
 
-**From the official Anthropic marketplace:**
 ```bash
-/plugin install modo@claude-plugins-official
+# From the pratham-software marketplace
+/plugin marketplace add pratham-software/PAI-Orbit
+/plugin install PAI-Orbit@pratham-software
 ```
 
-**Manual install:**
 ```bash
-git clone https://github.com/curiosityarc/modo /path/to/modo
-mkdir -p .claude/plugins
-ln -s /path/to/modo/.claude-plugin .claude/plugins/modo
-```
+# Clone into a local plugins directory
+git clone https://github.com/the-psi/pai-orbit ~/.claude/plugins/pai-orbit
 
-Then run `/setup` — Claude Code loads skills and commands from `.claude/` automatically.
+# Symlink the plugin into a target project
+ln -s ~/.claude/plugins/pai-orbit/.claude-plugin .claude/plugins/pai-orbit
+
+# Reload plugins in Claude Code
+/reload-plugins
+```
 
 ## First run
 
-`/setup` will:
+After installing, run `/setup` in your project directory. It will:
 
 1. Discover your repo structure and tech stack
 2. Ask a short set of questions (task board, branching model, deployment, docs home, team)
-3. Generate `.claude/modo-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, and a `docs/` scaffold
+3. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, and a `docs/` scaffold
 4. Tell you exactly what to fill in by hand
 
 Re-run `/setup` anytime the stack or team changes significantly.
@@ -80,7 +83,7 @@ Re-run `/setup` anytime the stack or team changes significantly.
 
 **Local-first docs.** All modes write markdown locally. If your team uses Confluence or Notion, `docs-writer` handles outbound sync. Local is Claude's working copy; the remote platform is the published surface. Edits should flow outward, not inward — bidirectional sync creates conflicts that are hard to resolve cleanly.
 
-**Config over baked-in.** Modes contain methodology, not project specifics. Board URLs, branch naming conventions, deployment targets, and team handles all live in `.claude/modo-config.md` and `.claude/team.md`. `/setup` generates those; the modes read them.
+**Config over baked-in.** Modes contain methodology, not project specifics. Board URLs, branch naming conventions, deployment targets, and team handles all live in `.claude/pai-orbit-config.md` and `.claude/team.md`. `/setup` generates those; the modes read them.
 
 ## License
 

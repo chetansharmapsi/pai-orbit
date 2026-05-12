@@ -11,7 +11,7 @@ Reads from:
 - `CLAUDE.md` — stack conventions, key file patterns, architectural constraints
 - `docs/decisions/` — ADRs; changes that conflict with a decision are flagged
 - `docs/features/<feature>/` — requirements and design; confirms the implementation matches intent
-- `.claude/modo-config.md` — branching model and PR conventions
+- `.claude/pai-orbit-config.md` — branching model and PR conventions
 - `.claude/team.md` — reviewer assignment
 
 ---

@@ -7,7 +7,7 @@ description: Git operations — commit, branch, PR, push — following the proje
 
 Commit, branch, PR, and push following this project's git conventions.
 
-Reads branching model and conventions from `.claude/modo-config.md` → `## Git` section.
+Reads branching model and conventions from `.claude/pai-orbit-config.md` → `## Git` section.
 
 ## Commit
 
@@ -33,7 +33,7 @@ Rules:
 
 ## Branching
 
-Read the branching model from `.claude/modo-config.md`. Apply accordingly:
+Read the branching model from `.claude/pai-orbit-config.md`. Apply accordingly:
 
 **GitHub Flow** (default for most projects):
 - Branch from `main` for every change: `feature/<slug>`, `fix/<slug>`, `hotfix/<slug>`
@@ -53,7 +53,7 @@ Read the branching model from `.claude/modo-config.md`. Apply accordingly:
 
 ## PR process
 
-Read PR conventions from `.claude/modo-config.md`. Defaults:
+Read PR conventions from `.claude/pai-orbit-config.md`. Defaults:
 - Draft PR for work in progress; mark ready when tests pass
 - Title mirrors commit format: `feat: add user authentication`
 - Body: what changed, why, how to test, closes #N

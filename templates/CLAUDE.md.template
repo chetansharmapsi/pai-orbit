@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-<!-- Generated stub from modo /setup. Fill in sections marked TODO. -->
+<!-- Generated stub from PAI-Orbit /setup. Fill in sections marked TODO. -->
 <!-- This file is the single source of truth Claude reads for this project. -->
 <!-- Keep it current — stale CLAUDE.md leads to wrong architectural assumptions. -->
 
@@ -91,7 +91,7 @@ Copy `.env.example` → `.env` before running locally.
 ## Deployment
 
 <!-- TODO: Cloud provider, region, services deployed. -->
-<!-- Reference .claude/modo-config.md for deploy commands. -->
+<!-- Reference .claude/pai-orbit-config.md for deploy commands. -->
 <!-- Note any environment-specific config (staging vs prod). -->
 
 ---

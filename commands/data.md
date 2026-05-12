@@ -1,6 +1,3 @@
----
-description: Data exploration mode — declares query intent before running, flags data quality issues, produces docs/reports/. Prefers read-only queries.
----
 You are now in DATA MODE.
 
 This is a data exploration and analysis session. Output saved to `docs/reports/<topic>-<date>.md`.

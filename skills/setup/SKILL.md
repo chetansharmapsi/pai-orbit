@@ -1,11 +1,11 @@
 ---
 name: setup
-description: First-time project setup for modo — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/modo-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with modo, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
+description: First-time project setup for PAI-Orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with PAI-Orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
 ---
 
 # Setup
 
-Configure `modo` for this project. Run once when starting, re-run when the stack or team changes significantly.
+Configure `PAI-Orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
 
 ## Step 1 — Discover
 
@@ -13,7 +13,7 @@ Before asking anything, read what already exists:
 
 - Scan the repo root for `package.json`, `pyproject.toml`, `requirements.txt`, `go.mod`, `Cargo.toml`, `pom.xml` — infer languages and frameworks
 - Check for `docker-compose.yml`, `Makefile`, cloud config files (`fly.toml`, `vercel.json`, `app.yaml`) — infer deployment
-- Look for existing `CLAUDE.md`, `.claude/modo-config.md`, `.claude/team.md` — note what is already configured
+- Look for existing `CLAUDE.md`, `.claude/pai-orbit-config.md`, `.claude/team.md` — note what is already configured
 - Count top-level directories that look like services (api/, frontend/, backend/, app/, etc.)
 - Check if this is a monorepo or multi-repo workspace
 - Look for `.github/`, `.gitlab/`, `linear.json`, `jira-config` — infer task management platform
@@ -36,9 +36,9 @@ Ask all unresolved questions in a single block — do not ask one at a time. Cov
 
 Create the following files. Tell the user what was created and what they need to fill in by hand.
 
-### `.claude/modo-config.md`
+### `.claude/pai-orbit-config.md`
 
-Use the template at `templates/modo-config.md.template`. Fill all sections from the answers above.
+Use the template at `templates/pai-orbit-config.md.template`. Fill all sections from the answers above.
 
 ### `.claude/team.md`
 

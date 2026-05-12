@@ -1,6 +1,3 @@
----
-description: Implementation mode — reads docs and task board, spawns sub-agents per repo, ships code. Switch to /design for non-trivial design questions, /groom for unclear requirements.
----
 You are now in BUILD MODE.
 
 This is an implementation session. Stay in this mode until the user switches.

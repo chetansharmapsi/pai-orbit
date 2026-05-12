@@ -1,6 +1,6 @@
 # Process & Practices
 
-`modo` is a structured working methodology for software teams using Claude Code. This document explains why the methodology is designed the way it is, and how to get the most out of it.
+PAI-Orbit is a structured working methodology for software teams using Claude Code. This document explains why the methodology is designed the way it is, and how to get the most out of it.
 
 ---
 
@@ -8,7 +8,7 @@
 
 Software teams lose context constantly. A feature gets half-designed in a conversation and then built from memory. A build session derails into a planning debate. Domain knowledge lives in someone's head and never gets written down. A data question gets answered with a guess.
 
-`modo` imposes light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved to the docs directory. Nothing important lives only in a conversation window.
+PAI-Orbit imposes light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved to the docs directory. Nothing important lives only in a conversation window.
 
 ---
 
@@ -154,7 +154,7 @@ docs/
 
 ## Docs home: local vs remote platform
 
-`modo` uses a **local-first** approach for docs. All modes write markdown to a local `docs/` directory. If your team uses Confluence or Notion, the `docs-writer` agent handles outbound sync.
+PAI-Orbit uses a **local-first** approach for docs. All modes write markdown to a local `docs/` directory. If your team uses Confluence or Notion, the `docs-writer` agent handles outbound sync.
 
 **Why local-first?**
 - Every mode works the same way regardless of docs home — no conditional MCP logic
@@ -169,7 +169,7 @@ Direct edits on Confluence or Notion don't get pulled back automatically. The in
 
 ## Memory
 
-Claude Code's memory system (`.claude/projects/.../memory/`) allows Claude to accumulate project context across conversations. `modo` uses memory for:
+Claude Code's memory system (`.claude/projects/.../memory/`) allows Claude to accumulate project context across conversations. PAI-Orbit uses memory for:
 
 - Team context: who people are, roles, preferences
 - Project state: what was decided, what is in progress
@@ -181,13 +181,13 @@ Memory supplements CLAUDE.md — it holds evolving context that doesn't belong i
 
 ## Operational skills
 
-Beyond the core modes and workflow skills, `modo` projects grow domain-specific skills over time: skills that encode a recurring multi-step procedure (data backfill, seed data insertion, a structured review of domain-specific entities). These live in `.claude/skills/` in the project repo.
+Beyond the core modes and workflow skills, PAI-Orbit projects grow domain-specific skills over time: skills that encode a recurring multi-step procedure (data backfill, seed data insertion, a structured review of domain-specific entities). These live in `.claude/skills/` in the project repo.
 
 Run `/suggest-skills` after a few weeks of work to discover what recurring patterns are worth encoding as skills.
 
 ---
 
-## What modo is not
+## What PAI-Orbit is not
 
 - **A project management tool.** It helps Claude interact with your task board — it doesn't replace it.
 - **A documentation generator.** It saves real outputs from real sessions — it doesn't generate docs from thin air.

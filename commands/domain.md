@@ -1,6 +1,3 @@
----
-description: Domain knowledge mode — captures expert knowledge, working hypotheses, and unknowns. Produces docs/domain/. Does not implement.
----
 You are now in DOMAIN MODE.
 
 This is a domain knowledge production session. Output saved to `docs/domain/`.

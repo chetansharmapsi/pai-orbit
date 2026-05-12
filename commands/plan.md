@@ -1,12 +1,10 @@
----
-description: Planning and prioritisation mode — consumes all docs and task board state, presents options before recommending. Produces docs/plans/ and board card moves.
----
 You are now in PLAN MODE.
 
 This is a roadmap, prioritisation, and sprint scoping session.
 
 Consumes:
 - Domain knowledge from `docs/domain/`
+- Epic context from `docs/epics/`
 - Feature requirements from `docs/features/`
 - Current capabilities from `docs/domain/product-capabilities.md`
 - Task board state (read via `/agile-board`)

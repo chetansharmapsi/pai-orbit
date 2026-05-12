@@ -6,27 +6,35 @@
 - A software project with at least one service (the project doesn't need to be new)
 - Git initialised in your project directory
 
-## Install modo
+## Install PAI-Orbit
 
-**From the official Anthropic marketplace:**
-```bash
-/plugin install modo@claude-plugins-official
-```
+**Manual install (current recommended path):**
 
-**Manual install:**
-
-Clone the repo and symlink the plugin directory into your project:
+The Claude Code plugin marketplace is not yet publicly available. Install by cloning the repo and symlinking or copying the plugin directory:
 
 ```bash
-# Clone anywhere convenient
-git clone https://github.com/curiosityarc/modo /path/to/modo
+# Clone alongside your project (or anywhere convenient)
+git clone https://github.com/the-psi/pai-orbit /path/to/PAI-Orbit
 
 # In your project directory, wire the plugin
-mkdir -p .claude/plugins
-ln -s /path/to/modo/.claude-plugin .claude/plugins/modo
+mkdir -p .claude
+ln -s /path/to/PAI-Orbit/.claude-plugin .claude/plugins/PAI-Orbit
 ```
 
 Then run `/setup` — Claude Code loads skills and commands from `.claude/` automatically.
+
+**From the official Anthropic marketplace (when available):**
+```bash
+/plugin install PAI-Orbit@claude-plugins-official
+```
+
+**From the Pratham Software marketplace (when available):**
+```bash
+/plugin marketplace add pratham-software/PAI-Orbit
+/plugin install PAI-Orbit@thepsi.com
+```
+
+After marketplace install, run `/reload-plugins` to apply without restarting.
 
 ---
 
@@ -50,7 +58,7 @@ Setup will:
 
    | File | What it is |
    |------|------------|
-   | `.claude/modo-config.md` | Board config, git model, deploy targets, docs home |
+   | `.claude/pai-orbit-config.md` | Board config, git model, deploy targets, docs home |
    | `.claude/team.md` | Team roster used for assignments and handoffs |
    | `CLAUDE.md` | Project spec stub — some sections need filling by hand |
    | `.claude/agents/<service>-builder.md` | One agent per detected service |
@@ -137,7 +145,7 @@ Setup is idempotent — it reads existing config and updates only what changed. 
 Run `/reload-plugins`. If still missing, check `/plugin` → Errors tab.
 
 **`/agile-board` doesn't know my board:**
-Run `/setup` and answer the task management question. Or edit `.claude/modo-config.md → ## Agile Board` directly.
+Run `/setup` and answer the task management question. Or edit `.claude/pai-orbit-config.md → ## Agile Board` directly.
 
 **Lint hooks aren't running:**
 Check `.claude/settings.json` has the hooks wired. Check hook scripts are executable: `chmod +x .claude/hooks/*.sh`.

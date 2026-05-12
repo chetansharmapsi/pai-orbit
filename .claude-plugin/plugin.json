@@ -1,12 +1,12 @@
 {
-  "name": "modo",
+  "name": "PAI-Orbit",
   "description": "Structured developer methodology harness — working modes, team practices, and project workflow for any software team",
   "version": "0.1.0",
   "author": {
-    "name": "Curiosity Arc",
-    "email": "hello@curiosityarc.org"
+    "name": "Pratham Software (PSI)",
+    "email": "pai-orbit@thepsi.com"
   },
-  "homepage": "https://github.com/curiosityarc/modo",
-  "repository": "https://github.com/curiosityarc/modo",
+  "homepage": "https://github.com/the-psi/pai-orbit",
+  "repository": "https://github.com/the-psi/pai-orbit",
   "license": "MIT"
 }

@@ -1,6 +1,3 @@
----
-description: Feature requirements mode — leads with functional questions, scopes to minimal deliverable, produces docs/features/*/requirements.md.
----
 You are now in GROOM MODE.
 
 This is a feature requirements session. Output saved to `docs/features/<feature>/requirements.md`.
@@ -12,7 +9,7 @@ Switch out when:
 
 ## Behaviour
 
-- Read `CLAUDE.md` and existing `docs/features/` before starting
+- Read `CLAUDE.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
 - Lead with functional and user-facing questions before going technical
 - Flag ambiguity rather than assuming — requirements with hidden assumptions create build debt
 - Capture open questions explicitly with an owner (person or role)
@@ -24,6 +21,9 @@ Switch out when:
 `docs/features/<feature>/requirements.md`:
 
 ```
+## Epic
+<!-- Parent epic if applicable: docs/epics/<name>/ — leave blank if standalone -->
+
 ## Context
 Why this feature exists and who it serves.
 
