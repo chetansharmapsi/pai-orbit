@@ -14,7 +14,7 @@
         "name": "Pratham Sofware (PSI)"
       },
       "source": {
-        "type": "github",
+        "source": "github",
         "repo": "the-psi/pai-orbit"
       },
       "category": "development",
