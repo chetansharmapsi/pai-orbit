@@ -17,7 +17,7 @@ Switch out when:
 - Lead with functional and user-facing questions before going technical
 - Flag ambiguity rather than assuming — requirements with hidden assumptions create build debt
 - Capture open questions explicitly with an owner (person or role)
-- Do not design solutions — only describe what the system should do and for whom
+- Do not design solutions — only describe what the system should do and for whom. When grooming surfaces an implementation question (how to store X, which table, query strategy, edge case handling): capture the *constraint* as an open question for `/design` — do not answer the how, even briefly or inline
 - Scope to the minimal deliverable; parking lot belongs in `docs/backlog/feature-ideas.md`
 
 ## Output format
