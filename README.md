@@ -10,15 +10,16 @@ Software teams waste context constantly: half-designed features get built, build
 
 ```
 Backlog
+/arch            → architecture declaration — produces docs/architecture/ (system, constraints, stack)
 /domain          → domain knowledge — produces docs/domain/
 /ux              → user flow and layout design — produces docs/features/*/ux.md
 
 Sprint
 /groom           → feature requirements — produces docs/features/*/requirements.md
 /design          → technical trade-offs — produces docs/decisions/ and docs/features/*/design.md
-/build           → implementation — reads docs, checks task board, ships
+/build           → implementation — reads docs and constraints, checks task board, ships
 /test            → test planning and QA pass — produces docs/features/*/test-plan.md
-/review          → code review — checks diff against CLAUDE.md, ADRs, requirements
+/review          → code review — checks diff against constraints, CLAUDE.md, ADRs, requirements
 
 Release
 /deploy          → guided deployment with preflight and post-deploy verification
@@ -41,6 +42,45 @@ Planning and maintenance
 /setup           → first-time configuration — generates config, agents, hooks, docs scaffold
 /suggest-skills  → discover recurring patterns worth encoding as project skills
 ```
+
+## Mode flow
+
+```mermaid
+flowchart TD
+    subgraph BACKLOG["Backlog"]
+        arch["/arch\nArchitecture declaration"]
+        domain["/domain\nDomain knowledge"]
+        ux["/ux\nUX design"]
+        plan["/plan\nPrioritisation"]
+    end
+
+    subgraph SPRINT["Sprint"]
+        groom["/groom\nRequirements"]
+        design["/design\nTechnical design"]
+        build["/build\nImplementation"]
+        test["/test\nQA"]
+        review["/review\nCode review"]
+    end
+
+    subgraph RELEASE["Release"]
+        deploy["/deploy\nDeployment"]
+    end
+
+    incident["/incident\nProduction fast-path"]
+
+    arch & domain & ux --> groom
+    plan -.->|sequence| groom
+    groom --> design
+    design --> build
+    build --> test
+    test -- fail --> build
+    test -- pass --> review
+    review --> deploy
+    incident --> build
+    incident --> deploy
+```
+
+Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/security-review`, `/simplify`) can be invoked from any phase.
 
 ## Install
 
@@ -66,9 +106,11 @@ ln -s ~/.claude/plugins/pai-orbit/.claude-plugin .claude/plugins/pai-orbit
 After installing, run `/setup` in your project directory. It will:
 
 1. Discover your repo structure and tech stack
-2. Ask a short set of questions (task board, branching model, deployment, docs home, team)
-3. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, and a `docs/` scaffold
+2. Ask a short set of questions (task board, branching model, deployment, docs home, team, architecture)
+3. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, a `docs/` scaffold, and a `docs/architecture/` stub
 4. Tell you exactly what to fill in by hand
+
+Then run `/arch init` to complete your architecture declaration — a guided interview that writes `docs/architecture/system.md` (service map), `constraints.md` (enforcement rules), and `stack.md`. Once declared, `/build` reads the constraints before generating code and `/review` checks every diff against them.
 
 Re-run `/setup` anytime the stack or team changes significantly.
 
@@ -84,13 +126,14 @@ Two built-in agents ship with PAI-Orbit; `/setup` generates additional stack-spe
 
 ## Hooks
 
-Three shell hooks are included. Wire them in Claude Code's settings or copy them to `.claude/hooks/` in your project.
+Four shell hooks are included. Wire them in Claude Code's settings or copy them to `.claude/hooks/` in your project (done automatically by `/setup`).
 
 | Hook | Event | What it does |
 |------|-------|--------------|
 | `bash-guard.sh` | PreToolUse | Blocks `git push --force`, bulk staging (`git add .`/`-A`), `--no-verify`, and unsafe `rm` on root/home |
 | `lint-python.sh` | PostToolUse | Runs `ruff check` after any `.py` edit. Advisory — never blocks. |
 | `lint-ts.sh` | PostToolUse | Runs `eslint --max-warnings 0` after any `.ts`/`.tsx` edit. Advisory — never blocks. |
+| `arch-drift-guard.sh` | PostToolUse | Prints an advisory nudge when structural files (`docker-compose.yml`, `package.json`, `go.mod`, etc.) are edited. Suggests `/arch validate`. Never blocks. |
 
 ## Docs
 
@@ -100,7 +143,7 @@ Three shell hooks are included. Wire them in Claude Code's settings or copy them
 
 ## Philosophy
 
-**Producer/consumer.** `/domain` produces science. `/groom` produces requirements. `/design` produces architecture. `/build` produces code. `/plan` consumes all of the above to decide what to work on next. Switch modes when the headspace or output destination changes.
+**Producer/consumer.** `/arch` produces the architecture contract. `/domain` produces science. `/groom` produces requirements. `/design` produces feature-level architecture. `/build` produces code. `/plan` consumes all of the above to decide what to work on next. Switch modes when the headspace or output destination changes.
 
 **Local-first docs.** All modes write markdown locally. If your team uses Confluence or Notion, `docs-writer` handles outbound sync. Local is Claude's working copy; the remote platform is the published surface. Edits should flow outward, not inward — bidirectional sync creates conflicts that are hard to resolve cleanly.
 
