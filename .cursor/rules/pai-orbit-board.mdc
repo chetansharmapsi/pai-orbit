@@ -1,0 +1,75 @@
+---
+description: Task management — create issues, move cards, assign work, close on ship — using the project's configured board. Reads board config from .claude/pai-orbit-config.md and team roster from .claude/team.md. TRIGGER when creating a task or issue, moving a card, assigning work, closing a completed item, or asking about what's on the board. SKIP read-only board browsing (just use the browser or CLI directly).
+alwaysApply: false
+---
+
+
+# Agile Board
+
+Create, move, assign, and close tasks on the project's task board.
+
+Reads from:
+- `.claude/pai-orbit-config.md` → `## Agile Board` section — board type, URLs, label taxonomy, column flow
+- `.claude/team.md` — team roster for default assignees and handoffs
+
+## Procedure
+
+### Creating an issue
+
+1. Read `.claude/pai-orbit-config.md` to determine board type and column structure
+2. Ask which board/project if there are multiple (e.g., Tech vs Ops, Engineering vs Product)
+3. Ask issue type to determine labels and starting column (per the config)
+4. Read `.claude/team.md` to propose a default assignee based on issue type and role
+5. Compose:
+   - **Title:** short, imperative, ≤ 72 chars — mirrors commit format
+   - **Body:** what + why; link to relevant docs (`docs/features/<feature>/requirements.md`, prior issues, ADRs); for features, include sub-tasks broken down by service
+6. Create the issue using the configured CLI (see board type below)
+7. Place on board: report the target column; attempt CLI placement if available, otherwise instruct the user to move the card manually
+
+### Moving a card
+
+Read the column flow from config. Common flows:
+- **GitHub Projects v2:** `gh project item-edit` is unreliable for column moves — instruct browser drag is faster
+- **Linear:** `linear issue update --state <state>`
+- **Jira:** `jira issue transition`
+
+### Closing on ship
+
+When a task ships:
+- Close the issue with a brief comment: what was done, date, any follow-up items created
+- Use `closes #N` in the final commit (via `/git`), not here
+
+### Handoffs and assignments
+
+Read `.claude/team.md` for handles. Never hardcode handles in this skill — always look them up at runtime.
+If a role-based assignment is requested ("assign to the mobile lead"), look up the team member in that role.
+
+## Board-type CLI
+
+Determined by `## Agile Board → type` in `.claude/pai-orbit-config.md`:
+
+**GitHub Issues:**
+```bash
+gh issue create \
+  --repo <owner>/<repo> \
+  --title "<title>" \
+  --body "<body>" \
+  --label "<labels>" \
+  --assignee "<handle>"
+```
+
+**Linear:**
+```bash
+linear issue create --title "<title>" --description "<body>" --team <team-id> --assignee <user-id>
+```
+
+**Jira:**
+```bash
+jira issue create --project <key> --summary "<title>" --description "<body>" --assignee <user-id>
+```
+
+## Conventions (always apply)
+
+- `refs #N` in commits during development; `closes #N` in the final shipping commit only
+- One feature = one issue; sub-tasks go in the body unless they ship independently
+- Do not close issues autonomously without confirming with the user

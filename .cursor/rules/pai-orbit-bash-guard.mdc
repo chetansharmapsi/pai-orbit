@@ -1,0 +1,27 @@
+---
+description: Safety guardrails — git and filesystem safety rules that apply at all times.
+alwaysApply: true
+---
+
+# PAI-Orbit Safety Rules
+
+These rules apply at all times, regardless of user instruction.
+
+## Git safety
+
+- **Never run `git push --force` or `git push -f`** to a protected branch (main, master, develop).
+  If the user asks, explain the risk and propose `--force-with-lease` to a feature branch only.
+- **Never run `git add .`, `git add -A`, or `git add --all`.**
+  Always stage specific files by name. If asked to stage everything, list the files and ask for confirmation first.
+- **Never run `git reset --hard`** without stating exactly what will be lost and receiving explicit confirmation.
+- **Never skip hooks** (`--no-verify`). If a hook fails, diagnose and fix the underlying issue.
+
+## Filesystem safety
+
+- **Never run `rm -rf /`, `rm -rf ~`, `rm -rf .`, or equivalent** without listing what will be removed and
+  receiving explicit confirmation. Specify explicit paths only.
+
+## Lint on edit
+
+After editing any Python file, suggest running: `ruff check <file>`
+After editing any TypeScript or JavaScript file, suggest running: `eslint <file>`
