@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+# pai — PAI-Orbit CLI wrapper for Codex
+#
+# Wraps the Codex CLI with PAI-Orbit mode and skill context.
+# Install: copy to a directory on your PATH (e.g. ~/.local/bin/pai)
+#
+# Usage:
+#   pai <mode|skill> [prompt]
+#
+# Examples:
+#   pai build "implement the user login feature"
+#   pai design "how should we structure the payments service"
+#   pai review
+#   pai git "commit and push the current changes"
+#   pai deploy
+#
+# Environment:
+#   CODEX_BIN   Codex CLI binary name or path (default: codex)
+
+set -euo pipefail
+
+CODEX_BIN="${CODEX_BIN:-codex}"
+
+# ── Mode/skill registry ───────────────────────────────────────────────────────
+
+declare -A MODES=(
+    [arch]="ARCHITECTURE MODE"
+    [build]="BUILD MODE"
+    [data]="DATA MODE"
+    [design]="DESIGN MODE"
+    [domain]="DOMAIN MODE"
+    [groom]="GROOM MODE"
+    [plan]="PLAN MODE"
+    [ux]="UX MODE"
+)
+
+declare -A SKILLS=(
+    [analysis]="ANALYSIS SKILL"
+    [board]="BOARD SKILL"
+    [data-model]="DATA MODEL SKILL"
+    [deploy]="DEPLOY SKILL"
+    [git]="GIT SKILL"
+    [incident]="INCIDENT SKILL"
+    [review]="REVIEW SKILL"
+    [security-review]="SECURITY REVIEW SKILL"
+    [setup]="SETUP SKILL"
+    [test]="TEST SKILL"
+)
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+check_codex() {
+    if ! command -v "$CODEX_BIN" &>/dev/null; then
+        printf "Error: '%s' not found in PATH.\n" "$CODEX_BIN" >&2
+        printf "Install Codex CLI or set CODEX_BIN to the correct binary path.\n" >&2
+        printf "  export CODEX_BIN=/path/to/codex\n" >&2
+        exit 1
+    fi
+}
+
+check_agents_md() {
+    if [[ ! -f "AGENTS.md" ]]; then
+        printf "Warning: AGENTS.md not found in current directory.\n" >&2
+        printf "Run the following to generate it:\n" >&2
+        printf "  /path/to/pai-orbit/scripts/generate-codex.sh --output-dir .\n" >&2
+    fi
+}
+
+usage() {
+    cat << EOF
+pai — PAI-Orbit wrapper for Codex CLI
+
+Usage: pai <command> [prompt]
+
+Modes (enter a focused working headspace):
+  arch     [prompt]   Architecture declaration and validation
+  build    [prompt]   Implementation — write code, fix bugs
+  data     [prompt]   Data exploration (read-only)
+  design   [prompt]   Technical design and trade-offs
+  domain   [prompt]   Domain knowledge capture
+  groom    [prompt]   Feature requirements
+  plan     [prompt]   Roadmap and prioritisation
+  ux       [prompt]   UX and user-flow design
+
+Skills (invoke a multi-step operational procedure):
+  analysis        [prompt]   Change impact / blast radius analysis
+  board           [prompt]   Create / move task board items
+  data-model      [prompt]   Schema reference and migration planning
+  deploy          [prompt]   Guided deployment with preflight checks
+  git             [prompt]   Commit, branch, PR, push
+  incident        [prompt]   Production incident fast-path
+  review          [prompt]   Structured code review
+  security-review [prompt]   OWASP security pass
+  setup           [prompt]   First-time PAI-Orbit project setup
+  test            [prompt]   Test planning and QA
+
+Environment:
+  CODEX_BIN   Codex binary name or path (default: codex)
+
+Examples:
+  pai build "implement user login with JWT"
+  pai design "how should we structure the notifications service"
+  pai git "commit and push the auth changes"
+  pai review
+  pai deploy
+EOF
+}
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+if [[ $# -eq 0 ]]; then
+    usage
+    exit 0
+fi
+
+COMMAND="$1"
+shift
+USER_PROMPT="${*:-}"
+
+# Look up mode or skill
+if [[ -v MODES[$COMMAND] ]]; then
+    LABEL="${MODES[$COMMAND]}"
+    TYPE="mode"
+elif [[ -v SKILLS[$COMMAND] ]]; then
+    LABEL="${SKILLS[$COMMAND]}"
+    TYPE="skill"
+elif [[ "$COMMAND" == "-h" || "$COMMAND" == "--help" ]]; then
+    usage
+    exit 0
+else
+    printf "Unknown command: %s\n\n" "$COMMAND" >&2
+    usage >&2
+    exit 1
+fi
+
+check_codex
+check_agents_md
+
+# Build the prompt
+if [[ "$TYPE" == "mode" ]]; then
+    if [[ -n "$USER_PROMPT" ]]; then
+        FULL_PROMPT="Enter ${LABEL}. ${USER_PROMPT}"
+    else
+        FULL_PROMPT="Enter ${LABEL}."
+    fi
+else
+    if [[ -n "$USER_PROMPT" ]]; then
+        FULL_PROMPT="Run ${LABEL}. ${USER_PROMPT}"
+    else
+        FULL_PROMPT="Run ${LABEL}."
+    fi
+fi
+
+printf "pai → %s: %s\n\n" "$LABEL" "${USER_PROMPT:-<no prompt>}"
+
+exec "$CODEX_BIN" "$FULL_PROMPT"
