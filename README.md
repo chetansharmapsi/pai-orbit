@@ -1,8 +1,10 @@
 # PAI-Orbit
 
-A structured developer methodology harness for Claude Code.
+A structured developer methodology harness for Claude Code, Cursor, and Codex CLI.
 
 PAI-Orbit gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
+
+Every mode and skill is defined once in a canonical format and compiled into the native constructs of each tool: slash commands for Claude Code, `.cursor/rules/` for Cursor, and `AGENTS.md` for Codex CLI.
 
 ## What it is
 
@@ -82,6 +84,71 @@ flowchart TD
 
 Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/security-review`, `/simplify`) can be invoked from any phase.
 
+## Cursor & Codex CLI
+
+PAI-Orbit's mode discipline works in Cursor and Codex CLI, not just Claude Code. Each command and skill file carries a canonical YAML front-matter spec. Generator scripts read those specs and produce tool-native output — no hand-maintained parallel files.
+
+### Cursor
+
+Generate one `.mdc` rule per mode and skill into `.cursor/rules/`:
+
+```bash
+# After first-time setup (scripts copied to .claude/scripts/)
+.claude/scripts/generate-cursor.sh
+
+# Or directly from the plugin
+~/.claude/plugins/pai-orbit/scripts/generate-cursor.sh --output-dir .
+```
+
+22 rules are generated:
+
+| Rule type | Examples |
+|-----------|---------|
+| `agent_requested` | All mode rules (`build`, `design`, `plan`…) and most skills — Cursor attaches them when the task matches |
+| `auto_attached` | `data-model` → attaches on `*.sql`, `migrations/**`; `test` → attaches on `*_test.*`, `*.spec.*` |
+| `alwaysApply: true` | `bash-guard` — safety rules (no force-push, no bulk staging) active at all times |
+
+To enter a mode in Cursor: type "enter build mode" or start a task — the agent attaches the relevant rule automatically. A `.vscode/tasks.json` lint template is also generated when Python or TypeScript is detected.
+
+### Codex CLI
+
+Generate `AGENTS.md` (all modes and skills in a single file) and install the `pai` CLI wrapper:
+
+```bash
+# Generate AGENTS.md
+~/.claude/plugins/pai-orbit/scripts/generate-codex.sh --output-dir .
+
+# Install the pai wrapper
+cp ~/.claude/plugins/pai-orbit/scripts/pai ~/.local/bin/pai
+```
+
+Use modes and skills from the terminal:
+
+```bash
+pai build "implement user login with JWT"
+pai design "how should we structure the notifications service"
+pai review
+pai git "commit and push"
+pai deploy
+```
+
+Or invoke Codex directly: `codex "Enter BUILD MODE. implement user login"`
+
+The `pai` wrapper prepends the right mode/skill context so you don't have to type it each time.
+
+### Regenerating after updates
+
+When PAI-Orbit is updated or you edit a command or skill file, regenerate:
+
+```bash
+.claude/scripts/generate-cursor.sh   # → .cursor/rules/
+.claude/scripts/generate-codex.sh    # → AGENTS.md
+```
+
+`/setup` runs these automatically and copies the scripts to `.claude/scripts/` the first time.
+
+---
+
 ## Install
 
 ```bash
@@ -106,9 +173,10 @@ ln -s ~/.claude/plugins/pai-orbit/.claude-plugin .claude/plugins/pai-orbit
 After installing, run `/setup` in your project directory. It will:
 
 1. Discover your repo structure and tech stack
-2. Ask a short set of questions (task board, branching model, deployment, docs home, team, architecture)
+2. Ask a short set of questions (task board, branching model, deployment, docs home, team, architecture, and **which AI tools your team uses**)
 3. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, a `docs/` scaffold, and a `docs/architecture/` stub
-4. Tell you exactly what to fill in by hand
+4. If Cursor or Codex CLI was selected: run the adapter generators and copy them to `.claude/scripts/` for future use
+5. Tell you exactly what to fill in by hand
 
 Then run `/arch init` to complete your architecture declaration — a guided interview that writes `docs/architecture/system.md` (service map), `constraints.md` (enforcement rules), and `stack.md`. Once declared, `/build` reads the constraints before generating code and `/review` checks every diff against them.
 
