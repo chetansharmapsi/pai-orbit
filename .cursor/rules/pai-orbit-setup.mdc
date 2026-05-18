@@ -18,6 +18,8 @@ Before asking anything, read what already exists:
 - Count top-level directories that look like services (api/, frontend/, backend/, app/, etc.)
 - Check if this is a monorepo or multi-repo workspace
 - Look for `.github/`, `.gitlab/`, `linear.json`, `jira-config` — infer task management platform
+- Check for `.cursor/rules/` — signals Cursor is already in use
+- Check for `AGENTS.md` — signals Codex CLI is already in use
 
 Report a brief summary of what was found before asking any questions.
 
@@ -34,6 +36,12 @@ Ask all unresolved questions in a single block — do not ask one at a time. Cov
 7. **Multi-repo project?**: Does this service repo belong to a larger multi-repo project with a separate repo for system-level docs (cross-cutting ADRs, epics spanning services, system-wide domain knowledge)? If yes, what is the path or git URL to that system docs repo?
 8. **Architecture (optional — can be done later with `/arch init`):** What services exist and how do they communicate? Any hard constraints — things that must never happen across the codebase? (e.g., "services must not share DBs", "frontend talks only to api-gateway")
 9. **Team**: names, roles, and handles (GitHub username / Linear ID / Jira user ID as relevant). Who is the default assignee for code issues? Who owns domain/expert decisions?
+10. **AI coding tools**: Which AI coding tools does your team use? Select all that apply:
+    - **Claude Code** — always included; no extra generation needed
+    - **Cursor** — generates `.cursor/rules/` with PAI-Orbit mode and skill rules
+    - **Codex CLI** — generates `AGENTS.md` and installs the `pai` CLI wrapper
+
+    If `.cursor/rules/` or `AGENTS.md` already exist (detected in Step 1), default to including those tools.
 
 ## Step 3 — Generate
 
@@ -115,6 +123,50 @@ If the user answered the architecture question (Step 2, item 8), pre-populate th
 
 Tell the user: "Run `/arch init` to complete your architecture declaration. Once declared, `/build` and `/review` will read `constraints.md` to enforce architectural rules automatically."
 
+### Tool adapter files
+
+Skip this section if the user selected Claude Code only.
+
+**Resolve the PAI-Orbit root directory** (needed to locate the generator scripts):
+
+```bash
+if [ -L ".claude/plugins/pai-orbit" ]; then
+    PAI_ORBIT_DIR=$(dirname "$(readlink -f .claude/plugins/pai-orbit)")
+elif [ -d "$HOME/.claude/plugins/pai-orbit" ]; then
+    PAI_ORBIT_DIR="$HOME/.claude/plugins/pai-orbit"
+else
+    PAI_ORBIT_DIR=""
+fi
+```
+
+If `PAI_ORBIT_DIR` cannot be resolved, warn: "PAI-Orbit plugin path not found — skipping adapter generation. Run the generators manually once the plugin is installed." Then skip the rest of this section.
+
+Create `.claude/scripts/` if it does not exist.
+
+**If Cursor was selected:**
+
+1. Run the Cursor generator: `bash "$PAI_ORBIT_DIR/scripts/generate-cursor.sh" --output-dir .`
+2. Copy the generator for future use: `cp "$PAI_ORBIT_DIR/scripts/generate-cursor.sh" .claude/scripts/generate-cursor.sh`
+3. Report how many `.mdc` rules were written and confirm `.cursor/rules/` was created.
+4. If Python or TypeScript was detected: confirm `.vscode/tasks.json` was also written.
+
+**If Codex CLI was selected:**
+
+1. Run the Codex generator: `bash "$PAI_ORBIT_DIR/scripts/generate-codex.sh" --output-dir .`
+2. Copy the scripts for future use:
+   ```bash
+   cp "$PAI_ORBIT_DIR/scripts/generate-codex.sh" .claude/scripts/generate-codex.sh
+   cp "$PAI_ORBIT_DIR/scripts/pai" .claude/scripts/pai
+   chmod +x .claude/scripts/pai .claude/scripts/generate-codex.sh
+   ```
+3. Tell the user: "To use `pai` from anywhere, add `.claude/scripts/` to your PATH or copy it to `~/.local/bin/pai`."
+4. Report that `AGENTS.md` was written.
+
+**Regeneration note** — add to the report:
+> Any time PAI-Orbit commands or skills change, regenerate the adapter files:
+> - Cursor: `.claude/scripts/generate-cursor.sh`
+> - Codex: `.claude/scripts/generate-codex.sh`
+
 ## Step 4 — Report
 
 List every file created. For each:
@@ -125,5 +177,11 @@ Architecture files:
 - ⚠️ Stub — `docs/architecture/system.md` — run `/arch init` to complete
 - ⚠️ Stub — `docs/architecture/constraints.md` — run `/arch init` to define rules
 - ✅ Generated — `docs/architecture/stack.md` (populated from detected stack)
+
+Tool adapter files (only if Cursor or Codex CLI was selected):
+- ✅ Generated — `.cursor/rules/` (N rules) — regenerate: `.claude/scripts/generate-cursor.sh`
+- ✅ Generated — `.vscode/tasks.json` — lint task templates for Cursor (if Python or TS detected)
+- ✅ Generated — `AGENTS.md` — regenerate: `.claude/scripts/generate-codex.sh`
+- ✅ Installed — `.claude/scripts/pai` — copy to `~/.local/bin/pai` to use from anywhere
 
 End with: "Run `/suggest-skills` after a few sessions to discover operational skills worth adding."
