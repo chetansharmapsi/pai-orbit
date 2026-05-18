@@ -1,3 +1,22 @@
+---
+name: arch
+type: command
+description: System architecture declaration and validation — declare services, boundaries, constraints, and data flow; check for drift.
+triggers:
+  - "architecture"
+  - "arch"
+  - "declare architecture"
+  - "validate architecture"
+  - "service boundaries"
+  - "constraints"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "ARCHITECTURE MODE"
+  condensed: true
+---
+
 You are now in ARCHITECTURE MODE.
 
 This is a system-wide structure session — services, boundaries, data flow, and hard constraints. No implementation. No feature design.

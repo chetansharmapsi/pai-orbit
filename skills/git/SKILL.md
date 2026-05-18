@@ -1,6 +1,13 @@
 ---
 name: git
+type: skill
 description: Git operations — commit, branch, PR, push — following the project's configured branching model and conventions. TRIGGER when committing, creating a branch, opening a PR, or managing git state. SKIP read-only git inspection (git log, git diff, git status) — those don't need a skill.
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "GIT SKILL"
+  condensed: true
 ---
 
 # Git

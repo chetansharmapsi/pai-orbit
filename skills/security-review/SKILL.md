@@ -1,6 +1,13 @@
 ---
 name: security-review
+type: skill
 description: Security-focused review of changed code — checks for OWASP Top 10 vulnerabilities, auth/authz gaps, secret management issues, and input validation at system boundaries. TRIGGER before merging a change that touches auth, input handling, external APIs, file I/O, database writes, or permissions. SKIP full architecture reviews (use /review) and ongoing implementation (use /build).
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "SECURITY REVIEW SKILL"
+  condensed: true
 ---
 
 # Security Review

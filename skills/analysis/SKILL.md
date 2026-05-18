@@ -1,6 +1,13 @@
 ---
 name: analysis
+type: skill
 description: Change impact and dependency analysis — assess the blast radius of a proposed change before building, or evaluate the effect of a shipped change after the fact. TRIGGER before refactoring a shared interface, when removing or renaming a public API, when changing a data model used by multiple services, or when asked "what breaks if we change X". SKIP pure data exploration with no change involved (use /data) and full architectural design (use /design).
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "ANALYSIS SKILL"
+  condensed: true
 ---
 
 # Analysis

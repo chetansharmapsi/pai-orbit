@@ -1,6 +1,13 @@
 ---
 name: epic
+type: skill
 description: Epic lifecycle management — create, load, update, and list epics in docs/epics/. TRIGGER when creating a new epic, loading epic context before planning, updating an epic after a session, or listing all epics. SKIP individual feature requirements (use /groom) and roadmap sequencing (use /plan).
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: false
+  section_title: "EPIC SKILL"
+  condensed: true
 ---
 
 # Epic Skill

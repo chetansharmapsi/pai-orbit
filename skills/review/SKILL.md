@@ -1,6 +1,13 @@
 ---
 name: review
+type: skill
 description: Structured code review — checks a branch diff against CLAUDE.md conventions, documented architecture decisions, and team patterns. Produces a review report the architect or tech lead can sign off on. TRIGGER when a PR or branch is ready for review, when the architect wants to verify architectural conformance, or before merging a significant change. SKIP read-only git inspection (git log, git diff without review intent) and automated test runs (handled by CI).
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "REVIEW SKILL"
+  condensed: true
 ---
 
 # Review

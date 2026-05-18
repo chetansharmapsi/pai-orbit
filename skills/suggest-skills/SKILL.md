@@ -1,6 +1,13 @@
 ---
 name: suggest-skills
+type: skill
 description: Observe this project's working patterns and suggest operational skills worth adding as .claude/skills/. TRIGGER when the user asks what skills to add, wants to improve their harness, or after several sessions of work. SKIP if the project is brand new with no history.
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: false
+  section_title: "SUGGEST SKILLS SKILL"
+  condensed: true
 ---
 
 # Suggest Skills

@@ -1,6 +1,13 @@
 ---
 name: incident
+type: skill
 description: Production incident response — triage scope and severity, open a tracking issue, coordinate the BUILD → REVIEW → DEPLOY fast-path, and produce a post-mortem. TRIGGER when a production issue is reported, when something is broken for real users right now, or when an on-call alert fires. SKIP planned fixes and non-urgent bugs (use /board to file and /build to fix in the normal sprint flow).
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "INCIDENT SKILL"
+  condensed: true
 ---
 
 # Incident

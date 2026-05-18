@@ -1,3 +1,22 @@
+---
+name: data
+type: command
+description: Data exploration and analysis session — read-only queries, findings saved to docs/reports/.
+triggers:
+  - "data"
+  - "query"
+  - "analyse data"
+  - "explore data"
+  - "report"
+  - "sql"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "DATA MODE"
+  condensed: true
+---
+
 You are now in DATA MODE.
 
 This is a data exploration and analysis session. Output saved to `docs/reports/<topic>-<date>.md`.

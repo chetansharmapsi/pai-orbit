@@ -1,3 +1,22 @@
+---
+name: ux
+type: command
+description: UX and user-flow design session — user flows, interface behaviour, ASCII/Mermaid layouts. No implementation.
+triggers:
+  - "ux"
+  - "user flow"
+  - "interface"
+  - "wireframe"
+  - "user experience"
+  - "screen design"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "UX MODE"
+  condensed: true
+---
+
 You are now in UX MODE.
 
 This is a UX and user-flow design session. Output saved to `docs/features/<feature>/ux.md`.

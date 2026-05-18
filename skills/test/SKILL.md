@@ -1,6 +1,19 @@
 ---
 name: test
+type: skill
 description: Test session — review requirements for testability, produce a test plan with acceptance criteria and edge cases, track manual vs automated coverage, run a release readiness check. TRIGGER when a feature is ready for QA review, when writing acceptance criteria, when planning a test pass before release, or when a test run fails and the issue needs scoping before returning to /build. SKIP unit test implementation (use /build) and exploratory data validation (use /data).
+cursor:
+  rule_type: auto_attached
+  attach_patterns:
+    - "*_test.*"
+    - "*.spec.*"
+    - "*.test.*"
+    - "tests/**"
+    - "__tests__/**"
+codex:
+  include_in_agents_md: true
+  section_title: "TEST SKILL"
+  condensed: true
 ---
 
 # QA

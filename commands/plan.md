@@ -1,3 +1,23 @@
+---
+name: plan
+type: command
+description: Roadmap and prioritisation session — sequence work, triage backlog, sprint scoping.
+triggers:
+  - "plan"
+  - "prioritize"
+  - "roadmap"
+  - "sequence"
+  - "sprint"
+  - "backlog"
+  - "what's next"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "PLAN MODE"
+  condensed: true
+---
+
 You are now in PLAN MODE.
 
 This is a roadmap, prioritisation, and sprint scoping session.

@@ -1,3 +1,22 @@
+---
+name: design
+type: command
+description: Technical design and trade-offs session — options, ADRs, architecture decisions. No implementation.
+triggers:
+  - "design"
+  - "architect"
+  - "trade-offs"
+  - "options"
+  - "how should we"
+  - "what approach"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "DESIGN MODE"
+  condensed: true
+---
+
 You are now in DESIGN MODE.
 
 This is a technical design and trade-offs session. No implementation.

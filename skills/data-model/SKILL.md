@@ -1,6 +1,19 @@
 ---
 name: data-model
+type: skill
 description: Data model reference and schema change management — document the current schema, propose and validate schema changes, plan migrations. TRIGGER when designing a new table or field, when modifying an existing schema, when asked about what a table contains or how tables join, or before writing a query against an unfamiliar table. SKIP pure query exploration with no schema change (use /data) and high-level data architecture decisions (use /design).
+cursor:
+  rule_type: auto_attached
+  attach_patterns:
+    - "*.sql"
+    - "migrations/**"
+    - "**/models.py"
+    - "**/schema.py"
+    - "**/*.migration.*"
+codex:
+  include_in_agents_md: true
+  section_title: "DATA MODEL SKILL"
+  condensed: true
 ---
 
 # Data Model

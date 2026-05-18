@@ -1,3 +1,22 @@
+---
+name: build
+type: command
+description: Implementation session — writing code, fixing bugs, shipping features. Stay in this mode until the work is done.
+triggers:
+  - "implement"
+  - "build"
+  - "fix"
+  - "code"
+  - "write"
+  - "develop"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "BUILD MODE"
+  condensed: true
+---
+
 You are now in BUILD MODE.
 
 This is an implementation session. Stay in this mode until the user switches.

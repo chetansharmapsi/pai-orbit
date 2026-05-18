@@ -1,6 +1,13 @@
 ---
 name: deploy
+type: skill
 description: Guided deployment with preflight checks and post-deploy verification. Reads deployment targets and commands from .claude/pai-orbit-config.md. TRIGGER when the user asks to deploy, ship, or release any service. SKIP read-only service inspection (describe, status, logs) and local dev server starts.
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "DEPLOY SKILL"
+  condensed: true
 ---
 
 # Deploy

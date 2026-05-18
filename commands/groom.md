@@ -1,3 +1,22 @@
+---
+name: groom
+type: command
+description: Feature requirements session — formalise user stories, acceptance criteria, and functional requirements.
+triggers:
+  - "groom"
+  - "requirements"
+  - "user story"
+  - "acceptance criteria"
+  - "feature spec"
+  - "what should it do"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "GROOM MODE"
+  condensed: true
+---
+
 You are now in GROOM MODE.
 
 This is a feature requirements session. Output saved to `docs/features/<feature>/requirements.md`.

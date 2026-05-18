@@ -1,3 +1,21 @@
+---
+name: domain
+type: command
+description: Domain knowledge capture — expert business rules and domain concepts saved to docs/domain/.
+triggers:
+  - "domain"
+  - "business rules"
+  - "expert knowledge"
+  - "how does this work"
+  - "capture knowledge"
+cursor:
+  rule_type: agent_requested
+codex:
+  include_in_agents_md: true
+  section_title: "DOMAIN MODE"
+  condensed: true
+---
+
 You are now in DOMAIN MODE.
 
 This is a domain knowledge production session. Output saved to `docs/domain/`.
