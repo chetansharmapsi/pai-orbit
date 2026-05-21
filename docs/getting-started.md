@@ -14,7 +14,7 @@ pai-orbit ships as a Claude Code marketplace hosted on GitHub. Install in two co
 
 ```bash
 /plugin marketplace add the-psi/pai-orbit
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 /reload-plugins
 ```
 
@@ -27,7 +27,7 @@ If you're hacking on pai-orbit itself, clone and add the local path as a marketp
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 After editing anything under `plugins/pai-orbit/core/`, rebuild with:

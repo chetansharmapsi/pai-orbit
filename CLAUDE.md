@@ -148,7 +148,7 @@ End users install directly from GitHub — no clone required:
 
 ```bash
 /plugin marketplace add the-psi/pai-orbit
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 For local development against a checkout:
@@ -156,7 +156,7 @@ For local development against a checkout:
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 Marketplace.json points at `plugins/pai-orbit/dist/claude-code/`, which is the committed build output. To rebuild it after editing `core/`, run `bash plugins/pai-orbit/build.sh`.

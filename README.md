@@ -93,7 +93,7 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/security-review
 /plugin marketplace add the-psi/pai-orbit
 
 # Install the plugin
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 That's it — Claude Code fetches the repo and resolves the plugin from the marketplace listing. The listing points at `plugins/pai-orbit/dist/claude-code/`, which is the committed, built artifact produced by `plugins/pai-orbit/adapters/claude-code/build.sh`. No clone needed for installation.
@@ -103,7 +103,7 @@ If you're developing against a local checkout instead:
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install pai-orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 ### Other coding assistants (lossy)
