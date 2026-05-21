@@ -1,10 +1,10 @@
-# PAI-Orbit — OpenAI Codex adapter (EXPERIMENTAL)
+# pai-orbit — OpenAI Codex adapter (EXPERIMENTAL)
 
-This is an **experimental, lossy** build of PAI-Orbit for the OpenAI Codex CLI.
+This is an **experimental, lossy** build of pai-orbit for the OpenAI Codex CLI.
 
 ## What's here
 
-- `AGENTS.md` — a single concatenated instructions file (Codex CLI's project-instruction convention) containing all PAI-Orbit modes and a skills appendix.
+- `AGENTS.md` — a single concatenated instructions file (Codex CLI's project-instruction convention) containing all pai-orbit modes and a skills appendix.
 
 ## Status
 

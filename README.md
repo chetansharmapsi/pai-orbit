@@ -1,14 +1,14 @@
-# PAI-Orbit
+# pai-orbit
 
 A structured developer methodology harness, distributed as a Claude Code plugin and as rule/instruction bundles for Cursor, GitHub Copilot, and OpenAI Codex.
 
-PAI-Orbit gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
+pai-orbit gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
 
-> **This repository is a Claude Code marketplace.** The PAI-Orbit plugin lives at [`plugins/pai-orbit/`](plugins/pai-orbit/). The marketplace currently lists this one plugin; additional plugins can be added alongside it.
+> **This repository is a Claude Code marketplace.** The pai-orbit plugin lives at [`plugins/pai-orbit/`](plugins/pai-orbit/). The marketplace currently lists this one plugin; additional plugins can be added alongside it.
 
 ## What it is
 
-Software teams waste context constantly: half-designed features get built, build sessions derail into planning debates, agronomic (or domain) questions get answered with guesses. PAI-Orbit imposes a light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved. Nothing important lives only in a conversation.
+Software teams waste context constantly: half-designed features get built, build sessions derail into planning debates, agronomic (or domain) questions get answered with guesses. pai-orbit imposes a light discipline: **each slash command puts Claude into a distinct headspace with a defined output destination.** Switching is explicit. Outputs are saved. Nothing important lives only in a conversation.
 
 ```
 Backlog
@@ -93,7 +93,7 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/security-review
 /plugin marketplace add the-psi/pai-orbit
 
 # Install the plugin
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@pai-orbit
 ```
 
 That's it — Claude Code fetches the repo and resolves the plugin from the marketplace listing. The listing points at `plugins/pai-orbit/dist/claude-code/`, which is the committed, built artifact produced by `plugins/pai-orbit/adapters/claude-code/build.sh`. No clone needed for installation.
@@ -103,7 +103,7 @@ If you're developing against a local checkout instead:
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@pai-orbit
 ```
 
 ### Other coding assistants (lossy)
@@ -133,7 +133,7 @@ Re-run `/setup` anytime the stack or team changes significantly.
 
 ## Agents
 
-Two built-in agents ship with PAI-Orbit; `/setup` generates additional stack-specific agents for your project.
+Two built-in agents ship with pai-orbit; `/setup` generates additional stack-specific agents for your project.
 
 | Agent | Role |
 |-------|------|

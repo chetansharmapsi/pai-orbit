@@ -1,6 +1,6 @@
 # Capabilities
 
-Reference for every mode, skill, and agent in PAI-Orbit.
+Reference for every mode, skill, and agent in pai-orbit.
 
 ---
 

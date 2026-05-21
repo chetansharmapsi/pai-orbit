@@ -1,10 +1,10 @@
-# PAI-Orbit — Cursor adapter
+# pai-orbit — Cursor adapter
 
-This is a **lossy** build of PAI-Orbit for Cursor.
+This is a **lossy** build of pai-orbit for Cursor.
 
 ## What's here
 
-- `.cursor/rules/*.mdc` — one rule file per PAI-Orbit mode (build, design, arch, etc.). Set `alwaysApply: false` so the agent picks them up by relevance, not unconditionally.
+- `.cursor/rules/*.mdc` — one rule file per pai-orbit mode (build, design, arch, etc.). Set `alwaysApply: false` so the agent picks them up by relevance, not unconditionally.
 - `.cursor/rules/skills.mdc` — concatenated skills reference (Cursor has no skill system).
 - `templates/` — project scaffolding templates, copied verbatim.
 

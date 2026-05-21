@@ -1,10 +1,10 @@
-# PAI-Orbit — GitHub Copilot adapter
+# pai-orbit — GitHub Copilot adapter
 
-This is a **lossy** build of PAI-Orbit for GitHub Copilot.
+This is a **lossy** build of pai-orbit for GitHub Copilot.
 
 ## What's here
 
-- `.github/copilot-instructions.md` — a single concatenated instructions file containing all PAI-Orbit modes and a skills appendix.
+- `.github/copilot-instructions.md` — a single concatenated instructions file containing all pai-orbit modes and a skills appendix.
 
 ## What's lost vs the Claude Code plugin
 

@@ -2,13 +2,13 @@
 
 **Date:** 2026-05-12  
 **Status:** Analysis complete — awaiting decision  
-**Context:** PAI-Orbit currently assumes a single-repo project. This note analyzes how to handle documentation when a project has one repository per microservice with cross-cutting concerns.
+**Context:** pai-orbit currently assumes a single-repo project. This note analyzes how to handle documentation when a project has one repository per microservice with cross-cutting concerns.
 
 ---
 
 ## Problem Statement
 
-PAI-Orbit hardcodes `docs/` paths relative to the repo root. In a microservices project, three categories of documentation exist that don't map cleanly to a single repo:
+pai-orbit hardcodes `docs/` paths relative to the repo root. In a microservices project, three categories of documentation exist that don't map cleanly to a single repo:
 
 1. **Service-specific** — how this service works, its schema, its API, its features
 2. **Cross-cutting** — auth patterns, shared data contracts, inter-service protocols, system-wide ADRs
@@ -40,7 +40,7 @@ One repo (`project-docs` or `<project>-system`) holds all documentation. Service
 - `+` Cross-cutting concerns have an obvious home
 - `–` Feature PR in `user-service` and its doc PR in `project-docs` are separate — review friction, docs drift risk
 - `–` Requires discipline to update the central repo when service code changes
-- `–` PAI-Orbit's `/build` mode writes docs after shipping code — split-repo makes this awkward
+- `–` pai-orbit's `/build` mode writes docs after shipping code — split-repo makes this awkward
 
 ---
 
@@ -66,7 +66,7 @@ system/docs/
   └── ops/                  ← human-owned operational docs
 ```
 
-PAI-Orbit config in each service's `.claude/pai-orbit-config.md` gains a pointer:
+pai-orbit config in each service's `.claude/pai-orbit-config.md` gains a pointer:
 
 ```markdown
 ## Docs
@@ -79,7 +79,7 @@ system_docs_path: ./docs
 - `+` Service docs stay co-located with service code — PRs are self-contained for service-level work
 - `+` Cross-cutting concerns have a designated home all teams know about
 - `+` `/plan` and `/domain` sessions run in the system repo and see the whole picture
-- `+` `cross-repo-impact` agent (already in PAI-Orbit) is positioned to traverse this boundary
+- `+` `cross-repo-impact` agent (already in pai-orbit) is positioned to traverse this boundary
 - `–` Engineers must decide "is this service-level or cross-cutting?" — requires a clear convention
 - `–` `/setup` and `pai-orbit-config.md` need updates to declare the system repo pointer
 - `–` Two repos to clone for full context locally
@@ -96,7 +96,7 @@ The `cross-repo-impact` agent already handles read-only cross-repo traversal —
 
 ---
 
-## Required PAI-Orbit Changes
+## Required pai-orbit Changes
 
 | Area | Change |
 |------|--------|

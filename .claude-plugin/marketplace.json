@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "PAI-Orbit",
+      "name": "pai-orbit",
       "description": "Structured developer methodology harness — working modes, team practices, and project workflow for any software team",
       "author": {
         "name": "Pratham Sofware (PSI)"

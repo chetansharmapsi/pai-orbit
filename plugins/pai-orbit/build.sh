@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Top-level build for the PAI-Orbit plugin.
+# Top-level build for the pai-orbit plugin.
 # Iterates adapters/*/build.sh and invokes each. Fails fast.
 set -euo pipefail
 

@@ -1,11 +1,11 @@
 ---
 name: setup
-description: First-time project setup for PAI-Orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with PAI-Orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
+description: First-time project setup for pai-orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with pai-orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
 ---
 
 # Setup
 
-Configure `PAI-Orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
+Configure `pai-orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
 
 ## Step 1 — Discover
 

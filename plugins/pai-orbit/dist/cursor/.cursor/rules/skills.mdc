@@ -1,9 +1,9 @@
 ---
-description: PAI-Orbit operational skills (callable procedures)
+description: pai-orbit operational skills (callable procedures)
 alwaysApply: false
 ---
 
-# PAI-Orbit Skills
+# pai-orbit Skills
 
 Cursor has no skill system. The following are procedures from the Claude Code plugin, preserved here as reference documents the agent can consult.
 
@@ -859,12 +859,12 @@ What was checked and found acceptable (briefly — gives confidence to the reade
 
 ---
 name: setup
-description: First-time project setup for PAI-Orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with PAI-Orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
+description: First-time project setup for pai-orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with pai-orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
 ---
 
 # Setup
 
-Configure `PAI-Orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
+Configure `pai-orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
 
 ## Step 1 — Discover
 
@@ -1159,7 +1159,7 @@ A workflow deserves its own skill when it is:
 - **Recurring** — comes up more than once or twice per sprint
 - **Multi-step** — more than 3 steps, each dependent on the last
 - **Error-prone** — easy to miss a step or run in the wrong order
-- **Project-specific** — not covered by a generic PAI-Orbit skill
+- **Project-specific** — not covered by a generic pai-orbit skill
 
 Common examples in software projects:
 - **Data backfill** — re-running a pipeline for historical records with verification steps

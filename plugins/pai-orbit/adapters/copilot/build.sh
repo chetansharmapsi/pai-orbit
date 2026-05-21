@@ -20,9 +20,9 @@ mkdir -p "$DIST_DIR/.github"
 
 out="$DIST_DIR/.github/copilot-instructions.md"
 {
-  echo "# PAI-Orbit — GitHub Copilot Instructions"
+  echo "# pai-orbit — GitHub Copilot Instructions"
   echo ""
-  echo "This file is generated from the PAI-Orbit plugin. PAI-Orbit defines a mode-driven developer workflow: each \"mode\" puts the assistant into a specific headspace with declared inputs and outputs. Modes do not bleed into each other."
+  echo "This file is generated from the pai-orbit plugin. pai-orbit defines a mode-driven developer workflow: each \"mode\" puts the assistant into a specific headspace with declared inputs and outputs. Modes do not bleed into each other."
   echo ""
   echo "Below are the mode definitions, followed by a skills appendix."
   echo ""
@@ -59,13 +59,13 @@ out="$DIST_DIR/.github/copilot-instructions.md"
 } > "$out"
 
 cat > "$DIST_DIR/README.md" <<'EOF'
-# PAI-Orbit — GitHub Copilot adapter
+# pai-orbit — GitHub Copilot adapter
 
-This is a **lossy** build of PAI-Orbit for GitHub Copilot.
+This is a **lossy** build of pai-orbit for GitHub Copilot.
 
 ## What's here
 
-- `.github/copilot-instructions.md` — a single concatenated instructions file containing all PAI-Orbit modes and a skills appendix.
+- `.github/copilot-instructions.md` — a single concatenated instructions file containing all pai-orbit modes and a skills appendix.
 
 ## What's lost vs the Claude Code plugin
 

@@ -2,12 +2,12 @@
 docs/epics/multi-repo-docs/
 
 ## Context
-PAI-Orbit currently assumes a single-repo project with docs at `./docs`. In microservices projects, cross-cutting documentation (system-wide ADRs, epics spanning services, shared domain knowledge) has no natural home. This feature adds an optional `system_docs_repo` pointer to `pai-orbit-config.md` so PAI-Orbit knows where system-level docs live — enabling commands to read from both locations.
+pai-orbit currently assumes a single-repo project with docs at `./docs`. In microservices projects, cross-cutting documentation (system-wide ADRs, epics spanning services, shared domain knowledge) has no natural home. This feature adds an optional `system_docs_repo` pointer to `pai-orbit-config.md` so pai-orbit knows where system-level docs live — enabling commands to read from both locations.
 
 This feature covers schema and setup only. Command-level consumption of `system_docs_repo` is a follow-on feature.
 
 ## User stories / use cases
-- As a developer setting up PAI-Orbit in a microservices project, I want `/setup` to ask whether the project is multi-repo and write the pointer automatically, so I don't have to hand-edit the config.
+- As a developer setting up pai-orbit in a microservices project, I want `/setup` to ask whether the project is multi-repo and write the pointer automatically, so I don't have to hand-edit the config.
 - As a team member, I want `pai-orbit-config.md` to have a documented `## Docs` section, so the system repo location is discoverable and version-controlled.
 
 ## Functional requirements

@@ -6,15 +6,15 @@
 - A software project with at least one service (the project doesn't need to be new)
 - Git initialised in your project directory
 
-## Install PAI-Orbit
+## Install pai-orbit
 
 ### Claude Code (recommended)
 
-PAI-Orbit ships as a Claude Code marketplace hosted on GitHub. Install in two commands — no clone required:
+pai-orbit ships as a Claude Code marketplace hosted on GitHub. Install in two commands — no clone required:
 
 ```bash
 /plugin marketplace add the-psi/pai-orbit
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@pai-orbit
 /reload-plugins
 ```
 
@@ -22,12 +22,12 @@ That's the full install. Claude Code fetches the repo, reads `.claude-plugin/mar
 
 ### Developing against a local checkout
 
-If you're hacking on PAI-Orbit itself, clone and add the local path as a marketplace:
+If you're hacking on pai-orbit itself, clone and add the local path as a marketplace:
 
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@pai-orbit
 ```
 
 After editing anything under `plugins/pai-orbit/core/`, rebuild with:
