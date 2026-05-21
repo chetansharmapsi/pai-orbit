@@ -1,4 +1,4 @@
-# PAI-Orbit
+# pai-orbit
 
 A structured developer methodology harness for Claude Code that enforces disciplined working modes, prevents context loss, and produces local-first documentation at every stage of development.
 
@@ -8,15 +8,15 @@ A structured developer methodology harness for Claude Code that enforces discipl
 
 ## What This Is
 
-PAI-Orbit is a Claude Code plugin — a collection of slash commands, skills, agents, hooks, and templates. It is not a library or a build tool. It imposes a **mode-driven workflow** where each command puts Claude into a specific headspace with defined inputs, outputs, and destination files.
+pai-orbit is a Claude Code plugin — a collection of slash commands, skills, agents, hooks, and templates. It is not a library or a build tool. It imposes a **mode-driven workflow** where each command puts Claude into a specific headspace with defined inputs, outputs, and destination files.
 
-The core problem it solves: knowledge lives only in chat conversations and disappears. PAI-Orbit forces every meaningful output into versioned markdown files in the repo.
+The core problem it solves: knowledge lives only in chat conversations and disappears. pai-orbit forces every meaningful output into versioned markdown files in the repo.
 
 ---
 
 ## Directory Structure
 
-This repo is a **Claude Code marketplace**. The PAI-Orbit plugin lives under `plugins/pai-orbit/` with a tool-agnostic `core/` and per-tool `adapters/` that compile to `dist/`.
+This repo is a **Claude Code marketplace**. The pai-orbit plugin lives under `plugins/pai-orbit/` with a tool-agnostic `core/` and per-tool `adapters/` that compile to `dist/`.
 
 ```
 pai-orbit/                          # repo = marketplace
@@ -148,7 +148,7 @@ End users install directly from GitHub — no clone required:
 
 ```bash
 /plugin marketplace add the-psi/pai-orbit
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 For local development against a checkout:
@@ -156,7 +156,7 @@ For local development against a checkout:
 ```bash
 git clone https://github.com/the-psi/pai-orbit
 /plugin marketplace add /absolute/path/to/pai-orbit
-/plugin install PAI-Orbit@pai-orbit
+/plugin install pai-orbit@the-psi
 ```
 
 Marketplace.json points at `plugins/pai-orbit/dist/claude-code/`, which is the committed build output. To rebuild it after editing `core/`, run `bash plugins/pai-orbit/build.sh`.

@@ -5,7 +5,7 @@
 **Last Updated:** 2026-05-18
 
 ## Summary
-Enable PAI-Orbit to manage documentation across service repos and a central system repo, supporting microservices projects with cross-cutting concerns.
+Enable pai-orbit to manage documentation across service repos and a central system repo, supporting microservices projects with cross-cutting concerns.
 
 ## Requirements
 1. `pai-orbit-config.md` template gains a `## Docs` section with `local_docs_root` and optional `system_docs_repo` / `system_docs_path`
@@ -15,7 +15,7 @@ Enable PAI-Orbit to manage documentation across service repos and a central syst
 5. `process-and-practices.md` documents the convention for what belongs in service repos vs the system repo
 
 ## User Stories
-- As a developer in a microservices project, I want PAI-Orbit to know where system-level docs live, so that `/plan` and `/domain` sessions have the full picture without manual path hunting.
+- As a developer in a microservices project, I want pai-orbit to know where system-level docs live, so that `/plan` and `/domain` sessions have the full picture without manual path hunting.
 - As a team lead, I want cross-cutting ADRs and epics to have a designated home, so that they don't get lost in an arbitrary service repo.
 
 ## Features

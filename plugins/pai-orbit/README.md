@@ -1,6 +1,6 @@
-# PAI-Orbit (plugin)
+# pai-orbit (plugin)
 
-This directory is the PAI-Orbit plugin source. It is structured as a tool-agnostic `core/` plus per-tool `adapters/` that compile to `dist/`.
+This directory is the pai-orbit plugin source. It is structured as a tool-agnostic `core/` plus per-tool `adapters/` that compile to `dist/`.
 
 ```
 plugins/pai-orbit/

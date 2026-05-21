@@ -9,7 +9,7 @@
 
 ## Problem
 
-PAI-Orbit's `pai-orbit-config.md` has a `## Docs` section structured around a single docs home (local, dedicated-repo, Confluence, or Notion). In multi-repo microservices projects, a project needs *both* local service docs and a pointer to a system-level docs repo. There is no current mechanism to express this.
+pai-orbit's `pai-orbit-config.md` has a `## Docs` section structured around a single docs home (local, dedicated-repo, Confluence, or Notion). In multi-repo microservices projects, a project needs *both* local service docs and a pointer to a system-level docs repo. There is no current mechanism to express this.
 
 ---
 

@@ -40,11 +40,11 @@ done
 skills_out="$DIST_DIR/.cursor/rules/skills.mdc"
 {
   echo "---"
-  echo "description: PAI-Orbit operational skills (callable procedures)"
+  echo "description: pai-orbit operational skills (callable procedures)"
   echo "alwaysApply: false"
   echo "---"
   echo ""
-  echo "# PAI-Orbit Skills"
+  echo "# pai-orbit Skills"
   echo ""
   echo "Cursor has no skill system. The following are procedures from the Claude Code plugin, preserved here as reference documents the agent can consult."
   echo ""
@@ -63,13 +63,13 @@ skills_out="$DIST_DIR/.cursor/rules/skills.mdc"
 cp -R "$CORE_DIR/templates" "$DIST_DIR/templates"
 
 cat > "$DIST_DIR/README.md" <<'EOF'
-# PAI-Orbit — Cursor adapter
+# pai-orbit — Cursor adapter
 
-This is a **lossy** build of PAI-Orbit for Cursor.
+This is a **lossy** build of pai-orbit for Cursor.
 
 ## What's here
 
-- `.cursor/rules/*.mdc` — one rule file per PAI-Orbit mode (build, design, arch, etc.). Set `alwaysApply: false` so the agent picks them up by relevance, not unconditionally.
+- `.cursor/rules/*.mdc` — one rule file per pai-orbit mode (build, design, arch, etc.). Set `alwaysApply: false` so the agent picks them up by relevance, not unconditionally.
 - `.cursor/rules/skills.mdc` — concatenated skills reference (Cursor has no skill system).
 - `templates/` — project scaffolding templates, copied verbatim.
 

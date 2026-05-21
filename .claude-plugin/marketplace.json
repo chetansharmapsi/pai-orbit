@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "pai-orbit",
+  "name": "the-psi",
   "description": "Pratham Software (PSI) plugin marketplace",
   "owner": {
     "name": "Pratham Software (PSI)",
@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "PAI-Orbit",
+      "name": "pai-orbit",
       "description": "Structured developer methodology harness — working modes, team practices, and project workflow for any software team",
       "author": {
         "name": "Pratham Sofware (PSI)"

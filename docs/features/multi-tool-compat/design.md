@@ -8,9 +8,9 @@
 
 ## Problem
 
-PAI-Orbit is currently a Claude Code plugin. Its value — mode discipline, context preservation, structured SDLC workflow — is locked to users of Claude Code. Teams using Cursor or Codex CLI get none of it.
+pai-orbit is currently a Claude Code plugin. Its value — mode discipline, context preservation, structured SDLC workflow — is locked to users of Claude Code. Teams using Cursor or Codex CLI get none of it.
 
-The goal is not to port Claude Code primitives to other tools. The goal is to evolve PAI-Orbit into a **provider-agnostic agent runtime** where Claude, Cursor, and Codex are interchangeable execution engines, and PAI-Orbit is the SDLC intelligence layer that runs on top of all of them.
+The goal is not to port Claude Code primitives to other tools. The goal is to evolve pai-orbit into a **provider-agnostic agent runtime** where Claude, Cursor, and Codex are interchangeable execution engines, and pai-orbit is the SDLC intelligence layer that runs on top of all of them.
 
 ---
 
@@ -31,7 +31,7 @@ skills/*/SKILL.md                     read directly by Claude Code via .claude-p
 
 **Future (Option B):** generator also produces `.claude-plugin/plugin.json` and any Claude-specific wrappers, making all three tools symmetric. Triggered when adding a 4th tool makes the symmetry worth the migration cost.
 
-The runtime layer is **PAI-Orbit's IP**. The adapters are thin generators that compile runtime definitions into each tool's native format.
+The runtime layer is **pai-orbit's IP**. The adapters are thin generators that compile runtime definitions into each tool's native format.
 
 ---
 
@@ -132,7 +132,7 @@ The current `.claude-plugin/` structure remains as-is. The Claude adapter reads 
 
 **Structure:**
 ```markdown
-# PAI-Orbit — Agent Instructions
+# pai-orbit — Agent Instructions
 
 ## Modes
 <!-- One section per command, condensed -->
@@ -221,4 +221,4 @@ This design does not include:
 - OpenTelemetry / agent traces — future
 - Enterprise integrations (Azure DevOps, SonarQube) — future
 
-The current scope is: **generate the right files so PAI-Orbit's mode discipline works in Claude Code, Cursor, and Codex CLI from a single source of truth.**
+The current scope is: **generate the right files so pai-orbit's mode discipline works in Claude Code, Cursor, and Codex CLI from a single source of truth.**

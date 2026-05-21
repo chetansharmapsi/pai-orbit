@@ -1,11 +1,11 @@
 ---
 name: setup
-description: First-time project setup for PAI-Orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with PAI-Orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
+description: First-time project setup for pai-orbit — interrogates repo structure and tech stack, asks short questions about task management, branching, deployment, docs, and team, then generates .claude/pai-orbit-config.md, .claude/team.md, a CLAUDE.md stub, stack-specific agents, and a docs/ scaffold. TRIGGER when starting a new project with pai-orbit, when the stack changes significantly, or when the user asks to configure or reconfigure the harness. SKIP if config files already exist and are current — offer to update specific sections instead.
 ---
 
 # Setup
 
-Configure `PAI-Orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
+Configure `pai-orbit` for this project. Run once when starting, re-run when the stack or team changes significantly.
 
 ## Step 1 — Discover
 
@@ -40,19 +40,41 @@ Once the user confirms the task-management platform, query the live board for it
 
 ### GitLab
 
+First, query the project's boards:
+
 ```bash
 # Replace <namespace/project> with the project path from the board URL
+glab api /projects/<encoded-namespace%2Fproject>/boards \
+  | jq -r '.[] | "\(.id): \(.name)"'
+```
+
+**If boards exist**, present the list and ask:
+
+> "Which board(s) define your team's workflow? You can select one or more (e.g. `1` or `1,3`). If you select multiple, their lists will be merged in the order you list them."
+
+For each selected board, fetch its lists (each list maps directly to a column label):
+
+```bash
+glab api /projects/<encoded-namespace%2Fproject>/boards/<board_id>/lists \
+  | jq -r '.[] | "\(.position): \(.label.name) (color: \(.label.color))"'
+```
+
+The lists are already ordered by `position`. Present the merged, ordered column→label table to the user and ask them to confirm or reorder before writing config. Do not ask the user to type label names — derive them directly from the board lists.
+
+**If no boards exist** (empty array), fall back to querying all labels:
+
+```bash
 glab api /projects/<encoded-namespace%2Fproject>/labels --paginate \
   | jq -r '.[] | "\(.name) (color: \(.color))"'
 ```
 
 Present the full label list — **include every label, not just scoped `workflow::*` ones**. Standalone labels like `To Do`, `Design`, and `Blocked` are valid column markers and must be captured.
 
-Ask:
+Then ask:
 
-> "Which of these labels represent board columns? List them in the order they appear on the board (left → right), separated by commas. Include both scoped (e.g. `workflow::In Progress`) and standalone (e.g. `To Do`) labels."
+> "No boards found. Which of these labels represent board columns? List them in the order they appear on the board (left → right), separated by commas. Include both scoped (e.g. `workflow::In Progress`) and standalone (e.g. `To Do`) labels."
 
-After the user confirms the ordered list, re-query to verify each label exists:
+After the user confirms the ordered list, verify each label exists:
 
 ```bash
 for label in "<label-1>" "<label-2>" ...; do

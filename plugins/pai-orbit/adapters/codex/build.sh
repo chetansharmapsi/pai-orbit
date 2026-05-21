@@ -20,9 +20,9 @@ mkdir -p "$DIST_DIR"
 
 out="$DIST_DIR/AGENTS.md"
 {
-  echo "# PAI-Orbit — Codex CLI Instructions"
+  echo "# pai-orbit — Codex CLI Instructions"
   echo ""
-  echo "This file is generated from the PAI-Orbit plugin. PAI-Orbit defines a mode-driven developer workflow: each \"mode\" puts the assistant into a specific headspace with declared inputs and outputs. Modes do not bleed into each other."
+  echo "This file is generated from the pai-orbit plugin. pai-orbit defines a mode-driven developer workflow: each \"mode\" puts the assistant into a specific headspace with declared inputs and outputs. Modes do not bleed into each other."
   echo ""
   echo "Below are the mode definitions, followed by a skills appendix."
   echo ""
@@ -57,13 +57,13 @@ out="$DIST_DIR/AGENTS.md"
 } > "$out"
 
 cat > "$DIST_DIR/README.md" <<'EOF'
-# PAI-Orbit — OpenAI Codex adapter (EXPERIMENTAL)
+# pai-orbit — OpenAI Codex adapter (EXPERIMENTAL)
 
-This is an **experimental, lossy** build of PAI-Orbit for the OpenAI Codex CLI.
+This is an **experimental, lossy** build of pai-orbit for the OpenAI Codex CLI.
 
 ## What's here
 
-- `AGENTS.md` — a single concatenated instructions file (Codex CLI's project-instruction convention) containing all PAI-Orbit modes and a skills appendix.
+- `AGENTS.md` — a single concatenated instructions file (Codex CLI's project-instruction convention) containing all pai-orbit modes and a skills appendix.
 
 ## Status
 

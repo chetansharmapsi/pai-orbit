@@ -23,7 +23,7 @@ A workflow deserves its own skill when it is:
 - **Recurring** — comes up more than once or twice per sprint
 - **Multi-step** — more than 3 steps, each dependent on the last
 - **Error-prone** — easy to miss a step or run in the wrong order
-- **Project-specific** — not covered by a generic PAI-Orbit skill
+- **Project-specific** — not covered by a generic pai-orbit skill
 
 Common examples in software projects:
 - **Data backfill** — re-running a pipeline for historical records with verification steps
