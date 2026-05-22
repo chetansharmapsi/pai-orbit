@@ -16,11 +16,14 @@ Backlog
 /domain          → domain knowledge — produces docs/domain/
 /ux              → user flow and layout design — produces docs/features/*/ux.md
 
-Sprint
+Sprint — recommended order for a new feature
 /groom           → feature requirements — produces docs/features/*/requirements.md; readiness gate blocks /design until functional gaps are closed
+/test (write)    → draft test cases from requirements before any code is written — produces docs/features/*/test-plan.md
 /design          → technical trade-offs — produces docs/decisions/ and docs/features/*/design.md
 /build           → implementation — reads docs and constraints, checks task board, ships
-/test            → test planning and QA pass — produces docs/features/*/test-plan.md
+/test (run)      → execute test plan; log failures to docs/wip/
+/build           → fix logged bugs; repeat test → build until clean
+/test (verify)   → final verification pass; confirm all acceptance criteria are met
 /review          → code review — checks diff against constraints, CLAUDE.md, ADRs, requirements
 
 Release
@@ -28,6 +31,13 @@ Release
 
 Production fast-path
 /incident        → triage → BUILD → REVIEW → DEPLOY → post-mortem
+
+Hand-off / issue response
+check issue      → read response or reviewer feedback
+/design          → revise approach if needed — updates design.md or creates a new ADR
+/build           → implement the change
+/test            → run relevant test cases; log any failures
+/deploy          → ship once the test pass is clean
 
 Workflow skills
 /git             → commit, branch, PR — reads project branching model
@@ -56,12 +66,21 @@ flowchart TD
         plan["/plan\nPrioritisation"]
     end
 
-    subgraph SPRINT["Sprint"]
+    subgraph FEATURE["New Feature"]
         groom["/groom\nRequirements"]
+        testwrite["/test (write)\nDraft test cases"]
         design["/design\nTechnical design"]
         build["/build\nImplementation"]
-        test["/test\nQA"]
+        testrun["/test (run)\nRun & log bugs"]
+        testverify["/test (verify)\nFinal verification"]
         review["/review\nCode review"]
+    end
+
+    subgraph HANDOFF["Hand-off / Issue Response"]
+        issue["Check issue response"]
+        design2["/design\nRevise approach"]
+        build2["/build\nImplement change"]
+        test2["/test\nRun test cases"]
     end
 
     subgraph RELEASE["Release"]
@@ -72,12 +91,20 @@ flowchart TD
 
     arch & domain & ux --> groom
     plan -.->|sequence| groom
-    groom --> design
+    groom --> testwrite
+    testwrite --> design
     design --> build
-    build --> test
-    test -- fail --> build
-    test -- pass --> review
+    build --> testrun
+    testrun -- bug found --> build
+    testrun -- clean --> testverify
+    testverify --> review
     review --> deploy
+
+    issue --> design2
+    design2 --> build2
+    build2 --> test2
+    test2 --> deploy
+
     incident --> build
     incident --> deploy
 ```
