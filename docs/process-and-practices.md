@@ -15,21 +15,31 @@ pai-orbit imposes light discipline: **each slash command puts Claude into a dist
 ## The full workflow
 
 ```
-BACKLOG                          SPRINT                                    RELEASE
-┌──────────────┐    ┌─────────────────────────────────────────┐    ┌──────────┐
-│ /domain      │    │ /groom → /design → /build → /test ─────────→ /review │    │ /deploy  │
-│ /ux          │ →  │                               └─ fail → /build        │ →  │          │
-│ /plan        │    │                                                        │    │          │
-│ /arch        │    │                                                        │    │          │
-└──────────────┘    └─────────────────────────────────────────────────────┘    └──────────┘
+NEW FEATURE                                                         HAND OFF / RESPONSE
 
-Production fast-path:  /incident ──────────────────→ /build → /review → /deploy
+  /groom                                                              check issue response
+     │                                                                      │
+  /test  ← write test cases                                              /design
+     │                                                                      │
+  /design                                                               /build
+     │                                                                      │
+  /build ◄─────────────────────────────────┐                           /test
+     │                                     │                               │
+  /test  ← run test cases & log bugs       │                           /deploy
+     │                                     │
+     ├─ bug found ──────────────── /build  ┘
+     │
+  /test  ← verify
+     │
+  /deploy  (confirm targets + rollback before shipping)
 ```
 
 **Workflow skills** (used across all phases):
 `/git` · `/board` · `/analysis` · `/data-model` · `/security-review` · `/simplify`
 
 `/arch validate` is used after build sessions that touch service structure.
+
+Production fast-path:  `/incident` ──→ `/build` → `/review` → `/deploy`
 
 ---
 
@@ -71,22 +81,43 @@ The discipline: **switch modes when the headspace or output destination changes.
 
 ## How a session should flow
 
-### Starting a feature (full flow)
+### Starting a feature (recommended flow)
 
-1. `/domain` — capture any expert knowledge needed to understand the problem space; output to `docs/domain/`
-2. `/ux` — define the user flow and interface behaviour; output to `docs/features/<feature>/ux.md`
-3. `/groom` — formalise requirements and acceptance criteria; output to `docs/features/<feature>/requirements.md`
-4. `/design` — design the technical solution; output to `docs/features/<feature>/design.md` and/or `docs/decisions/`
-5. `/board` — create the task board item if it doesn't exist yet
-6. `/build` — implement; reference the docs from steps 1–4
-7. `/test` — write and run the test plan; output to `docs/features/<feature>/test-plan.md`
-   - If tests fail: document the failure, switch back to `/build` with context, re-test after fix
-8. `/security-review` — if the change touches auth, input handling, or permissions
+**Phase 1 — Define**
+
+1. `/groom` — formalise requirements and acceptance criteria; output to `docs/features/<feature>/requirements.md`
+2. `/test` (write) — draft test cases from the requirements before any code is written; output to `docs/features/<feature>/test-plan.md`
+3. `/design` — design the technical solution; output to `docs/features/<feature>/design.md` and/or `docs/decisions/`
+
+Writing test cases before design surfaces ambiguities in the requirements while they are still cheap to fix.
+
+**Phase 2 — Build**
+
+4. `/build` — implement against the design and test plan
+5. `/test` (run) — execute the test plan; log each failure with a failure doc in `docs/wip/`
+6. `/build` — fix logged bugs (repeat 5 → 6 until the run is clean)
+7. `/test` (verify) — final verification pass; confirm all acceptance criteria are met
+
+**Phase 3 — Ship**
+
+8. `/security-review` — if the change touches auth, input handling, permissions, or secrets
 9. `/review` — architect or tech lead code review before merge
 10. `/git` — commit and push
-11. `/deploy` — ship to production
+11. `/deploy` — confirm targets and rollback plan; ship to production
 
-Not every feature needs every step. A minor bug fix may go straight to `/build → /git → /deploy`. A greenfield feature needs the full flow.
+Not every feature needs every step. A minor bug fix may go straight to `/build → /git → /deploy`. A greenfield feature should follow the full flow.
+
+---
+
+### Responding to a hand-off or issue comment
+
+When an issue receives a response, a reviewer requests changes, or an external dependency unblocks:
+
+1. Read the response on the issue
+2. `/design` — if the response changes the approach; output revised `design.md` or a new ADR
+3. `/build` — implement the change
+4. `/test` — run the relevant test cases; log any failures
+5. `/deploy` — ship once the test pass is clean
 
 ### Starting a build session
 
