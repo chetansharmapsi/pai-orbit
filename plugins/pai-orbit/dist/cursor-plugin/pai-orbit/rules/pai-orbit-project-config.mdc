@@ -1,0 +1,6 @@
+---
+description: Read per-project pai-orbit config for board, git, deploy, and docs settings
+alwaysApply: true
+---
+
+When working in a repository that contains `.claude/pai-orbit-config.md`, read it before board, deploy, git workflow, or epic work. Use it for board URLs, branching model, deployment targets, docs home, and team roster (`.claude/team.md`). Also read `CLAUDE.md` for stack and project conventions.
