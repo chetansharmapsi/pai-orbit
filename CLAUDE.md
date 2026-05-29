@@ -34,7 +34,8 @@ pai-orbit/                          # repo = marketplace
 │       │   └── templates/          # /setup scaffolds (agents, docs, ADR, CLAUDE.md template, …)
 │       ├── adapters/
 │       │   ├── claude-code/        # full fidelity
-│       │   ├── cursor/             # lossy; .cursor/rules/*.mdc
+│       │   ├── cursor-plugin/      # Cursor plugin (rules, skills, commands, agents, hooks)
+│       │   ├── cursor/             # lossy legacy; .cursor/rules/*.mdc
 │       │   ├── copilot/            # lossy; .github/copilot-instructions.md
 │       │   └── codex/              # experimental; AGENTS.md
 │       ├── dist/                   # COMMITTED build outputs (one subdir per adapter)
