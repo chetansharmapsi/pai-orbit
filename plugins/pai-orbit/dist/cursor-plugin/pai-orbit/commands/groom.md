@@ -14,11 +14,11 @@ Switch out when:
 
 ## Behaviour
 
-- Read `.claude/pai-orbit-config.md`. If a `## System Docs` section is present:
+- Read `.cursor/pai-orbit-config.md`. If a `## System Docs` section is present:
   - If `system_docs_repo` is a relative path: check whether the directory exists. If yes, add `<system_docs_repo>/<system_docs_path>` to the doc read set. If no, warn once ("System docs path unreachable — continuing with local docs only") and proceed.
   - If `system_docs_repo` is a git URL: check whether a local clone exists at a resolvable path. If yes, add it. If no, warn once and proceed.
   - Read docs from all resolved paths before starting the session.
-- Read `CLAUDE.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
+- Read `AGENTS.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
 - If `docs/architecture/system.md` exists, read it — reference service ownership to assign features to the right service and flag requirements that would cross declared boundaries
 - Lead with functional and user-facing questions before going technical
 - Flag ambiguity rather than assuming — requirements with hidden assumptions create build debt

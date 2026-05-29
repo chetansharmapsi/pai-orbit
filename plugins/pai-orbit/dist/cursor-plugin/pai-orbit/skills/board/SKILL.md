@@ -1,6 +1,6 @@
 ---
 name: board
-description: Task management — create issues, move cards, assign work, close on ship — using the project's configured board. Reads board config from .claude/pai-orbit-config.md and team roster from .claude/team.md. TRIGGER when creating a task or issue, moving a card, assigning work, closing a completed item, or asking about what's on the board. SKIP read-only board browsing (just use the browser or CLI directly).
+description: Task management — create issues, move cards, assign work, close on ship — using the project's configured board. Reads board config from .cursor/pai-orbit-config.md and team roster from .cursor/team.md. TRIGGER when creating a task or issue, moving a card, assigning work, closing a completed item, or asking about what's on the board. SKIP read-only board browsing (just use the browser or CLI directly).
 ---
 
 # Agile Board
@@ -8,17 +8,17 @@ description: Task management — create issues, move cards, assign work, close o
 Create, move, assign, and close tasks on the project's task board.
 
 Reads from:
-- `.claude/pai-orbit-config.md` → `## Agile Board` section — board type, URLs, label taxonomy, column flow
-- `.claude/team.md` — team roster for default assignees and handoffs
+- `.cursor/pai-orbit-config.md` → `## Agile Board` section — board type, URLs, label taxonomy, column flow
+- `.cursor/team.md` — team roster for default assignees and handoffs
 
 ## Procedure
 
 ### Creating an issue
 
-1. Read `.claude/pai-orbit-config.md` to determine board type and column structure
+1. Read `.cursor/pai-orbit-config.md` to determine board type and column structure
 2. Ask which board/project if there are multiple (e.g., Tech vs Ops, Engineering vs Product)
 3. Ask issue type to determine labels and starting column (per the config)
-4. Read `.claude/team.md` to propose a default assignee based on issue type and role
+4. Read `.cursor/team.md` to propose a default assignee based on issue type and role
 5. Compose:
    - **Title:** short, imperative, ≤ 72 chars — mirrors commit format
    - **Body:** what + why; link to relevant docs (`docs/features/<feature>/requirements.md`, prior issues, ADRs); for features, include sub-tasks broken down by service
@@ -47,12 +47,12 @@ When a task ships:
 
 ### Handoffs and assignments
 
-Read `.claude/team.md` for handles. Never hardcode handles in this skill — always look them up at runtime.
+Read `.cursor/team.md` for handles. Never hardcode handles in this skill — always look them up at runtime.
 If a role-based assignment is requested ("assign to the mobile lead"), look up the team member in that role.
 
 ## Board-type CLI
 
-Determined by `## Agile Board → type` in `.claude/pai-orbit-config.md`:
+Determined by `## Agile Board → type` in `.cursor/pai-orbit-config.md`:
 
 **GitHub Issues:**
 ```bash
@@ -94,7 +94,7 @@ glab issue update <issue-id> \
 glab issue close <issue-id> --repo <namespace>/<project>
 ```
 
-Column→label map is read from `## Agile Board → columns` in `.claude/pai-orbit-config.md`. If the map is absent, ask the user to supply it before moving.
+Column→label map is read from `## Agile Board → columns` in `.cursor/pai-orbit-config.md`. If the map is absent, ask the user to supply it before moving.
 
 ## Conventions (always apply)
 

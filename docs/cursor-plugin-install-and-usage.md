@@ -118,11 +118,12 @@ Use this when the plugin is ready for external users.
 
 In the target project, ensure these exist:
 
-- `.claude/pai-orbit-config.md`
-- `CLAUDE.md`
+- `.cursor/pai-orbit-config.md` — board, git, deploy, docs config
+- `.cursor/team.md` — team roster
+- `AGENTS.md` — project stack and conventions (Cursor project guide)
 - `docs/` structure (features, architecture, decisions, plans, epics)
 
-If missing, generate them via Claude `/setup` once, then use them from Cursor.
+If missing, run `/setup` in Cursor. The Cursor setup skill writes `.cursor/` config + `AGENTS.md` only — no `.claude/` or `CLAUDE.md`.
 
 ### Typical usage patterns
 
@@ -150,6 +151,6 @@ After installation, verify:
 - skills appear individually (not collapsed into one file)
 - commands are discoverable in chat (behavior may vary by Cursor version)
 - `pai-orbit-project-config` rule is present and enabled
-- agent can read `.claude/pai-orbit-config.md` when running board/deploy/git workflows
+- agent can read `.cursor/pai-orbit-config.md` when running board/deploy/git workflows
 
 If behavior is inconsistent, reload Cursor and re-check that the local plugin path points to `dist/cursor-plugin/pai-orbit`.

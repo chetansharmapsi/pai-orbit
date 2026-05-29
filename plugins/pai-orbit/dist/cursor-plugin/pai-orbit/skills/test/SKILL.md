@@ -9,7 +9,7 @@ Review features for testability and produce structured test plans.
 
 Reads from:
 - `docs/features/<feature>/requirements.md` — requirements and acceptance criteria
-- `CLAUDE.md` — stack, test frameworks, and conventions
+- `AGENTS.md` — stack, test frameworks, and conventions
 - `docs/decisions/` — architectural constraints that affect testability
 
 Writes to:

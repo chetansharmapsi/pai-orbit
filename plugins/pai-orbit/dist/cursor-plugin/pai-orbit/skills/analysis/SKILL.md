@@ -8,7 +8,7 @@ description: Change impact and dependency analysis — assess the blast radius o
 Assess the impact and dependencies of a change before building or after shipping.
 
 Reads from:
-- `CLAUDE.md` — service boundaries, key interfaces, and data model
+- `AGENTS.md` — service boundaries, key interfaces, and data model
 - Codebase — call sites, consumers, and dependencies
 - `docs/decisions/` — relevant ADRs that constrain the change
 

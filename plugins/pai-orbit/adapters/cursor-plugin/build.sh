@@ -22,6 +22,17 @@ mode_description() {
   grep -m1 -v '^[[:space:]]*$' "$file" | sed 's/^#\+ *//' | sed 's/"/\\"/g'
 }
 
+# Rewrite Claude Code project paths/names to Cursor-native paths in built artifacts.
+rewrite_cursor_paths() {
+  local file="$1"
+  [ -f "$file" ] || return 0
+  sed -i \
+    -e 's|\.claude/pai-orbit-config\.md|.cursor/pai-orbit-config.md|g' \
+    -e 's|\.claude/team\.md|.cursor/team.md|g' \
+    -e 's|CLAUDE\.md|AGENTS.md|g' \
+    "$file"
+}
+
 rm -rf "$DIST_ROOT"
 mkdir -p "$DIST_DIR/.cursor-plugin" \
          "$DIST_DIR/rules" \
@@ -74,16 +85,6 @@ for mode_file in "$CORE_DIR"/modes/*.md; do
   } > "$DIST_DIR/commands/${mode_name}.md"
 done
 
-# Always-on rule: point agents at per-project config
-cat > "$DIST_DIR/rules/pai-orbit-project-config.mdc" <<'EOF'
----
-description: Read per-project pai-orbit config for board, git, deploy, and docs settings
-alwaysApply: true
----
-
-When working in a repository that contains `.claude/pai-orbit-config.md`, read it before board, deploy, git workflow, or epic work. Use it for board URLs, branching model, deployment targets, docs home, and team roster (`.claude/team.md`). Also read `CLAUDE.md` for stack and project conventions.
-EOF
-
 # Skills — one directory per skill (native Cursor discovery)
 cp -R "$CORE_DIR/skills/." "$DIST_DIR/skills/"
 
@@ -92,6 +93,8 @@ cp -R "$CORE_DIR/agents/." "$DIST_DIR/agents/"
 
 # Templates (for /setup-equivalent manual scaffolding)
 cp -R "$CORE_DIR/templates" "$DIST_DIR/templates"
+cp "$ADAPTER_DIR/AGENTS.md.template" "$DIST_DIR/templates/AGENTS.md.template"
+rm -f "$DIST_DIR/templates/CLAUDE.md.template"
 
 # Hook scripts (adapted from core; Claude-specific stdin format — see README parity notes)
 for hook_script in "$CORE_DIR"/hooks/*.sh; do
@@ -123,6 +126,26 @@ cat > "$DIST_DIR/hooks/hooks.json" <<'EOF'
   }
 }
 EOF
+
+# Rewrite .claude/ config paths → .cursor/ and CLAUDE.md → AGENTS.md in built artifacts
+while IFS= read -r -d '' f; do
+  rewrite_cursor_paths "$f"
+done < <(find "$DIST_DIR" \( -name '*.md' -o -name '*.mdc' -o -name '*.template' \) ! -path '*/skills/setup/SKILL.md' -print0)
+
+# Always-on rule: written after rewrite (contains legacy Claude paths intentionally)
+cat > "$DIST_DIR/rules/pai-orbit-project-config.mdc" <<'EOF'
+---
+description: Read per-project pai-orbit config for board, git, deploy, and docs settings
+alwaysApply: true
+---
+
+When working in a repository that contains `.cursor/pai-orbit-config.md`, read it before board, deploy, git workflow, or epic work. Use it for board URLs, branching model, deployment targets, docs home, and team roster (`.cursor/team.md`). Also read `AGENTS.md` for stack and project conventions.
+
+If only legacy `.claude/pai-orbit-config.md` or `CLAUDE.md` exist (pre-migration repo), read those instead — but prefer `.cursor/` and `AGENTS.md` when present.
+EOF
+
+# Cursor-specific setup skill — copied after rewrite to preserve Claude/legacy references in migration text
+cp "$ADAPTER_DIR/setup-SKILL.md" "$DIST_DIR/skills/setup/SKILL.md"
 
 cat > "$DIST_ROOT/README.md" <<'EOF'
 # pai-orbit — Cursor plugin adapter
@@ -171,7 +194,7 @@ If you cannot use the plugin format, the lossy bundle remains at `dist/cursor/` 
 
 | Feature | Claude Code | Cursor plugin |
 |---------|-------------|---------------|
-| `/setup` interactive board query | Full | Partial — use setup skill + templates manually |
+| `/setup` interactive board query | Full | Full — writes `.cursor/pai-orbit-config.md`, `.cursor/team.md`, and `AGENTS.md` (no `.claude/` or `CLAUDE.md`) |
 | Live `/board` label resolution | Full | Depends on agent + CLI |
 | Hook blocking (bash-guard) | PreToolUse | `beforeShellExecution` — script expects Claude stdin JSON; test per Cursor version |
 | Subagent parallel tasks | Yes | Cursor subagents — test per version |

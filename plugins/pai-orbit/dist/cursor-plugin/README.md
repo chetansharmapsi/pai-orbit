@@ -44,7 +44,7 @@ If you cannot use the plugin format, the lossy bundle remains at `dist/cursor/` 
 
 | Feature | Claude Code | Cursor plugin |
 |---------|-------------|---------------|
-| `/setup` interactive board query | Full | Partial — use setup skill + templates manually |
+| `/setup` interactive board query | Full | Full — writes `.cursor/pai-orbit-config.md`, `.cursor/team.md`, and `AGENTS.md` (no `.claude/` or `CLAUDE.md`) |
 | Live `/board` label resolution | Full | Depends on agent + CLI |
 | Hook blocking (bash-guard) | PreToolUse | `beforeShellExecution` — script expects Claude stdin JSON; test per Cursor version |
 | Subagent parallel tasks | Yes | Cursor subagents — test per version |

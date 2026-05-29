@@ -9,7 +9,7 @@ Targeted security pass on changed code before it merges.
 
 Reads from:
 - Branch diff or specified files
-- `CLAUDE.md` — auth model, system boundaries, and known security constraints
+- `AGENTS.md` — auth model, system boundaries, and known security constraints
 - `docs/architecture/system.md` — trust boundaries and attack surface (if it exists)
 - `docs/architecture/constraints.md` — declared constraints around auth, input, and external APIs (if it exists)
 - `docs/decisions/` — security-relevant ADRs

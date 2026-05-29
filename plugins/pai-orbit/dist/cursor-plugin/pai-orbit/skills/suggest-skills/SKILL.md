@@ -11,7 +11,7 @@ Analyse working patterns and suggest new operational skills tailored to this pro
 
 Read the following to identify recurring patterns:
 
-1. **CLAUDE.md and docs/** — what workflows are described but not yet skills?
+1. **AGENTS.md and docs/** — what workflows are described but not yet skills?
 2. **Git log** — what commit types recur? (`data:`, `ops:`, `chore:` commits often indicate recurring procedures)
 3. **Existing `.claude/skills/`** — what is already covered? Don't suggest duplicates
 4. **`docs/wip/` session captures** — what multi-step procedures came up repeatedly?

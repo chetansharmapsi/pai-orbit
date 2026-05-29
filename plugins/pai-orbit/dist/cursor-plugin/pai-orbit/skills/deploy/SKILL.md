@@ -1,13 +1,13 @@
 ---
 name: deploy
-description: Guided deployment with preflight checks and post-deploy verification. Reads deployment targets and commands from .claude/pai-orbit-config.md. TRIGGER when the user asks to deploy, ship, or release any service. SKIP read-only service inspection (describe, status, logs) and local dev server starts.
+description: Guided deployment with preflight checks and post-deploy verification. Reads deployment targets and commands from .cursor/pai-orbit-config.md. TRIGGER when the user asks to deploy, ship, or release any service. SKIP read-only service inspection (describe, status, logs) and local dev server starts.
 ---
 
 # Deploy
 
 Deploy project services with preflight checks and post-deploy verification.
 
-Reads deployment targets and commands from `.claude/pai-orbit-config.md` → `## Deploy` section.
+Reads deployment targets and commands from `.cursor/pai-orbit-config.md` → `## Deploy` section.
 
 ## Procedure
 
@@ -22,7 +22,7 @@ Before deploying anything:
 
 ### 2. Build and deploy
 
-Run the deployment commands from `.claude/pai-orbit-config.md` in the configured order.
+Run the deployment commands from `.cursor/pai-orbit-config.md` in the configured order.
 
 For multi-service projects:
 - Show which services are being deployed and ask for confirmation if deploying all at once

@@ -10,13 +10,13 @@ Documentation agent for this project.
 
 ## Setup
 
-1. Read `CLAUDE.md` for the project's docs location and structure
-2. Read `.claude/pai-orbit-config.md` → `## Docs` section for docs home configuration
+1. Read `AGENTS.md` for the project's docs location and structure
+2. Read `.cursor/pai-orbit-config.md` → `## Docs` section for docs home configuration
 3. Work only inside the configured docs path — never modify source code
 
 ## Docs home
 
-The docs home is configured in `.claude/pai-orbit-config.md`. Two cases:
+The docs home is configured in `.cursor/pai-orbit-config.md`. Two cases:
 
 **Local (`docs/` in repo or dedicated docs repo):**
 - Use Read/Write/Edit tools directly
