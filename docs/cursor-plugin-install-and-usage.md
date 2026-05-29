@@ -6,11 +6,68 @@ This guide explains the three supported ways to install pai-orbit in Cursor, how
 
 Use only one of these methods at a time:
 
-1. Local plugin install (no publish) - best for development and testing
-2. Team Marketplace (private org distribution)
-3. Public Cursor Marketplace (public distribution)
+1. **Git repo URL** (root marketplace) — recommended for teams using `gitUrl` in project settings
+2. Local plugin install (no publish) — best for active plugin development
+3. Team Marketplace (private org distribution)
+4. Public Cursor Marketplace (public distribution)
 
 Do not combine these with the legacy `dist/cursor/.cursor/rules` copy method in the same project, or you may get duplicate/conflicting guidance.
+
+---
+
+## Method 0: Install from GitHub repo root (recommended)
+
+Use this when adding pai-orbit via a **repository URL** in Cursor (project `.cursor/settings.json` or marketplace import).
+
+### Why the root manifest matters
+
+This repo ships two marketplace manifests:
+
+| File | Tool | Plugin source |
+|------|------|----------------|
+| `.cursor-plugin/marketplace.json` | **Cursor** | `plugins/pai-orbit/dist/cursor-plugin/pai-orbit/` (`.cursor/`, `AGENTS.md`) |
+| `.claude-plugin/marketplace.json` | **Claude Code** | `plugins/pai-orbit/dist/claude-code/` (`.claude/`, `CLAUDE.md`) |
+
+If you install from the repo root **without** `.cursor-plugin/marketplace.json`, Cursor may load the Claude Code bundle and `/setup` will ask for `.claude/team.md` and `CLAUDE.md`. The root Cursor manifest fixes that.
+
+### Install steps
+
+1. Ensure `plugins/pai-orbit/dist/cursor-plugin/pai-orbit/` exists on the branch you install (committed build output on `main`).
+2. In Cursor, add or update the plugin source to the **repository root**, for example:
+   - `https://github.com/the-psi/pai-orbit` (or your fork), branch `main`
+3. **Reinstall** if you previously installed the same repo (old cache may still point at `dist/claude-code/`).
+4. Run **Developer: Reload Window**.
+
+### Project-level settings example
+
+```json
+{
+  "plugins": {
+    "the-psi/pai-orbit": {
+      "enabled": true,
+      "gitUrl": "https://github.com/the-psi/pai-orbit",
+      "gitRef": "main"
+    }
+  }
+}
+```
+
+Use your fork URL if applicable (`https://github.com/<you>/pai-orbit`).
+
+### Verify Cursor bundle (not Claude Code)
+
+After reinstall, the loaded plugin’s `skills/setup/SKILL.md` should mention:
+
+- `.cursor/pai-orbit-config.md`, `.cursor/team.md`, `AGENTS.md`
+- **Do not create** `.claude/` or `CLAUDE.md`
+
+If it still mentions `.claude/team.md` as the primary output path, remove the plugin, clear cache if needed, reinstall from the updated repo, and reload.
+
+### Deep path (only if root install is unavailable)
+
+If your Cursor version cannot read the root marketplace manifest, install the plugin directory directly:
+
+`https://github.com/the-psi/pai-orbit/tree/main/plugins/pai-orbit/dist/cursor-plugin/pai-orbit`
 
 ---
 
