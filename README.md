@@ -141,9 +141,10 @@ Install as a **user-level or team marketplace** plugin (rules, skills, commands,
 
 | Path | How to install |
 |------|----------------|
-| [`plugins/pai-orbit/dist/cursor-plugin/pai-orbit/`](plugins/pai-orbit/dist/cursor-plugin/pai-orbit/) | Symlink or copy to `~/.cursor/plugins/local/pai-orbit`, or import repo in Team Marketplace |
+| Repo root (`.cursor-plugin/marketplace.json`) | Paste `https://github.com/the-psi/pai-orbit` in Cursor — installs `dist/cursor-plugin/pai-orbit/` |
+| [`plugins/pai-orbit/dist/cursor-plugin/pai-orbit/`](plugins/pai-orbit/dist/cursor-plugin/pai-orbit/) | Symlink or copy to `~/.cursor/plugins/local/pai-orbit` |
 
-See [`plugins/pai-orbit/dist/cursor-plugin/README.md`](plugins/pai-orbit/dist/cursor-plugin/README.md) and [`guides/PAI_ORBIT_CURSOR_PLUGIN_PLAN.md`](guides/PAI_ORBIT_CURSOR_PLUGIN_PLAN.md).
+See [`docs/cursor-plugin-install-and-usage.md`](docs/cursor-plugin-install-and-usage.md) and [`plugins/pai-orbit/dist/cursor-plugin/README.md`](plugins/pai-orbit/dist/cursor-plugin/README.md).
 
 **Do not** use the legacy copy-rules install and the plugin together — duplicate mode rules will conflict.
 

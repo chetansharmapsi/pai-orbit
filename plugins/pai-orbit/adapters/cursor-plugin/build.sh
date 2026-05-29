@@ -172,6 +172,12 @@ dist/cursor-plugin/pai-orbit/
 └── templates/
 ```
 
+## Install (GitHub repo root)
+
+The repository root includes `.cursor-plugin/marketplace.json`, which points at this directory. In Cursor, install from `https://github.com/the-psi/pai-orbit` (or your fork) on `main`, then reload. Reinstall if you previously got Claude-style `/setup` (`.claude/` paths).
+
+See `docs/cursor-plugin-install-and-usage.md` in the repo.
+
 ## Install (local development)
 
 **Windows (PowerShell):**

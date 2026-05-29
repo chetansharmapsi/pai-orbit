@@ -39,7 +39,7 @@ bash plugins/pai-orbit/build.sh
 
 ### Cursor (plugin)
 
-Full Cursor plugin at `plugins/pai-orbit/dist/cursor-plugin/pai-orbit/` — symlink to `~/.cursor/plugins/local/pai-orbit` or install via Team Marketplace. See `plugins/pai-orbit/dist/cursor-plugin/README.md`.
+Full Cursor plugin at `plugins/pai-orbit/dist/cursor-plugin/pai-orbit/` — install from the **repo root** via `.cursor-plugin/marketplace.json`, symlink to `~/.cursor/plugins/local/pai-orbit`, or use Team Marketplace. See [`docs/cursor-plugin-install-and-usage.md`](cursor-plugin-install-and-usage.md).
 
 Legacy copy-rules install (lossy): `plugins/pai-orbit/dist/cursor/` — use only if you cannot install the plugin.
 

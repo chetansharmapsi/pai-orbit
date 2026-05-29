@@ -21,7 +21,9 @@ This repo is a **Claude Code marketplace**. The pai-orbit plugin lives under `pl
 ```
 pai-orbit/                          # repo = marketplace
 ├── .claude-plugin/
-│   └── marketplace.json            # marketplace listing; points at dist/claude-code/
+│   └── marketplace.json            # Claude Code marketplace → dist/claude-code/
+├── .cursor-plugin/
+│   └── marketplace.json            # Cursor marketplace → dist/cursor-plugin/pai-orbit/
 ├── plugins/
 │   └── pai-orbit/
 │       ├── core/                   # tool-agnostic source of truth
