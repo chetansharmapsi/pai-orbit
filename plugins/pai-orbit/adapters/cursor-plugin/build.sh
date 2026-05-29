@@ -30,6 +30,7 @@ rewrite_cursor_paths() {
     -e 's|\.claude/pai-orbit-config\.md|.cursor/pai-orbit-config.md|g' \
     -e 's|\.claude/team\.md|.cursor/team.md|g' \
     -e 's|CLAUDE\.md|AGENTS.md|g' \
+    -e 's|\.claude/skills/|pai-orbit plugin skills/|g' \
     "$file"
 }
 
@@ -141,8 +142,13 @@ alwaysApply: true
 
 When working in a repository that contains `.cursor/pai-orbit-config.md`, read it before board, deploy, git workflow, or epic work. Use it for board URLs, branching model, deployment targets, docs home, and team roster (`.cursor/team.md`). Also read `AGENTS.md` for stack and project conventions.
 
-If only legacy `.claude/pai-orbit-config.md` or `CLAUDE.md` exist (pre-migration repo), read those instead — but prefer `.cursor/` and `AGENTS.md` when present.
+If only legacy `.claude/pai-orbit-config.md` or `CLAUDE.md` exist (pre-migration repo), read those as fallback — but prefer `.cursor/pai-orbit-config.md` and `AGENTS.md`. Do not warn that Claude paths are "missing" when Cursor-native paths are the expected contract.
 EOF
+
+# Append Cursor-specific /arch output contract (exact warning wording for /arch view)
+for arch_file in "$DIST_DIR/commands/arch.md" "$DIST_DIR/rules/arch.mdc"; do
+  cat "$ADAPTER_DIR/arch-cursor-append.md" >> "$arch_file"
+done
 
 # Cursor-specific setup skill — copied after rewrite to preserve Claude/legacy references in migration text
 cp "$ADAPTER_DIR/setup-SKILL.md" "$DIST_DIR/skills/setup/SKILL.md"

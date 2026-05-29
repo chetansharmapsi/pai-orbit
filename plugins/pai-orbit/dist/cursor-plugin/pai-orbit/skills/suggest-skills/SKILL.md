@@ -1,6 +1,6 @@
 ---
 name: suggest-skills
-description: Observe this project's working patterns and suggest operational skills worth adding as .claude/skills/. TRIGGER when the user asks what skills to add, wants to improve their harness, or after several sessions of work. SKIP if the project is brand new with no history.
+description: Observe this project's working patterns and suggest operational skills worth adding as pai-orbit plugin skills/. TRIGGER when the user asks what skills to add, wants to improve their harness, or after several sessions of work. SKIP if the project is brand new with no history.
 ---
 
 # Suggest Skills
@@ -13,7 +13,7 @@ Read the following to identify recurring patterns:
 
 1. **AGENTS.md and docs/** — what workflows are described but not yet skills?
 2. **Git log** — what commit types recur? (`data:`, `ops:`, `chore:` commits often indicate recurring procedures)
-3. **Existing `.claude/skills/`** — what is already covered? Don't suggest duplicates
+3. **Existing `pai-orbit plugin skills/`** — what is already covered? Don't suggest duplicates
 4. **`docs/wip/` session captures** — what multi-step procedures came up repeatedly?
 5. **`docs/ops/`** — what field or operational procedures are documented but manual?
 
@@ -50,4 +50,4 @@ Rank by value: highest-impact suggestions first.
 
 ## After presenting suggestions
 
-Ask: "Want me to scaffold any of these?" If yes, create the skill file at `.claude/skills/<name>/SKILL.md` using `templates/skills/domain-operational.template.md` as the base pattern. Fill in what can be inferred; leave clear `<!-- TODO -->` markers for what the team needs to add.
+Ask: "Want me to scaffold any of these?" If yes, create the skill file at `pai-orbit plugin skills/<name>/SKILL.md` using `templates/skills/domain-operational.template.md` as the base pattern. Fill in what can be inferred; leave clear `<!-- TODO -->` markers for what the team needs to add.
