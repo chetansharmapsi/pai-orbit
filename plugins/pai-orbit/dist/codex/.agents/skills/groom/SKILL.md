@@ -1,7 +1,10 @@
 ---
-name: "groom"
-description: "Formalize acceptance criteria. Use to convert vague feature requests into structured requirements with unambiguous acceptance criteria. Writes docs/features/<feature>/requirements.md. Explicit invocation only."
+name: groom-mode
+description: pai-orbit groom mode - a feature requirements session that runs in three gated phases — purpose, scenarios, then requirements Do not analyze requirements until phases 1 and 2 are confirmed. Output saved to `docs/features/<feature>/requirements.md`.
+inclusion: manual
 ---
+
+# pai-orbit GROOM Mode
 
 You are now in GROOM MODE.
 
@@ -10,7 +13,16 @@ This is a feature requirements session that runs in three gated phases — purpo
 Switch out when:
 - Domain or expert knowledge is needed to resolve a requirement → `/domain`
 - The feature is groomed and ready for design → `/design`
-- Priority of the feature needs deciding → `$orbit-plan`
+- Priority of the feature needs deciding → `/plan`
+
+## Entry gate — ticket number
+
+Before Phase 1 begins, resolve which board ticket this session is for:
+
+1. Check for a ticket/issue number already in context: an explicit reference in the invocation (e.g. "groom #42", "refs #42"), a number passed as an argument, or a parent epic issue already resolved for this session.
+2. If none is found, ask the user directly: "What ticket/issue number is this grooming session for?" Wait for an answer before proceeding to Phase 1.
+3. **Explicit opt-out:** if the user states this is standalone/exploratory grooming with no ticket yet, ask them to confirm that explicitly ("Confirm: proceed without a ticket number?") before continuing. Do not infer this from silence or from the absence of a number in the initial message.
+4. Once a ticket number is provided, resolve it via `/board`. Hold it as the session's parent board issue — this is the issue used in Session close steps 4 and 6 below. If resolution fails (issue not found, no board access), surface the error and ask the user to correct the number or confirm the opt-out.
 
 ## Session flow
 
@@ -68,11 +80,11 @@ Only after purpose is agreed and all scenarios are confirmed:
 
 ## Behaviour
 
-- Read `.codex/pai-orbit-config.md`. If a `## System Docs` section is present:
+- Read `.claude/pai-orbit-config.md`. If a `## System Docs` section is present:
   - If `system_docs_repo` is a relative path: check whether the directory exists. If yes, add `<system_docs_repo>/<system_docs_path>` to the doc read set. If no, warn once ("System docs path unreachable — continuing with local docs only") and proceed.
   - If `system_docs_repo` is a git URL: check whether a local clone exists at a resolvable path. If yes, add it. If no, warn once and proceed.
   - Read docs from all resolved paths before starting the session.
-- Read `AGENTS.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
+- Read `CLAUDE.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
 - If `docs/architecture/system.md` exists, read it — reference service ownership to assign features to the right service and flag requirements that would cross declared boundaries
 - Flag ambiguity rather than assuming — requirements with hidden assumptions create build debt
 - Capture open questions explicitly with an owner (person or role)
@@ -99,7 +111,7 @@ Before marking a feature as groomed and ready for `/design`, run a readiness gat
 
 3. **Mark ready only when phases 1–2 pass and functional questions are closed.** Once the pre-flight audit passes and all functional gaps are resolved (answers recorded in requirements, acceptance criteria updated to match), update the status line to `Groomed — ready for /design`.
 
-4. **Post open questions to the board issue.** If there are any remaining open questions (including design questions deferred to `/design`), post a comment on the parent board issue listing them, each tagged `[open question]`. This makes them trackable without leaving the issue thread. Example comment format:
+4. **Post open questions to the board issue.** If a parent board issue was resolved at the entry gate and there are any remaining open questions (including design questions deferred to `/design`), post a comment on it listing them, each tagged `[open question]`. This makes them trackable without leaving the issue thread. If the session opted out of a ticket number, skip this step — note the open questions in the requirements file only. Example comment format:
 
    ```
    ## Open questions from grooming
@@ -118,7 +130,7 @@ Before marking a feature as groomed and ready for `/design`, run a readiness gat
 
    This is a local commit only. Do not push yet.
 
-6. **Offer to move the board issue.** Read the target "Groomed" or backlog-ready column name from `.codex/pai-orbit-config.md → ## Agile Board`. Offer: "Move issue #N to `<column name>`?" Wait for confirmation before acting via `/board`. Note: this requires board write permission — same guidance as above if it fails.
+6. **Offer to move the board issue.** If a parent board issue was resolved at the entry gate: read the target "Groomed" or backlog-ready column name from `.claude/pai-orbit-config.md → ## Agile Board`. Offer: "Move issue #N to `<column name>`?" Wait for confirmation before acting via `/board`. Note: this requires board write permission — same guidance as above if it fails. If the session opted out of a ticket number, skip this step.
 
 7. **Offer to push.** After the commit, ask: "Push this branch to remote?" Wait for explicit confirmation. Note: this requires push permission for the branch.
 
@@ -167,3 +179,8 @@ Testable conditions that define done (must cover all confirmed scenarios):
 - AC-1 (Scenario 1): [Test condition]
 - AC-2 (Scenario 2): [Test condition]
 ```
+
+## Usage in Kiro
+Activate this mode by using `#groom-mode` in your conversation or by typing "enter groom mode".
+
+The mode will guide you through the structured workflow and generate the appropriate documentation files.
