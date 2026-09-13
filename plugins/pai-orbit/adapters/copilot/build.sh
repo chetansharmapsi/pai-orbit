@@ -1067,23 +1067,31 @@ if git diff --cached --name-only -z | xargs -0 -I{} grep -l -E '(AWS_SECRET_ACCE
   exit 1
 fi
 
+# Collect staged files NUL-delimited into an array, so paths containing spaces or
+# glob characters reach the linters as single arguments.
+staged_py=()
+staged_js_ts=()
+while IFS= read -r -d '' staged_file; do
+  case "$staged_file" in
+    *.py) staged_py+=("$staged_file") ;;
+    *.js|*.jsx|*.ts|*.tsx|*.mjs|*.cjs) staged_js_ts+=("$staged_file") ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACM -z)
+
 # Lint Python — invoke project's ruff if pyproject.toml exists in repo root
-if [ -f pyproject.toml ] && command -v ruff >/dev/null 2>&1 ; then
-  ruff check --quiet $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.py$' || true) || {
+if [ -f pyproject.toml ] && [ ${#staged_py[@]} -gt 0 ] && command -v ruff >/dev/null 2>&1 ; then
+  ruff check --quiet "${staged_py[@]}" || {
     echo "pai-orbit pre-commit: ruff lint failed. Fix or amend." >&2
     exit 1
   }
 fi
 
 # Lint JS/TS — invoke project's eslint if .eslintrc.json or .eslintrc.cjs exists
-if { [ -f .eslintrc.json ] || [ -f .eslintrc.cjs ] || [ -f eslint.config.js ]; } && command -v npx >/dev/null 2>&1 ; then
-  staged_js_ts=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|jsx|ts|tsx|mjs|cjs)$' || true)
-  if [ -n "$staged_js_ts" ]; then
-    npx --no-install eslint $staged_js_ts || {
-      echo "pai-orbit pre-commit: eslint failed. Fix or amend." >&2
-      exit 1
-    }
-  fi
+if [ ${#staged_js_ts[@]} -gt 0 ] && { [ -f .eslintrc.json ] || [ -f .eslintrc.cjs ] || [ -f eslint.config.js ]; } && command -v npx >/dev/null 2>&1 ; then
+  npx --no-install eslint "${staged_js_ts[@]}" || {
+    echo "pai-orbit pre-commit: eslint failed. Fix or amend." >&2
+    exit 1
+  }
 fi
 
 exit 0
