@@ -99,9 +99,9 @@ Available flags:
 
 **Re-run behaviour:** `pai-orbit update copilot` (no `--setup`) refreshes pai-orbit-owned files and preserves your `.copilot/*` + `AGENTS.md`. `pai-orbit update copilot --setup` refreshes files **and** re-runs the interview, overwriting `.copilot/pai-orbit-config.md` and `.copilot/team.md` with new answers.
 
-### Alternative: use `/setup` inside Claude Code or Cursor
+### There is no cross-tool install path
 
-If your team already uses Claude Code or Cursor, run `/setup` inside the host tool and select `copilot` (or `multiple`) as a target. The same templates and same `dist/copilot/` output land in the project. The `npx` CLI exists for **Copilot-only teams** that have neither tool installed.
+Claude Code's and Cursor's `/setup` scaffold only their own target — they cannot install the Copilot files. Multi-target `/setup` was prototyped and reverted before merge (see D9 and the multi-tool-compat EPIC), so the `npx` CLI above is the only way to install the Copilot adapter, whether or not the team also runs Claude Code or Cursor.
 
 ### `/setup` inside Copilot Chat — for re-configuration after first install
 
@@ -170,10 +170,11 @@ The tool-agnostic surface is shared:
 - `docs/` — every assistant writes here.
 - Project-context file — Claude and Cursor read `CLAUDE.md`; Copilot reads `AGENTS.md`. Content is identical; only the filename differs.
 
-To set up multiple assistants:
+To set up multiple assistants, run each one's own installer — there is no single multi-target install:
 
-- Inside Claude Code or Cursor: run `/setup` and select multiple targets in Step 2.
-- For the Copilot half on a machine without Claude Code or Cursor: `npx github:the-psi/pai-orbit init copilot` adds the Copilot files non-destructively to a project that already has `.claude/` or `.cursor/`.
+- Claude Code / Cursor: run `/setup` inside the tool.
+- Copilot: `npx github:the-psi/pai-orbit init copilot` — adds the Copilot files non-destructively to a project that already has `.claude/` or `.cursor/`.
+- Codex CLI: `npx github:the-psi/pai-orbit init codex`.
 
 Re-running one assistant's install does not touch the others.
 

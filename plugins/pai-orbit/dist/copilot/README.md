@@ -36,4 +36,5 @@ End users run the standalone install CLI from the project root:
 npx github:the-psi/pai-orbit init copilot
 ```
 
-Or, inside Claude Code / Cursor, run `/setup` and pick Copilot as a target.
+This is the only install path for the Copilot adapter — Claude Code's and Cursor's
+`/setup` scaffold only their own target.
