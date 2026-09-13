@@ -13,7 +13,7 @@ npx github:the-psi/pai-orbit init codex
 Pin a specific release with a git ref suffix:
 
 ```bash
-npx github:the-psi/pai-orbit#v1.4.0 init codex
+npx github:the-psi/pai-orbit#<tag> init codex
 ```
 
 To re-install and overwrite existing files (upgrade path):
@@ -26,6 +26,23 @@ The CLI copies every file under `dist/codex/` into your project's root.
 Under the hood it just runs Node's `fs.copyFile`; there's no network fetch
 beyond `npx`'s initial repo download, no shell requirement, and no
 platform-specific script.
+
+## Upgrading from 1.4.0 or earlier
+
+Before 1.4.2 this adapter emitted a single reference file (`dist/codex/AGENTS.md`)
+that you copied into your project by hand. From 1.4.2 it emits a full native tree
+(`.agents/skills/`, `.codex/agents/`, `.codex/hooks/`, `.codex/templates/`).
+
+Nothing breaks if you do nothing — an existing hand-copied `AGENTS.md` keeps
+working as reference text. To pick up skills, hooks and subagents:
+
+```bash
+npx github:the-psi/pai-orbit update codex
+```
+
+Use `update codex`, not `init codex` — `init` deliberately refuses to overwrite
+an existing install. After upgrading, run `/hooks` inside Codex and trust the four
+registered hooks; hook trust is invalidated by every hook edit.
 
 ## Layout installed into your project
 

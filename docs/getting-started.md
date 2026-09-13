@@ -53,7 +53,7 @@ Single command, cross-platform:
 npx github:the-psi/pai-orbit init codex
 ```
 
-Pin a specific release with a git ref suffix: `npx github:the-psi/pai-orbit#v1.4.0 init codex`. Re-install with `update codex` in place of `init codex`.
+Pin a specific release with a git ref suffix: `npx github:the-psi/pai-orbit#<tag> init codex`. Re-install with `update codex` in place of `init codex`.
 
 After install, launch `codex` in the project, trust the project when prompted, then:
 

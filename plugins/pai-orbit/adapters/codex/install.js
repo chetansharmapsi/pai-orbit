@@ -53,7 +53,7 @@ Usage:
   npx github:the-psi/pai-orbit --version           Print version.
 
 Pin a ref by appending #<branch|tag|sha>:
-  npx github:the-psi/pai-orbit#v1.4.0 init codex
+  npx github:the-psi/pai-orbit#<tag> init codex
 
 Requires: OpenAI Codex CLI v0.144.6+ and Node.js 18+.
 

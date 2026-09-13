@@ -23,7 +23,7 @@ That's it. Works on macOS, Linux, WSL, and native Windows PowerShell. **Requires
 Append a git ref (branch, tag, or SHA) with `#`:
 
 ```bash
-npx github:the-psi/pai-orbit#v1.4.0 init codex
+npx github:the-psi/pai-orbit#<tag> init codex
 ```
 
 ```bash
