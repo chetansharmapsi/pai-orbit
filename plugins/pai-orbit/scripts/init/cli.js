@@ -15,6 +15,7 @@
 //
 // Targets:
 //   copilot                      fully implemented
+//   codex                        delegates to adapters/codex/install.js
 //   claude | cursor              stubs — point users at /setup inside the host tool
 //
 // Distribution channel: `npx github:the-psi/pai-orbit init copilot`. No npm publish.
@@ -69,7 +70,7 @@ Subcommands:
   pai-orbit --help                   Show this help.
   pai-orbit --version                Show CLI version.
 
-  <target>: copilot | claude | cursor  (claude/cursor are stubs in v1)
+  <target>: copilot | codex | claude | cursor  (claude/cursor are stubs in v1)
 
 Flags:
   --setup                            Run the 11-question interview after files
@@ -102,6 +103,10 @@ Examples — Copilot Free:
 
   npx github:the-psi/pai-orbit init copilot --setup --yes
       Same but auto-answered with defaults. Fast install; hand-edit later.
+
+Examples — Codex CLI:
+  npx github:the-psi/pai-orbit init codex
+      Installs the Codex adapter tree; then run /hooks and $setup inside the Codex TUI.
 
 Examples — CI / non-interactive:
   npx github:the-psi/pai-orbit init copilot --setup --yes --board=gitlab`;
@@ -160,7 +165,7 @@ async function main(argv) {
     dieWithUsage(`unknown subcommand: ${subcommand}`);
   }
   if (!target) {
-    dieWithUsage(`missing target for '${subcommand}' (one of: copilot, claude, cursor)`);
+    dieWithUsage(`missing target for '${subcommand}' (one of: copilot, codex, claude, cursor)`);
   }
 
   const cwd = process.cwd();
@@ -177,6 +182,11 @@ async function main(argv) {
   if (target === 'copilot') {
     const copilot = require('./lib/copilot');
     await copilot.run(ctx);
+    return;
+  }
+  if (target === 'codex') {
+    const codex = require('./lib/codex');
+    await codex.run(ctx);
     return;
   }
   if (target === 'claude') {

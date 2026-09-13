@@ -2,7 +2,7 @@
 
 **Status:** In Progress
 **Owner:** Punit Singhal
-**Last Updated:** 2026-07-05
+**Last Updated:** 2026-09-13
 
 ## Summary
 Extend pai-orbit so the same mode discipline and operational skills work in Cursor, GitHub Copilot Chat, and OpenAI Codex CLI, not just Claude Code — enabling teams to use whichever AI coding tool they prefer without losing the methodology.
@@ -27,9 +27,9 @@ Extend pai-orbit so the same mode discipline and operational skills work in Curs
 |---------|--------|-------|
 | canonical-spec | Not started | Phase 1 of the broader multi-tool plan; deferred until a 4th tool warrants it (per existing decision below) |
 | cursor-adapter | Done | Ships in `plugins/pai-orbit/adapters/cursor/` and `cursor-plugin/`; install guide at `docs/cursor-plugin-install-and-usage.md` |
-| codex-adapter | Done (experimental) | Ships in `plugins/pai-orbit/adapters/codex/`; emits `AGENTS.md`. Hooks degrade gracefully |
+| codex-adapter | Done | Full-parity build against Codex CLI v0.144.6 (2026-07-18) — native skills, hooks, subagents. Install guide at `docs/codex-install-and-usage.md` |
 | copilot-adapter-prompt-files | Done (automation green; live-Chat validation pending) | Copilot adapter emits 29 prompts (14 modes incl. `/setup` and `/suggest-skills` as agent-mode, 6 skills, 9 agent-mode prompts: 7 service-builders + `/docs-writer` + `/cross-repo-impact`) + 5 instructions files (adds `decisions.instructions.md`) + 2 hook templates + slim rule book. All prompts use documented `mode: agent` + `tools:` frontmatter. Working plan kept locally by the implementing team. |
-| copilot-install-cli (npx) | Done (smoke-tested; live npx flow pending) | Phase 3b. `pai-orbit init|update|migrate copilot` runs end-to-end with first-run / re-run / migration detection. Install-only by default; `--setup` runs the full 11-question interview from the terminal (for Copilot Free users whose Chat-side `/setup` degrades to advisory text). |
+| copilot-install-cli (npx) | Done (smoke-tested; live npx flow pending) | Phase 3b. `pai-orbit init|update|migrate copilot` runs end-to-end with first-run / re-run / migration detection. Install-only by default; `--setup` runs the full 11-question interview from the terminal (for Copilot Free users whose Chat-side `/setup` degrades to advisory text). The same CLI carries the `codex` target, delegating to the Codex adapter's installer. |
 | setup-multi-tool | Deferred | Multi-target `/setup` (single interview scaffolds Claude/Cursor/Copilot together) was prototyped but reverted before merge to keep the Copilot PR scoped. Each adapter's `/setup` scaffolds only its own target. Multi-target may return as a separate follow-up feature if there is demand. |
 
 ## Success Metrics
@@ -44,7 +44,7 @@ Extend pai-orbit so the same mode discipline and operational skills work in Curs
 - **Generator vs parallel files:** Generator approach — single source of truth in `core/modes/*.md`, `core/skills/*/SKILL.md`, and `core/templates/agents/*.md`; per-tool adapters in `adapters/<tool>/build.sh` produce Cursor / Codex / Copilot artefacts. See `docs/features/multi-tool-compat/design.md` D6.
 - **Claude adapter strategy (Phase 1):** Claude reads source files directly (native format). Generator does not produce Claude output yet. Migration to full Option B deferred to a future phase when a 4th tool warrants it.
 - **Cursor modes:** Surfaced as `agent_requested` Cursor rules — no custom slash commands. User types "enter build mode" or task context triggers the rule automatically.
-- **Codex CLI hooks:** Terminal wrapper scripts (`pai` CLI) handle pre/post execution hooks. No native hook system in Codex CLI.
+- **Codex CLI hooks:** ~~Terminal wrapper scripts (`pai` CLI) handle pre/post execution hooks. No native hook system in Codex CLI.~~ **Superseded 2026-07-18** — Codex CLI v0.144.6 has a native hook system (`hooks.json` with `PreToolUse`/`PostToolUse` events, `commandWindows` overrides, per-hook trust via `/hooks`). pai-orbit's Codex adapter registers hooks natively via `.codex/hooks.json`; no `pai` CLI wrapper needed. See docs/codex-install-and-usage.md.
 - **Copilot adapter (2026-06-28 → 2026-07-05):** Working plan kept locally by the implementing team. Highlights:
   - Prompt files use documented `mode: agent` + `tools:` frontmatter — 14 modes, 6 skills, 7 service-builder agent prompts, 2 named agents (`/docs-writer`, `/cross-repo-impact`).
   - Instructions files for `git`, `data-model`, `arch-drift`, `context-discovery`, and `decisions` (ADR obligation rules, always attached).
@@ -54,10 +54,11 @@ Extend pai-orbit so the same mode discipline and operational skills work in Curs
   - No editor-specific files (`.vscode/`, `.idea/`, etc.) emitted.
   - Hook intent delivered as advisory text + opt-in pre-commit (husky or pre-commit framework).
 - **Copilot `/setup` content lives in the Copilot adapter, not in shared source (D39):** `plugins/pai-orbit/adapters/copilot/build.sh` assembles Copilot's `setup.prompt.md` from shared Steps 1–2b + Copilot-specific Steps 3–4 heredocs. Shared `core/modes/setup.md` stays byte-identical to `main`, so Claude Code and Cursor dist trees are untouched by this branch.
+- **One `bin`, many targets (2026-09-13):** the Codex adapter and the Copilot install CLI both claimed the package's single `pai-orbit` `bin` entry. Resolved at merge in favour of `scripts/init/cli.js`, which already dispatches by target; the `codex` target forwards `init`/`update` to `adapters/codex/install.js` in a child process, so `npx github:the-psi/pai-orbit init codex` keeps working unchanged.
 
 ## Open Questions
 - [ ] Should Phase 1 (canonical front-matter) be done in one PR across all commands + skills, or incrementally? — owner: Punit Singhal
 - [ ] Which skills should use `auto_attached` Cursor rule type vs `agent_requested`? (e.g. data-model auto-attaches to `*.sql`) — owner: Punit Singhal
-- [ ] `pai` CLI wrapper: how does it detect which Codex CLI binary is installed (`codex` vs `openai`)? — owner: Punit Singhal
+- [x] ~~`pai` CLI wrapper: how does it detect which Codex CLI binary is installed (`codex` vs `openai`)? — owner: Punit Singhal~~ — **Resolved 2026-07-18:** No `pai` CLI wrapper needed. Codex CLI has native hooks (`hooks.json`), skills (`.agents/skills/`), and subagents (`.codex/agents/*.toml`). Adapter emits directly into those primitives.
 - [ ] Husky template — assume husky v9+ installed (current default) vs ship as plain `.git/hooks/pre-commit.template`? Resolve from Phase 4 live-Chat validation results. — owner: Chetan Sharma
 - [ ] Broadest `applyTo:` glob Copilot honours on instructions files — `**/*` is assumed; confirm or fall back to per-extension splits per design §10.2. — owner: Chetan Sharma
