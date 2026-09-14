@@ -9,6 +9,12 @@ superseded-by: ""
 
 # ADR: Ship `/groom` Phase 1b with `copilot` and `codex` below parity
 
+> **Amended 2026-09-14 — half of this is now resolved.** PR #51 merged, so `codex` emits full
+> mode text and **does carry** Phase 1b. PR #34 has not merged, so `copilot` still does not.
+> The rule 6 exception this ADR records is now one adapter wide, not two. The decision and its
+> reasoning stand as written below; only the scope has narrowed. Closure condition is now #34
+> alone.
+
 ## Context
 
 Issue #35 adds product-context reasoning and a Phase 1b scope gate to `/groom`. Every line of
@@ -58,7 +64,7 @@ discovered later, and that must be closed by #34 and #51 — not left to stand.*
 | `cursor` (legacy) | Yes | `.cursor/rules/groom.mdc` |
 | `kiro-power` | Yes | `skills/groom-mode.md` |
 | `copilot` | **No** | `emit_mode_summary()` drops `## Session flow`; `dist/copilot/` unchanged by the rebuild |
-| `codex` | **No** | Same; `dist/codex/AGENTS.md` unchanged by the rebuild |
+| `codex` | **No** at the time of this decision; **yes** since 2026-09-14 | PR #51 merged and replaced `emit_mode_summary()` with native `.agents/skills/` emission |
 
 ### Conditions attached
 
@@ -112,5 +118,6 @@ discovered later, and that must be closed by #34 and #51 — not left to stand.*
 
 ## Review Date
 
-At the merge of PRs #34 and #51 — this ADR should be marked resolved once a rebuild confirms
-Phase 1b text in `dist/copilot/` and `dist/codex/`.
+Partially resolved 2026-09-14: PR #51 merged and `dist/codex/.agents/skills/groom/SKILL.md`
+now carries Phase 1b, verified by rebuild. Mark this ADR fully resolved when PR #34 merges and
+a rebuild confirms Phase 1b text in `dist/copilot/`.

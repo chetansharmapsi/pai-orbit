@@ -12,7 +12,7 @@ Status: declared
 | kiro-power adapter | `plugins/pai-orbit/adapters/kiro-power/` → `dist/kiro-power/` | bash build script | Kiro Power (skills + auto-loading steering); no agent or hook fidelity today |
 | cursor adapter (legacy) | `plugins/pai-orbit/adapters/cursor/` → `dist/cursor/` | bash build script | Lossy `.cursor/rules/*.mdc` compile |
 | copilot adapter | `plugins/pai-orbit/adapters/copilot/` → `dist/copilot/` | bash build script | Lossy `.github/copilot-instructions.md` compile |
-| codex adapter | `plugins/pai-orbit/adapters/codex/` → `dist/codex/` | bash build script | Experimental `AGENTS.md` compile |
+| codex adapter | `plugins/pai-orbit/adapters/codex/` → `dist/codex/` | bash build script + Node install CLI | Full-parity native compile (skills, hooks, subagents, `AGENTS.md`) with `npx` installer |
 
 ## Communication
 
@@ -56,5 +56,5 @@ graph LR
 
 ## Open Questions
 
-- [ ] `constraints.md` rule 6 requires full adapter parity, but only `claude-code` and `cursor-plugin` meet it. The gap is not uniform, and an earlier version of this question mis-stated it as "`cursor` (legacy) lossy, `codex` experimental". Verified against each build script, it splits three ways: **mode content** — `copilot` and `codex` summarize modes via `emit_mode_summary()` and drop `## Session flow`, closed by PRs #34 and #51; **mode invocation** — `cursor` (legacy), `copilot` and `codex` have no command system, so modes are reference text only; **agents and hooks** — dropped by `cursor` (legacy), `kiro-power`, `copilot` and `codex`. Either bring adapters to parity, or revisit rule 6 to state a per-dimension bar rather than one flat requirement. — owner: unassigned
-- [ ] `kiro-power` ships with no agent or hook fidelity (`❌`/`❌` in `plugins/pai-orbit/README.md`'s adapter fidelity table) — same gap `copilot` and `codex` already carry. Accepted at introduction per `docs/decisions/2026-08-18-add-kiro-power-adapter.md` rather than blocking the adapter's addition; revisit alongside the `cursor`/`codex` parity question above. — owner: unassigned
+- [x] ~~`constraints.md` rule 6 requires full adapter parity, but `cursor` (legacy) is documented as "lossy" and `codex` as "experimental" today — both are known to fall short. Bring them to parity, or revisit the rule.~~ — **Partially resolved 2026-07-30 by the codex adapter upgrade.** Codex is now full-parity (native skills, hooks, subagents, npx installer) — see `docs/decisions/2026-07-19-codex-adapter-decisions.md`. `cursor` (legacy) remains a documented lossy path retained only for teams that cannot install the `cursor-plugin` build; the Cursor plugin adapter is full-parity and is the recommended install for Cursor users. Rule 6 is now met by all recommended install paths (`claude-code`, `cursor-plugin`, `codex`); the legacy `cursor` fallback is a deliberate documented exception.
+- [ ] `kiro-power` ships with no agent or hook fidelity (`❌`/`❌` in `plugins/pai-orbit/README.md`'s adapter fidelity table) — the same gap `copilot` carries, and the gap `codex` carried until the 2026-07-30 upgrade above. Accepted at introduction per `docs/decisions/2026-08-18-add-kiro-power-adapter.md` rather than blocking the adapter's addition; revisit when Kiro gains an agent/hook-equivalent primitive. — owner: unassigned
