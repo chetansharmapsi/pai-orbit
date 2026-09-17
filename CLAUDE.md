@@ -2,7 +2,7 @@
 
 A structured developer methodology harness for Claude Code that enforces disciplined working modes, prevents context loss, and produces local-first documentation at every stage of development.
 
-**Author:** Pratham Software (PSI) | **License:** MIT | **Version:** 1.5.0
+**Author:** Pratham Software (PSI) | **License:** MIT | **Version:** 1.6.0
 
 ---
 
@@ -38,7 +38,7 @@ pai-orbit/                          # repo = marketplace
 │       │   ├── claude-code/        # full fidelity
 │       │   ├── cursor-plugin/      # Cursor plugin (rules, skills, commands, agents, hooks)
 │       │   ├── cursor/             # lossy legacy; .cursor/rules/*.mdc
-│       │   ├── copilot/            # lossy; .github/copilot-instructions.md
+│       │   ├── copilot/            # full; .github/prompts/, instructions/, copilot-instructions.md
 │       │   └── codex/              # full parity; .agents/skills/, .codex/agents/, hooks, npx install.js
 │       ├── dist/                   # COMMITTED build outputs (one subdir per adapter)
 │       ├── build.sh                # runs every adapter
@@ -72,7 +72,7 @@ graph LR
     core[core/ — modes, skills, agents, hooks, templates] --> claudecode[adapters/claude-code]
     core --> cursorplugin[adapters/cursor-plugin]
     core --> cursor[adapters/cursor — lossy legacy]
-    core --> copilot[adapters/copilot — lossy]
+    core --> copilot[adapters/copilot — full]
     core --> codex[adapters/codex — full parity]
     claudecode --> distcc[dist/claude-code/]
     cursorplugin --> distcp[dist/cursor-plugin/]
@@ -204,7 +204,13 @@ npx github:the-psi/pai-orbit init codex
 
 Pin a ref with `#<branch|tag|sha>`; re-install with `update codex` in place of `init codex`. See [docs/codex-install-and-usage.md](docs/codex-install-and-usage.md) for the full walkthrough (hook trust flow, `$setup`, `orbit-plan` / `orbit-review` renames, parity notes).
 
-For GitHub Copilot (lossy), copy `plugins/pai-orbit/dist/copilot/.github/copilot-instructions.md` into your repo.
+For GitHub Copilot (VS Code), single command from the project root (requires Node.js 18+):
+
+```bash
+npx github:the-psi/pai-orbit init copilot
+```
+
+Installs 29 invokable prompts, 5 auto-attaching instructions files, and the rule book at `.github/copilot-instructions.md`. Also supports `update copilot` and `migrate copilot`. See [docs/copilot-install-and-usage.md](docs/copilot-install-and-usage.md) for the full walkthrough (Business vs Free tier behaviour, `/setup` in Chat, pre-commit hook templates).
 
 ---
 
