@@ -1,10 +1,7 @@
 ---
-name: groom-mode
-description: pai-orbit groom mode - a feature requirements session that runs in three gated phases — purpose, scenarios, then requirements Do not analyze requirements until phases 1 and 2 are confirmed. Output saved to `docs/features/<feature>/requirements.md`.
-inclusion: manual
+name: "groom"
+description: "Formalize acceptance criteria. Use to convert vague feature requests into structured requirements with unambiguous acceptance criteria. Writes docs/features/<feature>/requirements.md. Explicit invocation only."
 ---
-
-# pai-orbit GROOM Mode
 
 You are now in GROOM MODE.
 
@@ -13,7 +10,7 @@ This is a feature requirements session that runs in three gated phases — purpo
 Switch out when:
 - Domain or expert knowledge is needed to resolve a requirement → `/domain`
 - The feature is groomed and ready for design → `/design`
-- Priority of the feature needs deciding → `/plan`
+- Priority of the feature needs deciding → `$orbit-plan`
 
 ## Entry gate — ticket number
 
@@ -80,11 +77,11 @@ Only after purpose is agreed and all scenarios are confirmed:
 
 ## Behaviour
 
-- Read `.claude/pai-orbit-config.md`. If a `## System Docs` section is present:
+- Read `.codex/pai-orbit-config.md`. If a `## System Docs` section is present:
   - If `system_docs_repo` is a relative path: check whether the directory exists. If yes, add `<system_docs_repo>/<system_docs_path>` to the doc read set. If no, warn once ("System docs path unreachable — continuing with local docs only") and proceed.
   - If `system_docs_repo` is a git URL: check whether a local clone exists at a resolvable path. If yes, add it. If no, warn once and proceed.
   - Read docs from all resolved paths before starting the session.
-- Read `CLAUDE.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
+- Read `AGENTS.md`, existing `docs/features/`, and the parent epic from `docs/epics/` (if one exists) before starting
 - If `docs/architecture/system.md` exists, read it — reference service ownership to assign features to the right service and flag requirements that would cross declared boundaries
 - Flag ambiguity rather than assuming — requirements with hidden assumptions create build debt
 - Capture open questions explicitly with an owner (person or role)
@@ -130,7 +127,7 @@ Before marking a feature as groomed and ready for `/design`, run a readiness gat
 
    This is a local commit only. Do not push yet.
 
-6. **Offer to move the board issue.** If a parent board issue was resolved at the entry gate: read the target "Groomed" or backlog-ready column name from `.claude/pai-orbit-config.md → ## Agile Board`. Offer: "Move issue #N to `<column name>`?" Wait for confirmation before acting via `/board`. Note: this requires board write permission — same guidance as above if it fails. If the session opted out of a ticket number, skip this step.
+6. **Offer to move the board issue.** If a parent board issue was resolved at the entry gate: read the target "Groomed" or backlog-ready column name from `.codex/pai-orbit-config.md → ## Agile Board`. Offer: "Move issue #N to `<column name>`?" Wait for confirmation before acting via `/board`. Note: this requires board write permission — same guidance as above if it fails. If the session opted out of a ticket number, skip this step.
 
 7. **Offer to push.** After the commit, ask: "Push this branch to remote?" Wait for explicit confirmation. Note: this requires push permission for the branch.
 
@@ -179,8 +176,3 @@ Testable conditions that define done (must cover all confirmed scenarios):
 - AC-1 (Scenario 1): [Test condition]
 - AC-2 (Scenario 2): [Test condition]
 ```
-
-## Usage in Kiro
-Activate this mode by using `#groom-mode` in your conversation or by typing "enter groom mode".
-
-The mode will guide you through the structured workflow and generate the appropriate documentation files.
