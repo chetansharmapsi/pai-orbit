@@ -13,8 +13,8 @@
 > the feature shipped ahead of them by decision. The rebuild then showed D1's stated cost did
 > not exist: it touches 14 files, **none** under `dist/copilot/` or `dist/codex/`, because
 > those adapters drop `## Session flow` — so it adds no conflict surface to either PR. What
-> remains is the parity gap itself: `copilot` and `codex` ship `/groom` without this feature
-> until those PRs land. See
+> remained was the parity gap itself, and that closed as those PRs landed — codex on
+> 2026-09-14, copilot on 2026-09-24. All five adapters now carry Phase 1b. See
 > [ADR 2026-09-03](../../decisions/2026-09-03-ship-groom-phase1b-ahead-of-adapter-parity.md)
 > and [test-plan.md](./test-plan.md).
 

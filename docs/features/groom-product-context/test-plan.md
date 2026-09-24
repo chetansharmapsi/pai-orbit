@@ -120,9 +120,9 @@ undercuts AC-7's intent.
 
 ## Not covered
 
-- `copilot` and `codex` were not tested, because they do not carry the feature — see
-  [ADR 2026-09-03](../../decisions/2026-09-03-ship-groom-phase1b-ahead-of-adapter-parity.md).
-  Re-test after PRs #34 and #51 merge.
+- `copilot` and `codex` were not run live. Both now carry the feature (PRs #51 and #34 merged)
+  and a rebuild confirms the Phase 1b text in their `dist/` output, but the mode has not been
+  exercised in either tool.
 - The session-close pre-flight audit of `## Scope` was not exercised end to end — the test run
   was stopped at Phase 2 before any file was written, deliberately, so nothing landed in the
   repo.

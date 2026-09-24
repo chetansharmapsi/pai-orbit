@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: resolved
 date: 2026-09-03
 deciders: [Chetan Sharma]
 scope: system
@@ -9,6 +9,10 @@ superseded-by: ""
 
 # ADR: Ship `/groom` Phase 1b with `copilot` and `codex` below parity
 
+> **Resolved 2026-09-24.** PR #34 has also merged: `copilot` now emits full mode text, and a
+> rebuild confirms Phase 1b in `dist/copilot/.github/prompts/groom.prompt.md`. All five
+> adapters carry the feature, so the rule 6 exception this ADR recorded no longer exists.
+>
 > **Amended 2026-09-14 — half of this is now resolved.** PR #51 merged, so `codex` emits full
 > mode text and **does carry** Phase 1b. PR #34 has not merged, so `copilot` still does not.
 > The rule 6 exception this ADR records is now one adapter wide, not two. The decision and its
@@ -118,6 +122,5 @@ discovered later, and that must be closed by #34 and #51 — not left to stand.*
 
 ## Review Date
 
-Partially resolved 2026-09-14: PR #51 merged and `dist/codex/.agents/skills/groom/SKILL.md`
-now carries Phase 1b, verified by rebuild. Mark this ADR fully resolved when PR #34 merges and
-a rebuild confirms Phase 1b text in `dist/copilot/`.
+Resolved. Codex caught up on 2026-09-14 (PR #51) and copilot on 2026-09-24 (PR #34); both
+verified by rebuild. No further review needed.
