@@ -61,7 +61,7 @@ What this does NOT include:
 5. REQ-5 (Scenario 1): Every excluded consumer must carry a **reason**, recorded under `## Out of scope` (e.g. "`ui/card.ts` reads `X` — excluded: card intentionally shows raw values").
 6. REQ-6 (Scenarios 1–4): Every groom session must emit a **visible consumer-check outcome line**: triggered / not triggered, the reason, the sources searched, and the result.
 7. REQ-7 (Scenario 2): When the search finds no other consumers, `/groom` must state the sources searched and "no other consumers found" — never omit the outcome.
-8. REQ-8 (Scenario 3): When the change introduces a brand-new signal/field, `/groom` must not run the search, and must announce and record "not triggered" with the reason.
+8. REQ-8 (Scenario 3): When the change introduces a brand-new signal/field, `/groom` must not run the consumer search — a quick lookup confirming the name is unread today is allowed, as the positive grounds for "New" — and must announce and record "not triggered" with the reason.
 9. REQ-9 (Scenario 4): When it is unclear whether the change touches an existing signal, `/groom` must default to running the check and say so.
 10. REQ-10 (Scenario 4): In the unclear case only, the developer may explicitly override (declare the change purely new); `/groom` must record the override and the developer's reason.
 11. REQ-11 (Scenario 5): When triggered, `/groom` must look for a project-maintained "domain concept → consumers" map under `<docs root>`; if found, every consumer it lists for the signal becomes a candidate scenario, in addition to code-search results.
@@ -81,7 +81,7 @@ What this does NOT include:
 - **Mode discipline (constraints rule 4):** the check is a *completeness* check ("does the fix belong here too?"), not a breakage/compatibility assessment. Breakage stays with `/design`'s impact gate and `/analysis`.
 - **Adapter parity (constraints rule 6):** the behaviour must work in every adapter (`claude-code`, `cursor-plugin`, `cursor`, `copilot`, `codex`).
 - **Backward compatibility (constraints rule 7):** projects without a concept map, without `constraints.md`, or single-repo projects must work unchanged apart from the new outcome line.
-- **Cost:** for brand-new signals the check adds only the "not triggered" announcement — no search.
+- **Cost:** for brand-new signals the check adds only the "not triggered" announcement and, at most, a quick lookup confirming the name is unread — no consumer search. *(Revised 2026-09-29 after testing — see test-plan Finding 1.)*
 
 ## Context
 - Classified as a **small enhancement** by the user (issue #37 has no labels); capabilities registry and roadmap reads were skipped per groom Phase 1 step 2.
@@ -113,7 +113,7 @@ All remaining questions are **design questions** (how, not what) — deferred to
 - AC-2 (Scenario 1): When the signal clearly exists, a developer request to skip the search is declined; individual consumers can still be excluded.
 - AC-3 (Scenario 1): Every excluded consumer appears under `## Out of scope` with a reason.
 - AC-4 (Scenario 2): When no other consumers exist, the outcome line lists the sources searched and states "no other consumers found".
-- AC-5 (Scenario 3): Grooming a change that introduces a new field produces "not triggered" with a reason, runs no search, and records the outcome.
+- AC-5 (Scenario 3): Grooming a change that introduces a new field produces "not triggered" with a reason, runs no consumer search (a quick lookup confirming the name is unread is allowed), and records the outcome.
 - AC-6 (Scenario 4): For an ambiguous change, groom runs the check by default and says so; an explicit developer override is honoured only in this case and recorded with its reason.
 - AC-7 (Scenario 5): With a concept map present, consumers listed in it for the signal appear as candidates and the outcome line names the map path; with no map, the outcome line says "no concept map found".
 - AC-8 (Scenario 6): When map and code disagree, candidates are the union of both, each discrepancy is flagged by direction, and the map file is not modified.

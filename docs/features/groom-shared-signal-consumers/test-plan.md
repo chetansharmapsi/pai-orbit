@@ -4,7 +4,7 @@
 **Issue:** [#37](https://github.com/the-psi/pai-orbit/issues/37)
 **Requirements:** [requirements.md](./requirements.md) — 21 REQs, 13 ACs, 10 scenarios
 **Design:** [design.md](./design.md) (D8 test approach)
-**Result:** 12 of 13 acceptance criteria pass on Claude Code. AC-5 passes in part (see Finding 1).
+**Result:** 13 of 13 acceptance criteria pass on Claude Code (AC-5 against its revised wording — see Finding 1).
 One defect found and fixed during testing (TC-20). Codex parity run blocked by the local environment (see Not covered).
 
 ---
@@ -42,7 +42,7 @@ All sessions used standalone grooming (confirmed ticket opt-out), so no board wa
 | ID | Scenario | Steps | Expected result | Automated? | Run | Result |
 |----|----------|-------|-----------------|------------|-----|--------|
 | TC-01 | S1, S5, S6, S8 | Full + constraints: "Hide inactive users on the team-lead dashboard"; exclude export with a reason; run to session close | 🔎 line before Scenario 1; Existing; export + weekly report proposed one at a time; dashboard not re-proposed; tests as a count; mobile not reachable; map discrepancies both ways; map unmodified; `## Consumer check` written; audit checks it | No (headless session) | R1 | Pass |
-| TC-02 | S3 | Full, no constraints: "add a new `nickname` field" | New / not triggered with positive grounds; 3-line block | No | R2 | Pass in part — Finding 1 |
+| TC-02 | S3 | Full, no constraints: "add a new `nickname` field" | New / not triggered with positive grounds; 3-line block | No | R2 | Pass (revised AC-5) — Finding 1 |
 | TC-03 | S2 | Only-surface: same dashboard change | Lists sources and terms; "no concept map found"; no other consumers | No | R6 | Pass |
 | TC-04 | S9 | Constraints present / absent | Read at start and applied / proceeds without error | No | R1, R2 | Pass |
 
@@ -70,7 +70,7 @@ All sessions used standalone grooming (confirmed ticket opt-out), so no board wa
 | AC-2: skip request declined | TC-20, TC-11 | Pass | R5b: "What I can't do: treat 'only the dashboard' as a blanket exclusion…"; R3: "For Existing … not waive the search" |
 | AC-3: excluded consumer under Out of scope with reason | TC-01, TC-20 | Pass (after fix) | R1: "Admin CSV export … excluded … serves admins performing a full audit"; R5b records each reason separately |
 | AC-4: none found lists sources | TC-03 | Pass | R6: "Searched: web (code); jobs, mobile not reachable … Result: 0 other consumers found in web; none known to the developer in jobs/mobile (unverified)" |
-| AC-5: new field → not triggered, no search, recorded | TC-02 | Pass in part | Classified and recorded correctly; a search *was* run to establish the grounds — Finding 1 |
+| AC-5: new field → not triggered, no consumer search, recorded | TC-02 | Pass | Classified and recorded correctly; only a lookup confirming the name is unread — Finding 1 |
 | AC-6: unclear → runs by default; override only here, recorded | TC-10 | Pass | R3b: "Any doubt at all means Unclear, and under Unclear the check runs by default"; "Override accepted and recorded — Unclear is exactly where it's available" |
 | AC-7: map path named / "no concept map found" | TC-01, TC-03 | Pass | R1 names the map path; R6: "Concept map: no concept map found" |
 | AC-8: union, discrepancies by direction, map untouched | TC-01 | Pass | R1: "Listed in map, not found in code: 'Admin panel user filter'" / "Found in code, not in map: 'Admin CSV export'"; `git status docs/domain` clean |
@@ -88,7 +88,7 @@ today". Design D2 requires positive grounds for New, while AC-5 and the cost req
 signal gets no search. A model cannot state positive grounds without looking, so the two conflict.
 The search was cheap and turned up something real: the change also alters how the existing `name`
 field is displayed, and groom ran a full check on `name` (2 other consumers). Requirements-level
-question — see Open decisions.
+question. **Resolved 2026-09-29:** REQ-8, AC-5 and the cost requirement revised to allow a quick lookup confirming the name is unread; the consumer search itself still does not run.
 
 **Finding 2 — groom finds signals the issue didn't name.** R2 (`name` behind `nickname`) and R3
 (`is_active` behind "account status") both identified an existing signal hiding behind a request
@@ -109,7 +109,7 @@ flagged the tension but did not block. Correct per the rules; worth knowing in r
 
 ## Manual test checklist
 - [x] TC-01 … TC-22 run headless against fresh fixtures (transcripts in the session scratchpad)
-- [ ] One S1 + S3 run in Codex or Copilot (rule 6)
+- [ ] One S1 + S3 run in Copilot (rule 6) — owner: Chetan Sharma
 
 ## Known risks
 - The model can still skip the step. The order gate, the visible line and the audit held in every
@@ -117,7 +117,7 @@ flagged the tension but did not block. Correct per the rules; worth knowing in r
 - Common signal names (`status`, `name`) produce broad searches; R2's `name` search used 21 terms.
 
 ## Sign-off
-- [x] All acceptance criteria covered (AC-5 in part — Finding 1)
+- [x] All acceptance criteria covered
 - [x] Edge cases documented
 - [ ] Manual checklist reviewed — parity run outstanding
 - QA: Chetan Sharma — pending
