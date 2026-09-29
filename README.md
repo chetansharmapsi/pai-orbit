@@ -44,7 +44,7 @@ check issue      → read response or reviewer feedback
 
 Workflow skills (callable from any mode)
 /git             → commit, branch, PR — reads project branching model
-/board           → task creation, card movement, team assignment (GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab)
+/board           → task creation, card movement, team assignment (GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab, Azure DevOps)
 /analysis        → change impact and dependency analysis
 /data-model      → schema reference and migration management
 /simplify        → code simplification — remove over-engineering, dead code, abstractions
@@ -185,12 +185,15 @@ After installing, run `/setup` in your project directory. It will:
    - **GitLab**: queries project boards first; presents the board list so you pick which one(s) define your workflow; derives column→label order directly from the board's lists. Falls back to querying all labels only if no boards are configured.
    - **GitHub Projects v2**: runs `gh project field-list` to read Status field options
    - **Linear**: runs `linear team list` to read workflow states
+   - **Azure DevOps**: checks Azure CLI, its `azure-devops` extension, and project access; confirms the team's area path and work-item type; discovers work-item states and asks you to confirm their board-column mapping and closing state. Failed or empty state discovery falls back to a manual mapping. Azure settings apply only to Azure boards.
    - **Jira / GitHub Issues / Notion**: prompts you to enter column names manually
 4. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, a `docs/` scaffold, and a `docs/architecture/` stub
 5. Create `.claude/hooks/`, write all safety hook scripts, wire them into `.claude/settings.json`, and validate each hook path — with a clear recovery message if anything is missing
 6. Tell you exactly what to fill in by hand
 
 Then run `/arch init` to complete your architecture declaration — a guided interview that writes `docs/architecture/system.md` (service map), `constraints.md` (enforcement rules), and `stack.md`. Once declared, `/build` reads the constraints before generating code and `/review` checks every diff against them.
+
+For a step-by-step Azure test using a disposable work item, see [Azure Boards verification](docs/azure-boards-verification.md).
 
 Re-run `/setup` anytime the stack, board configuration, or team changes significantly. The column→label table in `.claude/pai-orbit-config.md` includes a `# Re-run /setup` comment as a reminder when board labels drift.
 

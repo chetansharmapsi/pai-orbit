@@ -71,12 +71,16 @@ Organisation: {{AZURE_ORG}}
 Project: {{AZURE_PROJECT}}
 Team: {{AZURE_TEAM}}
 Area path: {{AZURE_AREA_PATH}}
+Work-item type: {{AZURE_WORK_ITEM_TYPE}}
+Closing state: {{AZURE_CLOSING_STATE}}
 Board URL: {{AZURE_BOARD_URL}}
 columns:
 | Column | Work-item state |
 |--------|-----------------|
 {{AZURE_COLUMNS}}
-<!-- Column names and states are populated by /setup from the project's process work-item states -->
+<!-- Azure only: Team selects area settings during setup; Area path is used for new work items, not as an iteration -->
+<!-- /setup confirms the column-to-state map for Work-item type; API state order need not match board column order -->
+<!-- Closing state is confirmed separately, even when excluded from active columns -->
 <!-- State names must match Azure Boards exactly -->
 <!-- END AZURE DEVOPS -->
 
