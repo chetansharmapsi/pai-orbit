@@ -101,7 +101,9 @@ Once purpose and scope are confirmed:
    **g. Show the outcome line**, every session, for every signal:
    `🔎 Consumer check — Signal: <name> · <Existing|New|Unclear> (<reason>) · Searched: <code repos | map path | none + limitation> · Result: <N other consumers | none found | not triggered>`
 
-   Each consumer found then enters step 4 as a candidate scenario, confirmed or excluded one at a time like any other. Every excluded consumer goes to `## Out of scope` with a reason.
+   A signal identified later in Phase 2 gets its own outcome line before any of its scenarios are proposed.
+
+   Each consumer found then enters step 4 as a candidate scenario, confirmed or excluded one at a time like any other. Every excluded consumer goes to `## Out of scope` with its own reason. A request to skip the search, or a general scope statement ("only the dashboard"), is **not** an exclusion — still present each consumer individually and ask for that consumer's reason.
 
 2. Propose a numbered list of **scenarios to cover** in this grooming session. Derive from the Phase 1b scope list, the consumers found in step 1, `ux.md`, the parent epic, domain docs, and discussion — include scenarios the user may not have named explicitly. Every confirmed scope item should be reachable by at least one scenario; if one is not, say so rather than quietly dropping it.
 3. Present each scenario as a distinct, user-facing situation (who is doing what, under what conditions). **Granularity test:** two situations are distinct scenarios if their acceptance criteria would differ — not just their inputs.
