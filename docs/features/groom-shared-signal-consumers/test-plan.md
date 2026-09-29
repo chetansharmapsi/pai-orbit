@@ -5,7 +5,7 @@
 **Requirements:** [requirements.md](./requirements.md) — 21 REQs, 13 ACs, 10 scenarios
 **Design:** [design.md](./design.md) (D8 test approach)
 **Result:** 13 of 13 acceptance criteria pass on Claude Code (AC-5 against its revised wording — see Finding 1).
-One defect found and fixed during testing (TC-20). Codex parity run blocked by the local environment (see Not covered).
+One defect found and fixed during testing (TC-20). Codex parity runs (R7c, R8c) pass; one Codex wording issue fixed (TC-14).
 
 ---
 
@@ -52,6 +52,7 @@ All sessions used standalone grooming (confirmed ticket opt-out), so no board wa
 | TC-10 | S4 | Docs-only: "coloured account-status badge"; override as purely new | Unclear; check runs by default and says so; override accepted only because Unclear; recorded with reason | No | R3b | Pass |
 | TC-11 | S4 (negative) | Full: same badge change; override attempted | Groom classifies from code; override on an Existing signal declined and recorded | No | R3 | Pass |
 | TC-12 | S1, REQ-6 | Second signal surfaces mid-Phase 2 | Own 🔎 line for each signal | No | R3 → fixed | Fail → fixed (see failure doc) |
+| TC-14 | S1, S6 (Codex) | Codex, full fixture: dashboard change; confirm/exclude each consumer | Each consuming surface a separate candidate | No | R7c | Fail → fixed (wording) — see Parity |
 | TC-13 | S8 | Declared repo not on disk (`mobile`, and `jobs` in only-surface) | Named not reachable; developer asked; never "none found" for it | No | R1, R5, R6 | Pass |
 
 ### Failure / error paths
@@ -98,18 +99,35 @@ that read as new. That is the `status` replaces `is_active` case from D2 working
 "In scope" grew the scope list from 4 to 8 items and pulled `jobs` into a small enhancement. Groom
 flagged the tension but did not block. Correct per the rules; worth knowing in real use.
 
+## Parity — Codex (rule 6)
+
+The built `dist/codex/.agents/skills/groom/SKILL.md` was installed in fresh fixtures and driven with
+`codex exec` / `codex exec resume`, sandbox `workspace-write`. (The first attempt failed on every
+shell command with `CreateProcessWithLogonW failed: 1385` until `~/.codex/config.toml`
+`[windows] sandbox` was changed from `elevated` to `unelevated`; no sandbox bypass was used.)
+
+| Run | Case | Result | Evidence |
+|---|---|---|---|
+| R7c | S1, S6, S8 — dashboard change | Pass, one wobble | 🔎 line (L65) before Scenario 1 (L79): "Existing … 2 other code consumers found; mobile repo is declared but not reachable"; tests as "2 files"; both map discrepancies flagged; map untouched; `## Consumer check` written citing `AGENTS.md` |
+| R8c | S3 — `nickname` | Pass | "New (adds a field with no existing reads and changes no existing readings) … Result: no existing consumers found"; only a lookup for the name itself |
+
+**TC-14 wobble:** R7c first merged the CSV export and the stale map-only admin filter into one
+scenario (L113), splitting them only when the developer said they were different things (L127).
+Cause: "group hits by surface using the granularity test" reads as permission to group surfaces.
+Fixed by wording — each surface is its own candidate, never merged. Verified by text in all 6 built
+outputs; not re-run live.
+
+Also seen in R7c (outside this feature): Codex did not ask the Phase 1 classification question when
+no labels existed. That is #35's Phase 1 behaviour, not the consumer check.
+
 ## Not covered
 
-- **Codex (rule 6 second tool):** not run. On this machine `codex exec` fails every shell command
-  under `workspace-write` and `read-only` with `CreateProcessWithLogonW failed: 1385`
-  (`~/.codex/config.toml` sets `[windows] sandbox = "elevated"`). Only `danger-full-access` works,
-  which was not used without the owner's approval. The Codex groom output was verified by text check (TC-23).
 - **Copilot, Cursor, Cursor plugin:** verified by text check only.
 - **Automated regression:** none — belongs to the `test-automation` epic.
 
 ## Manual test checklist
 - [x] TC-01 … TC-22 run headless against fresh fixtures (transcripts in the session scratchpad)
-- [ ] One S1 + S3 run in Copilot (rule 6) — owner: Chetan Sharma
+- [x] S1 + S3 run in Codex (rule 6) — R7c, R8c
 
 ## Known risks
 - The model can still skip the step. The order gate, the visible line and the audit held in every
@@ -119,5 +137,5 @@ flagged the tension but did not block. Correct per the rules; worth knowing in r
 ## Sign-off
 - [x] All acceptance criteria covered
 - [x] Edge cases documented
-- [ ] Manual checklist reviewed — parity run outstanding
-- QA: Chetan Sharma — pending
+- [x] Manual checklist reviewed
+- QA: Chetan Sharma — 2026-09-29

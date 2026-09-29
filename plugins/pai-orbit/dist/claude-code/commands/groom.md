@@ -83,7 +83,7 @@ Once purpose and scope are confirmed:
 
    **d. Search every reachable repo, inline, with your own file-search tools:**
    - Search terms: the named signal plus casing variants (`is_active`, `isActive`, `IS_ACTIVE`, `is-active`), serialized/API key names, config/env keys, derived names (`active_count`, `hasActive`), and aliases from the concept map (step e).
-   - A candidate is a **consuming surface** (screen, job, endpoint, component), not a grep line — group hits by surface using the granularity test in step 3.
+   - A candidate is a **consuming surface** (screen, job, endpoint, component), not a grep line — group hits into surfaces, but each surface is its own candidate: never merge two surfaces into one scenario, since each needs its own In / Out decision and reason.
    - Report test and fixture hits as a count; do not propose them as scenarios.
    - Record the exact search terms used, so "none found" can be checked.
    - Do not re-propose the surface the issue already names.
