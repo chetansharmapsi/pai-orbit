@@ -5,7 +5,7 @@
 **Requirements:** [requirements.md](./requirements.md) — 21 REQs, 13 ACs, 10 scenarios
 **Design:** [design.md](./design.md) (D8 test approach)
 **Result:** 13 of 13 acceptance criteria pass on Claude Code (AC-5 against its revised wording — see Finding 1).
-One defect found and fixed during testing (TC-20). Codex parity runs (R7c, R8c) pass; one Codex wording issue fixed (TC-14).
+One defect found and fixed during testing (TC-20). Codex (R7c, R8c) and Copilot (R9) parity runs pass; one Codex wording issue fixed (TC-14).
 
 ---
 
@@ -120,14 +120,36 @@ outputs; not re-run live.
 Also seen in R7c (outside this feature): Codex did not ask the Phase 1 classification question when
 no labels existed. That is #35's Phase 1 behaviour, not the consumer check.
 
+## Parity — Copilot (rule 6)
+
+**R9** — run by Chetan Sharma in VS Code Copilot Chat (Agent mode), 2026-09-29, against the full
+fixture with the built `dist/copilot/.github/prompts/groom.prompt.md` installed as a workspace
+prompt file (no user-level install), after the TC-14 wording fix. Case: "Hide inactive users on the
+team-lead dashboard". **Pass.**
+
+- Outcome line shown before Scenario 1, verbatim: "🔎 Consumer check — Signal: is_active · Existing
+  (the dashboard already reads it; this change alters that existing reading) · Searched: web, jobs;
+  concept map concept-consumers.md; mobile not reachable · Result: 3 other consumers."
+- Found the admin CSV export, which exists only in code — evidence of a real code search, not a
+  map read. `mobile` reported as declared in `AGENTS.md` but not present.
+- Search terms listed; "Test-only hits: 2 files"; both map discrepancies flagged by direction.
+- Asked once for other names before proposing scenarios.
+- Each consumer presented as its own scenario, one message at a time (admin filter → weekly report →
+  CSV export), each recorded with the developer's reason; stale map entry "I'll … suggest updating the
+  map; I won't edit it."
+- Phase 1 noticed the map's other consumers and offered to settle them early; when asked to defer,
+  it listed them as "Deferred, not excluded … I'll raise each separately in Phase 2".
+
 ## Not covered
 
-- **Copilot, Cursor, Cursor plugin:** verified by text check only.
+- **Cursor, Cursor plugin:** verified by text check only.
+- **Copilot new-field case (S3):** not run; covered on Claude Code (R2) and Codex (R8c).
 - **Automated regression:** none — belongs to the `test-automation` epic.
 
 ## Manual test checklist
 - [x] TC-01 … TC-22 run headless against fresh fixtures (transcripts in the session scratchpad)
 - [x] S1 + S3 run in Codex (rule 6) — R7c, R8c
+- [x] S1 run in Copilot (rule 6) — R9
 
 ## Known risks
 - The model can still skip the step. The order gate, the visible line and the audit held in every
