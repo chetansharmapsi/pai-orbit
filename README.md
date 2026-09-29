@@ -178,7 +178,7 @@ npx github:the-psi/pai-orbit init codex
 
 Modes are invoked as `$build`, `$groom`, and so on; `plan` and `review` are renamed `$orbit-plan` and `$orbit-review` so they don't clash with Codex's built-in `/plan` and `/review`. After installing, open `codex`, trust the project, run `/hooks` and trust the 4 hooks, then run `$setup`.
 
-**Existing projects:** `init codex` refuses to run if `AGENTS.md`, `README.md`, or `.codex/` already exist. `update codex` installs anyway but overwrites them with no backup, so commit first. Full guide: [`docs/codex-install-and-usage.md`](docs/codex-install-and-usage.md).
+**Existing projects:** `init codex` refuses to run if `AGENTS.md`, `README.md`, or `.codex/` already exist. `update codex` installs anyway but overwrites them with no backup, so commit first and restore your settings afterwards (see [Updating](#updating)). Full guide: [`docs/codex-install-and-usage.md`](docs/codex-install-and-usage.md).
 
 ### Other coding assistants (lossy)
 
@@ -194,10 +194,10 @@ See [`plugins/pai-orbit/README.md`](plugins/pai-orbit/README.md) for adapter int
 
 | Tool | How to update |
 |------|---------------|
-| Claude Code | `/plugin marketplace update the-psi`, then `/reload-plugins`. Third-party marketplaces don't auto-update by default. |
+| Claude Code | `/plugin marketplace update the-psi`, then in `/plugin` → **Installed** → `pai-orbit` → **Update now**, then `/reload-plugins`. From a shell: `claude plugin marketplace update the-psi`, then `claude plugin update pai-orbit@the-psi`. Third-party marketplaces don't auto-update by default. |
 | Cursor plugin | Reinstall or refresh the plugin from `https://github.com/the-psi/pai-orbit`, then reload Cursor. |
 | GitHub Copilot | `npx github:the-psi/pai-orbit update copilot` — refreshes pai-orbit files and keeps your `.copilot/` config and `AGENTS.md`. |
-| OpenAI Codex CLI | `npx github:the-psi/pai-orbit update codex` — overwrites `AGENTS.md`, `README.md`, and `.codex/` with no backup, so commit first. Then re-trust the hooks with `/hooks`. |
+| OpenAI Codex CLI | Commit first, then run `npx github:the-psi/pai-orbit update codex`. It overwrites `AGENTS.md`, `README.md`, and everything in `.codex/`, which resets your config, team file, and lint hook repo paths. Restore your `README.md` and `AGENTS.md` content, run `$setup` (or restore `.codex/` from git), then re-trust the hooks with `/hooks`. |
 | Cursor (legacy) | Copy `.cursor/` from [`plugins/pai-orbit/dist/cursor/`](plugins/pai-orbit/dist/cursor/) again. |
 
 After updating Claude Code or the Cursor plugin, re-run `/setup` in each project to pick up new templates and config sections. It only changes what's new.
