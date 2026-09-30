@@ -1,6 +1,6 @@
 # pai-orbit · v1.8.0
 
-A structured developer methodology harness, distributed as a Claude Code plugin and as rule/instruction bundles for Cursor, GitHub Copilot, and OpenAI Codex.
+A structured developer methodology harness for Claude Code, Cursor, GitHub Copilot, and OpenAI Codex (beta) — installed as a plugin in Claude Code and Cursor, and with one command for Copilot and Codex.
 
 pai-orbit gives your project a shared vocabulary for how work gets done — distinct modes for building, designing, planning, and exploring data; operational skills for git, task management, and deployment; and a first-time setup that generates everything project-specific from a short conversation.
 
@@ -17,12 +17,14 @@ Backlog
 /ux              → user flow and layout design — produces docs/features/*/ux.md
 
 Sprint — recommended order for a new feature
-/groom           → feature requirements — produces docs/features/*/requirements.md; runs purpose → scenario
-                   confirmation → requirements; readiness gate blocks /design until functional gaps are closed;
-                   at session close: posts open questions to board, commits file, offers card move and push
+/groom           → feature requirements — produces docs/features/*/requirements.md; asks for a ticket number,
+                   reasons about product context, confirms scope, then scenarios → requirements; readiness gate
+                   blocks /design until functional gaps are closed; at session close: posts open questions to
+                   board, commits file, offers card move and push
 /test (write)    → draft test cases from requirements before any code is written — produces docs/features/*/test-plan.md
 /design          → technical trade-offs — produces docs/decisions/ and docs/features/*/design.md
-/build           → implementation — reads docs and constraints, checks task board, ships
+/build           → implementation — sets up a branch first; builds only groomed, design-resolved issues;
+                   reads docs and constraints, checks task board, ships
 /test (run)      → execute test plan; log failures to docs/wip/
 /build           → fix logged bugs; repeat test → build until clean
 /test (verify)   → final verification pass; confirm all acceptance criteria are met
@@ -51,7 +53,7 @@ Workflow skills (callable from any mode)
 
 Planning and maintenance
 /plan            → roadmap and prioritisation — consumes docs, moves board cards
-/data            → data exploration — produces docs/reports/
+/data            → read-only data exploration (SELECT only) — produces docs/reports/
 /epic            → epic lifecycle — create, load, update, and list epics in docs/epics/
 /setup           → first-time configuration — generates config, agents, hooks, docs scaffold
 /suggest-skills  → discover recurring patterns worth encoding as project skills (extends Claude's built-in)
@@ -115,9 +117,9 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/simplify`) can 
 
 > **`/groom` readiness gate** — before handing off to `/design`, `/groom` audits every open question and classifies it as a *functional gap* (what the system does — must be resolved) or a *design question* (how it does it — deferred to `/design`). The feature is not marked groomed until all functional gaps are closed. This prevents half-specified features from entering design.
 
-> **`/review security`** — security-focused pass is now a sub-mode of `/review`. Use `/review` for full code review, `/review security` for the OWASP checklist, or `/review full` for both in sequence. Critical and High findings block merge.
+> **`/review security`** — the security-focused pass is a sub-mode of `/review`. Use `/review` for full code review, `/review security` for the OWASP checklist, or `/review full` for both in sequence. Critical and High findings block merge.
 
-> **v1.8.0 — `system_docs_repo` now redirects writes, not just reads.** Every mode/skill/agent that writes to `docs/` now resolves the target through a new shared `reference/docs-path-resolution.md`, shipped alongside `commands/`/`skills/`/`agents/`/`templates/` in every adapter bundle. If you installed pai-orbit before v1.8.0, re-run your adapter's install/update command to pick up both the new `reference/` directory and the fix — until then, `system_docs_repo` writes keep landing in the local repo instead of the configured docs repo.
+> **v1.8.0 — `system_docs_repo` now redirects writes, not just reads.** Every mode/skill/agent that writes to `docs/` now resolves the target through a new shared `reference/docs-path-resolution.md`, shipped with every adapter (inlined into each prompt and skill for Copilot and Codex). If you installed pai-orbit before v1.8.0, update it (see [Updating](#updating)) to pick up both the new `reference/` directory and the fix — until then, `system_docs_repo` writes keep landing in the local repo instead of the configured docs repo.
 
 ## Install
 
@@ -166,6 +168,18 @@ This installs the pai-orbit files only. Then run `/setup` in Copilot Chat (Busin
 
 **Enforcement is honest:** Copilot has no runtime hook system, so `bash-guard` intent lives as advisory text in `.github/copilot-instructions.md` (Copilot usually obeys); the optional `.husky/pre-commit` adds commit-time lint + weak secret detection, but cannot block `git push --force` or `git add -A`. Details in the adoption page's Hook coverage matrix.
 
+### OpenAI Codex CLI (beta)
+
+Codex users get a native install — 20 skills (6 operational, 14 modes), 2 subagents (`docs-writer`, `cross-repo-impact`), 4 hooks with PowerShell versions for Windows, MCP, and always-on rules. Requires Codex CLI v0.144.6+ and Node.js 18+. Install with one command from the project root:
+
+```bash
+npx github:the-psi/pai-orbit init codex
+```
+
+Modes are invoked as `$build`, `$groom`, and so on; `plan` and `review` are renamed `$orbit-plan` and `$orbit-review` so they don't clash with Codex's built-in `/plan` and `/review`. After installing, open `codex`, trust the project, run `/hooks` and trust the 4 hooks, then run `$setup`.
+
+**Existing projects:** `init codex` refuses to run if `AGENTS.md`, `README.md`, or `.codex/` already exist. `update codex` installs anyway but overwrites them with no backup, so commit first and restore your settings afterwards (see [Updating](#updating)). Full guide: [`docs/codex-install-and-usage.md`](docs/codex-install-and-usage.md).
+
 ### Other coding assistants (lossy)
 
 The same plugin source is compiled to per-tool bundles under `plugins/pai-orbit/dist/`.
@@ -173,9 +187,20 @@ The same plugin source is compiled to per-tool bundles under `plugins/pai-orbit/
 | Tool | Path | How to install |
 |------|------|----------------|
 | Cursor (legacy) | [`plugins/pai-orbit/dist/cursor/`](plugins/pai-orbit/dist/cursor/) | Copy `.cursor/` into your project root — use only if you cannot install the plugin |
-| OpenAI Codex CLI (experimental) | [`plugins/pai-orbit/dist/codex/`](plugins/pai-orbit/dist/codex/) | Copy `AGENTS.md` to your project root (lossy — reference instructions only) |
 
 See [`plugins/pai-orbit/README.md`](plugins/pai-orbit/README.md) for adapter internals and how to rebuild the bundles.
+
+## Updating
+
+| Tool | How to update |
+|------|---------------|
+| Claude Code | `/plugin marketplace update the-psi`, then in `/plugin` → **Installed** → `pai-orbit` → **Update now**, then `/reload-plugins`. From a shell: `claude plugin marketplace update the-psi`, then `claude plugin update pai-orbit@the-psi`. Third-party marketplaces don't auto-update by default. |
+| Cursor plugin | Reinstall or refresh the plugin from `https://github.com/the-psi/pai-orbit`, then reload Cursor. |
+| GitHub Copilot | `npx github:the-psi/pai-orbit update copilot` — refreshes pai-orbit files and keeps your `.copilot/` config and `AGENTS.md`. |
+| OpenAI Codex CLI | Commit first, then run `npx github:the-psi/pai-orbit update codex`. It overwrites `AGENTS.md`, `README.md`, and everything in `.codex/`, which resets your config, team file, and lint hook repo paths. Keep the newly installed files, and merge back only your project-specific content: restore your own `README.md`, re-add your project sections to the new `AGENTS.md`, and re-enter your config, team, and lint repo paths (or run `$setup`). Then re-trust the hooks with `/hooks`. |
+| Cursor (legacy) | Copy `.cursor/` from [`plugins/pai-orbit/dist/cursor/`](plugins/pai-orbit/dist/cursor/) again. |
+
+After updating Claude Code or the Cursor plugin, re-run `/setup` in each project to pick up new templates and config sections. It only changes what's new.
 
 ## First run
 
@@ -224,6 +249,9 @@ Four shell hooks are included. Wire them in Claude Code's settings or copy them 
 - [Process & Practices](docs/process-and-practices.md) — the methodology: why modes, working style, how sessions should flow
 - [Capabilities](docs/capabilities.md) — reference for every mode, skill, and agent
 - [Getting Started](docs/getting-started.md) — installation, first `/setup` walkthrough, first session
+- [Cursor plugin install and usage](docs/cursor-plugin-install-and-usage.md)
+- [Copilot install and usage](docs/copilot-install-and-usage.md)
+- [Codex install and usage](docs/codex-install-and-usage.md)
 
 ## Philosophy
 
