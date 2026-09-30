@@ -1,6 +1,6 @@
 # Verify Azure Boards support
 
-Use a test Azure DevOps project or a disposable work item. This checks the installed assistant's behavior as well as Azure CLI connectivity. A successful plugin build alone does not prove the live integration works.
+Use a test Azure DevOps project or a disposable work item to walk through setup, board operations, and failure handling.
 
 ## 1. Prepare your test
 
@@ -67,15 +67,15 @@ Use an isolated terminal/test environment so you do not disrupt your normal cred
 - **CLI or extension absent:** the assistant should explain what is missing and stop before board operations.
 - **Missing/expired credential:** use a test environment without working Azure credentials. It should report the authentication remedy and never claim a task was created. An alternative cached sign-in can make this test succeed; verify the environment actually lacks access.
 - **Wrong project or insufficient permissions:** it should report the actual error, rather than labelling every failure “not authenticated.”
-- **Empty discovery:** a tool-response fixture returning an empty resource listing or empty state list should make the assistant ask for the manual mapping. It must not call a resource with blank names or save empty states. This is a simulated edge-case check; report it separately from live Azure testing.
+- **Empty discovery:** use a tool-response fixture returning an empty resource listing or empty state list. The assistant should ask for the manual mapping, and must not call a resource with blank names or save empty states.
 - **Windows PowerShell 5.1:** run setup and the board sequence there if Windows support is being claimed. Commands must not fail because of Bash continuations, `/dev/null`, or shell-level `||`.
 
 ## 5. Record the result
 
 For each assistant tested, record: PR commit, assistant/version, OS/shell, Azure CLI/extension versions, date, test work-item ID, and pass/fail for setup, area routing, create/read/move/assign/comment/close, and failure handling. Keep tokens and sensitive project data out of screenshots or logs.
 
-Check off only tests actually run. Generated-bundle inspection establishes packaging parity across assistants; it does not replace testing their live behavior. Leave any untested assistant or shell explicitly marked “not run.”
+Record packaging results separately from the behavior observed for each assistant and shell.
 
 ## Reference commands
 
-The expected arguments are documented in Microsoft's [work-item CLI reference](https://learn.microsoft.com/en-us/cli/azure/boards/work-item?view=azure-cli-latest), [team-area reference](https://learn.microsoft.com/en-us/cli/azure/boards/area/team?view=azure-cli-latest), and [DevOps invoke reference](https://learn.microsoft.com/en-us/cli/azure/devops?view=azure-cli-latest#az-devops-invoke). Documentation checks and live test results are separate evidence.
+The expected arguments are documented in Microsoft's [work-item CLI reference](https://learn.microsoft.com/en-us/cli/azure/boards/work-item?view=azure-cli-latest), [team-area reference](https://learn.microsoft.com/en-us/cli/azure/boards/area/team?view=azure-cli-latest), and [DevOps invoke reference](https://learn.microsoft.com/en-us/cli/azure/devops?view=azure-cli-latest#az-devops-invoke).
