@@ -70,7 +70,7 @@ Board IDs (GitHub Projects v2):
 |--------|---------------|-----------|
 | groom  | Ready         | 61e4505c  |
 | design | no move       | —         |
-| build  | In review     | 47fc9ee4  |
+| build  | In review     | df73e18b  |
 | review | no move       | —         |
 ```
 
