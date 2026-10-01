@@ -1,4 +1,4 @@
-# pai-orbit · v1.8.0
+# pai-orbit · v1.9.0
 
 A structured developer methodology harness for Claude Code, Cursor, GitHub Copilot, and OpenAI Codex (beta) — installed as a plugin in Claude Code and Cursor, and with one command for Copilot and Codex.
 
@@ -118,6 +118,13 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/simplify`) can 
 > **`/groom` readiness gate** — before handing off to `/design`, `/groom` audits every open question and classifies it as a *functional gap* (what the system does — must be resolved) or a *design question* (how it does it — deferred to `/design`). The feature is not marked groomed until all functional gaps are closed. This prevents half-specified features from entering design.
 
 > **`/review security`** — the security-focused pass is a sub-mode of `/review`. Use `/review` for full code review, `/review security` for the OWASP checklist, or `/review full` for both in sequence. Critical and High findings block merge.
+
+> **Migrating to v1.9.0 — modes now move their own ticket.** `/groom`, `/design`, `/build` and `/review` move the ticket at close-out using a `## Mode transitions` map that `/setup` writes.
+> - Re-run `/setup` once — it adds `## Mode transitions` to `.claude/pai-orbit-config.md` (existing sections untouched).
+> - Until you do, those modes finish normally and print: "No mode-transition map — re-run /setup to enable automatic board moves."
+> - `/build` no longer closes the issue; it moves it (e.g. to In review). The issue closes on merge via `closes #N`.
+> - `/review` never moves the issue to Done by default. Done comes from the merge (your board's merge automation or `closes #N`). If your board has an "Approved" or "Ready to merge" column, an approving review moves the issue there.
+> - GitHub Projects: run `gh auth refresh -s project` if moves fail with a permission error.
 
 > **v1.8.0 — `system_docs_repo` now redirects writes, not just reads.** Every mode/skill/agent that writes to `docs/` now resolves the target through a new shared `reference/docs-path-resolution.md`, shipped with every adapter (inlined into each prompt and skill for Copilot and Codex). If you installed pai-orbit before v1.8.0, update it (see [Updating](#updating)) to pick up both the new `reference/` directory and the fix — until then, `system_docs_repo` writes keep landing in the local repo instead of the configured docs repo.
 

@@ -94,7 +94,7 @@ No implementation. Reads `requirements.md`'s open questions as a starting point,
 **Writes:** Code (in sub-repos), docs/domain/product-capabilities.md  
 **Switch to:** `/design` for non-trivial design questions, `/groom` for unclear requirements, `/plan` for priority questions
 
-Reads CLAUDE.md and relevant docs before starting. Checks the task board. Spawns sub-agents per service for parallel work. Before switching modes mid-session, saves a handoff note to `docs/wip/session-capture-<date>.md`. After shipping: closes the board item, creates issues for newly discovered tasks, updates product-capabilities.md, records design choices as ADRs.
+Reads CLAUDE.md and relevant docs before starting. Checks the task board. Spawns sub-agents per service for parallel work. Before switching modes mid-session, saves a handoff note to `docs/wip/session-capture-<date>.md`. After shipping: moves the board item via `/board` `transition(build)` (does not close it — the issue closes on merge), creates issues for newly discovered tasks, updates product-capabilities.md, records design choices as ADRs.
 
 ---
 
@@ -127,7 +127,7 @@ Shows query before running. Prefers read-only. Flags data quality issues explici
 **Writes:** `.claude/pai-orbit-config.md`, `.claude/team.md`, `CLAUDE.md` stub, `.claude/agents/<service>-builder.md`, `.claude/hooks/*.sh`, `.claude/settings.json`, docs scaffold  
 **Switch to:** `/arch init` when setup is complete
 
-Discovers repo structure and tech stack, asks targeted questions in one block, queries the live board API for actual column/label taxonomy, generates all config and scaffold files. Creates and validates `.claude/hooks/` with all safety hooks wired into `.claude/settings.json`. Re-run when the stack or team changes significantly.
+Discovers repo structure and tech stack, asks targeted questions in one block, queries the live board API for actual column/label taxonomy and IDs, proposes and confirms a mode→column map (`## Mode transitions`), generates all config and scaffold files. Creates and validates `.claude/hooks/` with all safety hooks wired into `.claude/settings.json`. Re-run when the stack or team changes significantly.
 
 ---
 
@@ -216,7 +216,7 @@ Git operations following the project's configured branching model. Covers commit
 
 ### `/board`
 
-Task management — create issues, move cards, assign work, close on ship. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, Linear, and Jira.
+Task management — create issues, move cards, assign work, close on ship. Also exposes `transition(mode)` (with `resolve_ticket()`): at close-out `/groom`, `/design`, `/build` and `/review` call it to move their ticket to the column mapped in `.claude/pai-orbit-config.md → ## Mode transitions` (written by `/setup`) — never backwards, never to Done from review, `no move` and missing-map cases reported in one line. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, Linear, and Jira.
 
 ---
 
