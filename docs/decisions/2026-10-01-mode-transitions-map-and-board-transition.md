@@ -42,6 +42,10 @@ Supporting rules:
 - Setup suggests targets from per-mode synonym lists (case-insensitive substring, first match),
   falling back to the next column after the previous mode's target. A suggestion at or before
   the previous target collapses to `no move`. Every row is user-confirmed.
+- Review never moves a ticket to Done by default. Review happens before merge, and Done is
+  owned by the merge (`closes #N` plus the board's own merge automation). Approval moves the
+  ticket only to a post-review, pre-merge column (Approved, Ready to merge) if one exists;
+  otherwise review is `no move`.
 - `transition()` reads the table by column position, so the requesting team's hand-written
   table (Mode | Status | Option ID) works unmodified.
 - `transition()` never blocks close-out: the mode commits its document first, and every
@@ -55,6 +59,7 @@ Supporting rules:
 | IDs added to the existing `## Agile Board → columns` table; map stores names only | Each ID stored once | Changes a table every mode reads; doesn't match the requesting team's format |
 | Names only, IDs looked up on every move | Never stale on IDs | Contradicts REQ-3; extra call per move; renames caught only at move time |
 | MCP-only moves | Leanest skill | No automatic moves without a board MCP; breaks the skill's shell-fallback pattern |
+| Review → Done on approval | One fewer manual step on boards without merge automation | Marks unmerged work Done; duplicates the board's merge automation, too early |
 | Model-judgement column suggestions | Flexible with odd names | Not deterministic across runs or adapters; untestable against AC-13 |
 
 ## Consequences
@@ -67,11 +72,11 @@ Supporting rules:
 **Negative / trade-offs:**
 - `/build` no longer closes the ticket; it closes on merge via `closes #N`. That's a visible
   workflow change, covered by the 1.9.0 migration note.
-- On boards where review → Done, a ticket can reach Done after approval but before merge.
 - The copilot adapter's hand-written setup step must be kept in step with core's setup by
   hand.
 
 **Neutral:**
+- Done is set by the merge, not by any mode; issue-close stays a confirmed ship action.
 - ux, test, arch, domain keep their "Offer to move?" prompts; data and plan are unchanged.
 - The legacy cursor adapter carries `transition()` as reference text under its documented
   lossy exception.

@@ -6,7 +6,7 @@ When a pai-orbit mode finishes its work, it moves the ticket to the right next c
 
 ## Scope
 What this delivers, as concrete changes:
-- `core/modes/setup.md` — after the existing board column discovery, `/setup` builds a mode→column map for whichever board type it detects. It only suggests columns that exist on that board: first a column whose name matches the step (Design, Build, Review, Done), otherwise the next real column in board order. If the wanted column is missing, it offers another real column or "no move". The user confirms every row; setup saves the real column names and IDs.
+- `core/modes/setup.md` — after the existing board column discovery, `/setup` builds a mode→column map for whichever board type it detects. It only suggests columns that exist on that board: first a column whose name matches the step (Design, Build, In review, and for review a post-review pre-merge column such as Approved or Ready to merge), otherwise the next real column in board order. If the wanted column is missing, it offers another real column or "no move". The user confirms every row; setup saves the real column names and IDs.
 - `.claude/pai-orbit-config.md` → new `## Mode transitions` section, and the same section in `core/templates/pai-orbit-config.md.template`.
 - `core/skills/board/SKILL.md` — new `transition(mode)` operation that reads the map and moves the ticket. Modes call this one step instead of re-deriving the column.
 - `core/modes/groom.md`, `design.md`, `build.md`, `review.md` — session close moves the ticket automatically via `transition(mode)`, with no "Offer to move?" prompt.
@@ -36,7 +36,7 @@ Confirmed scenarios this feature must handle:
 7. A mode finishes with no ticket linked to the session — the move is skipped quietly; the doc is saved and committed as normal.
 8. Setup is re-run on a project that already has a map — setup compares the map to the live board, flags changed or broken rows, suggests updates, and keeps untouched rows.
 9. A mode finishes but the ticket is already at or past the target column — the ticket is never moved backwards; the mode notes the skip in one line.
-10. Review finishes without approving ("request changes") — the ticket is not moved to Done; only an approving review moves it.
+10. Review finishes. Approval moves the ticket only to a post-review, pre-merge column (e.g. Approved, Ready to merge) if the board has one; otherwise the ticket stays where it is. "Request changes" never moves it. Review never moves a ticket to Done by default — Done comes from the merge (`closes #N` plus the board's own merge automation).
 
 ## User stories / use cases
 - S1: As a team lead running `/setup`, I want it to build the mode→column map from my real board, so that tickets move to the right place without guessing.
@@ -48,7 +48,7 @@ Confirmed scenarios this feature must handle:
 - S7: As a developer doing exploratory work, I want modes to work normally without a ticket, so that I am not blocked.
 - S8: As a team lead whose board changed, I want re-running setup to update only what changed, so that I do not redo the whole map.
 - S9: As a developer re-running a mode, I want the ticket never to move backwards, so that the board does not lose progress.
-- S10: As a reviewer, I want the ticket to stay in review when I request changes, so that Done really means done.
+- S10: As a reviewer, I want approval to leave the ticket short of Done until the PR merges, and "request changes" to leave it in review, so that Done really means merged.
 
 ## Functional requirements
 1. REQ-1 (Scenario 1): `/setup` must read the live columns of the board it detects (any supported board type) and suggest a target column for groom, design, build and review.
@@ -65,9 +65,9 @@ Confirmed scenarios this feature must handle:
 12. REQ-12 (Scenario 6): If the move fails, the mode must show the error and the permission or fix needed (e.g. `gh auth refresh -s project` for GitHub Projects).
 13. REQ-13 (Scenario 7): With no linked ticket, the move must be skipped quietly.
 14. REQ-14 (Scenario 8): Re-running setup must compare the saved map with the live board, flag changed or broken rows, suggest updates, and keep rows the team does not change.
-15. REQ-15 (Scenarios 1, 2): Setup must first suggest a column whose name matches the step (Design, Build, Review, Done), and fall back to the next column in board order only when none matches.
+15. REQ-15 (Scenarios 1, 2): Setup must first suggest a column whose name matches the step (Design, Build, In review; for review: Approved, Ready to merge, Ready for release), and fall back to the next column in board order only when none matches.
 16. REQ-16 (Scenario 9): A mode must never move a ticket backwards. If the ticket is already at or past the target column, the mode skips the move and notes why in one line.
-17. REQ-17 (Scenario 10): Review must move the ticket to Done only on approval ("approve" or "approve with comments"). On "request changes" the ticket is not moved.
+17. REQ-17 (Scenario 10): Review may move the ticket only on approval ("approve" or "approve with comments"), and only to a post-review, pre-merge column. Setup must not suggest Done for review; with no such column it suggests "no move". The team may still pick Done by hand at setup. On "request changes" the ticket is not moved.
 
 ## Non-functional requirements
 - **Adapter parity:** all 5 adapters must fully support the new board operation and the updated close-outs (`docs/architecture/constraints.md` rule 6).
@@ -79,7 +79,8 @@ Confirmed scenarios this feature must handle:
 - Board consulted: issue #30 sits in **Ready** on the-psi Projects board #3 (columns: Backlog, Ready, In progress, In review, Done).
 - `/setup` already discovers column names (`core/modes/setup.md` Step 2b) but not option IDs, and records no mode mapping.
 - Today the board skill advises dragging GitHub Projects cards in the browser because CLI moves are unreliable; this feature requires reliable automatic moves for mode close-out.
-- Expected map for this repo's own board: groom → Ready, design → no move, build → In review, review → Done.
+- Expected map for this repo's own board: groom → Ready, design → no move, build → In review, review → no move.
+- Review precedes merge on this team, and board #3 has its "Pull request merged" and "Item closed" workflows enabled, so Done is set by the merge, not by `/review` (decision revised 2026-10-01 after design review).
 
 ## Out of scope
 - Automatic moves for ux, test, arch, domain, data and plan modes.
@@ -88,6 +89,7 @@ Confirmed scenarios this feature must handle:
 - Incident fast-path column.
 - Creating missing columns on a board.
 - Moving a ticket backwards on the board.
+- Moving a ticket to Done from `/review` by default — Done is owned by the merge.
 
 ## Open questions
 Design questions deferred to `/design` (no functional gaps remain):
@@ -111,8 +113,8 @@ Design questions deferred to `/design` (no functional gaps remain):
 - AC-9 (Scenario 7): With no linked ticket, the mode finishes normally with no move and no error.
 - AC-10 (Scenario 8): Re-running setup after a column is added or renamed flags only the affected rows and keeps unchanged rows as they were.
 - AC-11 (Scenario 9): Re-running groom on a ticket in In review leaves it in In review, with a one-line note.
-- AC-12 (Scenario 10): Review with "request changes" leaves the ticket in In review; review with approval moves it to Done.
-- AC-13 (Scenarios 1, 2): On this repo's board, setup suggests groom → Ready, design → no move, build → In review, review → Done.
+- AC-12 (Scenario 10): Review with "request changes" leaves the ticket in In review. Review with approval moves it to the mapped post-review column if one exists, otherwise leaves it in In review; in neither case is it moved to Done.
+- AC-13 (Scenarios 1, 2): On this repo's board, setup suggests groom → Ready, design → no move, build → In review, review → no move.
 - AC-14 (NFR): Every adapter's `dist/` contains the new board operation and the updated close-outs, and a project without the map gets the AC-7 message instead of breaking.
 
 Status: Designed — ready for /build ([design.md](./design.md))

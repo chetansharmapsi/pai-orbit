@@ -71,7 +71,7 @@ Board IDs (GitHub Projects v2):
 | groom  | Ready         | 61e4505c  |
 | design | no move       | —         |
 | build  | In review     | 47fc9ee4  |
-| review | Done          | 98236657  |
+| review | no move       | —         |
 ```
 
 What "Column ID" holds per board type:
@@ -154,7 +154,7 @@ columns (position)        Re-running /groom on #30 sitting in In review:
  2 Ready      ← groom       → "#30 is already in In review (past Ready) — not moved"
  3 In progress
  4 In review  ← build
- 5 Done       ← review
+ 5 Done       ← set by merge, not by a mode
 ```
 
 Options rejected: an explicit order number in the map (duplicates the columns table, can
@@ -183,18 +183,27 @@ changes three modes' openings — scope creep); asking at close-out (contradicts
 
 ### ⑤ Review — which variants move, what counts as approval *(not raised in grooming)*
 
-**Decision:** only the final verdict moves the ticket.
+**Decision:** only the final verdict moves the ticket, and **never to Done by default** — Done is
+owned by the merge. *(Revised 2026-10-01 after design review; requirements Scenario 10, REQ-17,
+AC-12 and AC-13 amended to match.)*
 
 | Variant | Outcome | Board action |
 |---------|---------|--------------|
-| `/review` | approve / approve with comments | `transition(review)` |
+| `/review` | approve / approve with comments | `transition(review)` — to the mapped post-review column, or `no move` |
 | `/review` | request changes | not moved; one-line note "changes requested" (REQ-17) |
-| `/review full` | review approves **and** security pass has no Critical/High | `transition(review)` |
+| `/review full` | review approves **and** security pass has no Critical/High | `transition(review)` — same as above |
 | `/review full` | any Critical/High finding | not moved |
 | `/review security` alone | any | never transitions — it's a gate, not a final sign-off |
 
-Accepted consequence: on boards where review → Done, a ticket can reach Done after approval but
-before merge. This is the agreed AC-12 behaviour.
+Why not Done: review happens **before** merge, so approval means "ready to merge", not "done".
+Every supported board already sets Done on merge — GitHub Projects' built-in "Pull request
+merged" / "Item closed" workflows (both enabled on board #3), GitLab's `Closes #N`, and the
+Linear and Jira GitHub/GitLab integrations. A review-time move would duplicate that, too early.
+Teams without merge automation still have the confirmed issue-close step (REQ-8).
+
+On boards with a post-review, pre-merge column (Approved, Ready to merge, Ready for release),
+approval moves the ticket there. Otherwise review is `no move` and the ticket sits in In review
+until the merge.
 
 ### ⑤b Build no longer closes the ticket *(recorded, not a choice)*
 
@@ -215,16 +224,18 @@ mode's target becomes `no move`.
 | groom | Ready for Design, Design, Groomed, Refined, Ready | the board's first column |
 | design | Ready for Build, Build, Ready for Dev, To do, Ready | groom's target |
 | build | In review, Review, Code review, QA, Testing | design's target, else groom's |
-| review | Done, Closed, Complete, Shipped | build's target |
+| review | Approved, Ready to merge, Ready for release — **never Done** (no match → `no move`, no board-order fallback) | build's target |
 
 Worked examples:
 
 | Board | groom | design | build | review |
 |-------|-------|--------|-------|--------|
-| This repo — Backlog, Ready, In progress, In review, Done | Ready | Ready → collapses to **no move** | In review | Done |
-| Requesting team — …, Design, Build&Test, Done | Design | Build&Test | Done (fallback) | Done → collapses to **no move** |
+| This repo — Backlog, Ready, In progress, In review, Done | Ready | Ready → collapses to **no move** | In review | **no move** (no post-review column) |
+| Requesting team — …, Design, Build&Test, Done | Design | Build&Test | Done (fallback) | **no move** |
 
-The first row is AC-13. The second reproduces the requesting team's hand-written map.
+The first row is AC-13. The second reproduces the requesting team's hand-written map. Review
+is the one mode with no board-order fallback: the next column after In review is usually Done,
+which review must not suggest (REQ-17). A team can still pick Done by hand at setup.
 
 Suggestions are only ever drawn from columns that exist on the board (REQ-4). When a mode's
 synonyms all miss, setup names the gap ("no review-like column found") before offering the
@@ -275,6 +286,9 @@ REQ-10 message instead. Migration note in the plugin README and release notes:
   "No mode-transition map — re-run /setup to enable automatic board moves."
 - `/build` no longer closes the issue; it moves it (e.g. to In review).
   The issue closes on merge via `closes #N`.
+- `/review` never moves the issue to Done by default. Done comes from the merge
+  (your board's merge automation or `closes #N`). If your board has an "Approved" or
+  "Ready to merge" column, an approving review moves the issue there.
 - GitHub Projects: run `gh auth refresh -s project` if moves fail with a permission error.
 ```
 
@@ -351,7 +365,7 @@ block the commit (REQ-11). Review calls `transition()` only when ⑤ allows.
 5. **`core/modes/design.md`** — replace close step 4 with `transition(design)`.
 6. **`core/modes/build.md`** — "After shipping": replace "Close the task board item" with
    `transition(build)`; keep follow-up item creation (⑤b).
-7. **`core/modes/review.md`** — "After review": `transition(review)` per the ⑤ table.
+7. **`core/modes/review.md`** — "After review": `transition(review)` per the ⑤ table; never Done by default.
 8. **`adapters/copilot/build.sh`** — add `## Mode transitions` to the hand-written setup
    section list (⑦).
 9. **Rebuild + verify** — `bash plugins/pai-orbit/build.sh`; grep every `dist/` (AC-14).
