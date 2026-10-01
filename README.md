@@ -1,4 +1,4 @@
-# pai-orbit · v1.8.0
+# pai-orbit · v1.9.0
 
 A structured developer methodology harness for Claude Code, Cursor, GitHub Copilot, and OpenAI Codex (beta) — installed as a plugin in Claude Code and Cursor, and with one command for Copilot and Codex.
 
@@ -118,6 +118,8 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/simplify`) can 
 > **`/groom` readiness gate** — before handing off to `/design`, `/groom` audits every open question and classifies it as a *functional gap* (what the system does — must be resolved) or a *design question* (how it does it — deferred to `/design`). The feature is not marked groomed until all functional gaps are closed. This prevents half-specified features from entering design.
 
 > **`/review security`** — the security-focused pass is a sub-mode of `/review`. Use `/review` for full code review, `/review security` for the OWASP checklist, or `/review full` for both in sequence. Critical and High findings block merge.
+
+> **v1.9.0 — `/groom` checks other consumers of an existing signal.** When a change alters how an existing field, flag, or derived value is read, `/groom` Phase 2 now searches the code (and every declared, locally available repo) for other places that read it, plus an optional `docs/domain/concept-consumers.md` map, and proposes each one as a candidate scenario. The outcome is shown every session and recorded under a new `## Consumer check` section that the session-close audit enforces — so re-grooming a feature whose older `requirements.md` has no such section will return to Phase 2 until it is added. `/groom` also now reads `docs/architecture/constraints.md`. Update pai-orbit to pick it up (see [Updating](#updating)).
 
 > **v1.8.0 — `system_docs_repo` now redirects writes, not just reads.** Every mode/skill/agent that writes to `docs/` now resolves the target through a new shared `reference/docs-path-resolution.md`, shipped with every adapter (inlined into each prompt and skill for Copilot and Codex). If you installed pai-orbit before v1.8.0, update it (see [Updating](#updating)) to pick up both the new `reference/` directory and the fix — until then, `system_docs_repo` writes keep landing in the local repo instead of the configured docs repo.
 
