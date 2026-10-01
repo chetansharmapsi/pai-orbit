@@ -91,13 +91,13 @@ Confirmed scenarios this feature must handle:
 
 ## Open questions
 Design questions deferred to `/design` (no functional gaps remain):
-- [ ] D1: Exact layout of `## Mode transitions` and how IDs are stored per board type — owner: /design
-- [ ] D2: How to make GitHub Projects v2 moves reliable (field/option IDs, resolving an issue's project item) — owner: /design
-- [ ] D3: How `transition(mode)` determines board order to detect a backwards move — owner: /design
-- [ ] D4: How the name matching for setup's suggestions works — owner: /design
-- [ ] D5: How each adapter (copilot, legacy cursor, and the others) carries the new operation at full parity — owner: /design
-- [ ] D6: Version number and migration-note wording — owner: /design
-- [ ] D7: Whether to align with the requesting team's hand-written `## Mode transitions` format for compatibility — owner: /design
+- [x] D1: Exact layout of `## Mode transitions` and how IDs are stored per board type — **Resolved:** standalone section, board-IDs header + `Mode | Target column | Column ID` table (design ①)
+- [x] D2: How to make GitHub Projects v2 moves reliable (field/option IDs, resolving an issue's project item) — **Resolved:** board-agnostic `transition()` contract, MCP-first with per-board CLI fallback (design ②)
+- [x] D3: How `transition(mode)` determines board order to detect a backwards move — **Resolved:** row order of the existing columns table (design ③)
+- [x] D4: How the name matching for setup's suggestions works — **Resolved:** per-mode synonym lists + board-order fallback + collapse rule (design ⑥)
+- [x] D5: How each adapter (copilot, legacy cursor, and the others) carries the new operation at full parity — **Resolved:** core + rebuild all dists, plus one copilot adapter edit (design ⑦)
+- [x] D6: Version number and migration-note wording — **Resolved:** 1.9.0 minor, migration note in design ⑧
+- [x] D7: Whether to align with the requesting team's hand-written `## Mode transitions` format for compatibility — **Resolved:** yes, positional read keeps their table working (design ①)
 
 ## Acceptance criteria
 - AC-1 (Scenario 1): After `/setup` on a board with matching columns, the config contains `## Mode transitions` with real column names and IDs for groom, design, build and review — no placeholders.
@@ -115,4 +115,4 @@ Design questions deferred to `/design` (no functional gaps remain):
 - AC-13 (Scenarios 1, 2): On this repo's board, setup suggests groom → Ready, design → no move, build → In review, review → Done.
 - AC-14 (NFR): Every adapter's `dist/` contains the new board operation and the updated close-outs, and a project without the map gets the AC-7 message instead of breaking.
 
-Status: Groomed — ready for /design
+Status: Designed — ready for /build ([design.md](./design.md))
