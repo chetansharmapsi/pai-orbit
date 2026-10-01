@@ -245,6 +245,8 @@ The file has these top-level sections:
 - `## System Docs` — see rules below
 - `## MCP` — see the MCP subsection later in this step
 
+When `type` is **Azure DevOps**, also record `Organisation:`, `Project:`, `Team:`, `Area path:`, `Work-item type:`, and `Closing state:` under `## Agile Board`, using only the values confirmed in Step 2b. The `columns` table maps `Column` to `Work-item state`. Organisation is the organisation name used in `https://dev.azure.com/<org>`. Omit these Azure-specific fields for other board types; their existing configuration stays unchanged.
+
 For the `## System Docs` section:
 - If the user answered **no** to the multi-repo question: omit the `## System Docs` section entirely (do not write it with blank values).
 - If the user answered **yes** and provided a **relative path**: check whether that directory exists before writing. If it does not exist, warn the user ("System docs path not found — writing the pointer anyway; ensure the repo is cloned before running commands") and write it as given.
@@ -252,7 +254,7 @@ For the `## System Docs` section:
 
 ### `.copilot/team.md`
 
-Synthesize this file from the team roster the user gave in Step 2. The file is a markdown table with columns `Name | Role | GitHub | Linear | Jira | Notes` — one row per team member the user named. Also include `Default engineering lead:`, `Default domain expert:`, and `Default ops lead:` lines below the table populated from the roles the user assigned.
+Synthesize this file from the team roster the user gave in Step 2. The file is a markdown table with columns `Name | Role | GitHub | Linear | Jira | Azure DevOps | Notes` — one row per team member the user named. Populate Azure DevOps with the confirmed Azure identity (email) when that platform is selected; leave unused platform columns blank. Also include `Default engineering lead:`, `Default domain expert:`, and `Default ops lead:` lines below the table populated from the roles the user assigned.
 
 ### `.copilot/settings.json`
 
