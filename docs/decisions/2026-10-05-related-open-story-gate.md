@@ -40,6 +40,29 @@ does not infer the relationship, edit tickets, create links/comments, close dupl
 assignees without the required developer confirmation. If the board cannot be queried, Orbit reports
 that limitation and asks whether to continue without the check.
 
+### Resumption checkpoint
+
+Orbit keeps scan state in one stable file per configured board/project and in-hand ticket:
+`<docs root>/wip/related-open-story-checkpoints/<board-key>-<ticket-id>.md`, with the docs root
+resolved using `reference/docs-path-resolution.md`. The board key comes from the configured board
+or project identity, and the ticket ID is its stable identifier. This lets later work find the same
+checkpoint across dates and sessions. The checkpoint records the scan start and completion times in
+UTC, whether it was full or incremental, and candidate IDs, URLs, statuses, and classifications or
+pending decisions. It contains scan state only, not a workflow handoff; Orbit does not create a
+generic `session-capture-<date>.md` for this purpose.
+
+On resumption, Orbit always rereads the in-hand ticket and its current comments. It may use an
+incremental query for open stories created or updated since the previous scan's start only when the
+configured board can return a reliable, complete result. Otherwise, or when the checkpoint is absent
+or does not match the board and ticket, Orbit runs the full scan. A checkpoint is an optimization,
+not a source of current ticket truth.
+
+Native changed-since query paths are available for GitHub Issues, GitLab, Linear, Jira, and Azure
+DevOps. GitHub Projects v2 uses its underlying issue tracker rather than a separate project-item
+changed-since query. This does not guarantee incremental scanning through every CLI or MCP
+integration: Orbit uses it only when the configured integration supports the filter and can retrieve
+all matching pages for the configured board/project. Otherwise it runs a full scan.
+
 ## Options Considered
 
 | Option | Pros | Cons |
@@ -56,9 +79,12 @@ that limitation and asks whether to continue without the check.
 - Acceptance-criteria changes are made explicit and reviewable before ticket edits.
 - Confirmed changes flow through the existing modes so requirements, design, implementation, and test artifacts can stay aligned.
 - Ticket relationship decisions remain with the developer.
+- A stable per-board, per-ticket checkpoint avoids repeating unchanged scan results across sessions
+  while remaining separate from generic mode handoffs.
 
 **Negative / trade-offs:**
 - Ticketed workflows require an additional board scan; plausible conflicts can pause work until the developer classifies them.
+- Incremental scans depend on the configured board's ability to return a complete created-or-updated-since result; otherwise each resumption uses a full scan.
 - An unavailable board prevents the check from completing and requires the developer to choose whether to continue.
 
 **Neutral:**
