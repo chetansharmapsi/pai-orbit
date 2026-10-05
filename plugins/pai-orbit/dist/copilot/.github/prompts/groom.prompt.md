@@ -95,8 +95,7 @@ Before Phase 1 begins, resolve which board ticket this session is for:
 2. If none is found, ask the user directly: "What ticket/issue number is this grooming session for?" Wait for an answer before proceeding to Phase 1.
 3. **Explicit opt-out:** if the user states this is standalone/exploratory grooming with no ticket yet, ask them to confirm that explicitly ("Confirm: proceed without a ticket number?") before continuing. Do not infer this from silence or from the absence of a number in the initial message.
 4. Once a ticket number is provided, resolve it via `/board`. Hold it as the session's parent board issue — this is the issue used in Session close steps 4 and 6 below. If resolution fails (issue not found, no board access), surface the error and ask the user to correct the number or confirm the opt-out.
-
-5. **Related open-story gate:** Before Phase 1, use the board skill's Related open-story check for the resolved ticket. Include all open stories on the configured board, regardless of whether they were created before or after this ticket. Surface a possible requirement change, overlap, or duplicate and wait for the developer to classify it before grooming. If the board cannot be read, follow the check's explicit continue-without-scan prompt.
+5. **Related open-story gate:** For a resolved ticket, run the board skill's Related open-story check before Phase 1. Skip only when the user explicitly opts out of ticketed grooming.
 
 ## Session flow
 

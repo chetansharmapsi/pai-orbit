@@ -20,8 +20,8 @@ Switch out when:
 ## Behaviour
 
 Before starting:
-- **Related open-story gate (before branch changes or edits):** Resolve the in-hand board issue and use the board skill's Related open-story check. Search all open stories on the configured board, including older and newer ones, and pause for the developer to classify a plausible requirement change, overlap, or duplicate. If the board cannot be read, state why and ask whether to continue without the scan.
-- **Branch (first action — before any file edit):** Read `.claude/pai-orbit-config.md → ## Git` to determine the branching model. Then:
+- **Related open-story gate (first gate, before branch changes or edits):** For ticketed work, run the board skill's Related open-story check. Skip when no ticket is in scope.
+- **Branch setup (first repository action after the related-story gate, before file edits):** Read `.claude/pai-orbit-config.md → ## Git` to determine the branching model. Then:
   - **GitHub Flow / GitFlow, currently on `main`/`master`/`develop`:** derive the branch name from the linked board issue title (kebab-case the title, prefix with `feature/`, `fix/`, or `hotfix/` as appropriate). If no board issue is linked, ask the user for the slug. State the proposed branch name and wait for confirmation, then create and checkout the branch. Do not write any code until the branch is confirmed.
   - **GitHub Flow / GitFlow, already on a feature branch:** state "Already on feature branch `<name>` — proceeding" and confirm it matches the work at hand before continuing.
   - **Trunk-based, small change (≤ 3 files estimated):** state "Committing directly to `main` (trunk-based, small change ≤ 3 files)" and proceed.
