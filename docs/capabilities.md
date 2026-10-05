@@ -55,7 +55,7 @@ Leads with the user's goal and context before discussing interface. Describes fl
 
 Before Phase 1, an entry gate resolves the session's ticket number: checks context for one already referenced, otherwise asks the user directly and waits for an answer. Standalone/exploratory grooming with no ticket requires an explicit, confirmed opt-out — never inferred from silence. A resolved ticket becomes the parent board issue used later for posting open questions and offering a column move; an opted-out session skips those two steps.
 
-Runs in three gated phases with explicit transitions, with a scope gate (Phase 1b) closing Phase 1. **Phase 1** classifies the issue first (new feature vs bug/small enhancement, from labels or by asking), reads product context to match — always CLAUDE.md, domain docs, `ux.md` and the parent epic; for new features also the capabilities registry (`docs/domain/product-capabilities.md`, falling back to `docs/features/*`) and both roadmap sources — then reasons about the *why* **before** drafting anything, asking direct why-questions when context is sparse and offering a stated-assumption-vs-open-question choice when it is genuinely undocumented. Overlaps and conflicts name the specific epic, feature, plan file, or board item and block until resolved. **Phase 1b** produces a discrete list of what will be changed or newly implemented and requires explicit confirmation. **Phase 2** confirms each scenario in scope with examples (granularity: distinct if acceptance criteria differ); **Phase 3** analyzes requirements with traceability mapping. Roadmap precedence is per-field — board for status/ownership/existence, `docs/plans/*.md` for sequencing rationale; an unreachable board degrades to plans-only with the caveat recorded, never a failed phase. Session-close pre-flight blocks groomed status if purpose, scope, or scenarios are incomplete; new scenarios in Phase 3 return to Phase 2. Scopes to minimal deliverable. Captures open questions with owners. Does not design solutions.
+Runs in three gated phases with explicit transitions, with a scope gate (Phase 1b) closing Phase 1. **Phase 1** classifies the issue first (new feature vs bug/small enhancement, from labels or by asking), reads product context to match — always CLAUDE.md, domain docs, `ux.md` and the parent epic; for new features also the capabilities registry (`docs/domain/product-capabilities.md`, falling back to `docs/features/*`) and both roadmap sources — then reasons about the *why* **before** drafting anything, asking direct why-questions when context is sparse and offering a stated-assumption-vs-open-question choice when it is genuinely undocumented. Overlaps and conflicts name the specific epic, feature, plan file, or board item and block until resolved. **Phase 1b** produces a discrete list of what will be changed or newly implemented and requires explicit confirmation. **Phase 2** opens with a **consumer check**: groom names each signal the change touches and classifies it New / Existing / Unclear (Unclear runs the check; only Unclear may be overridden, with a recorded reason). For Existing or Unclear signals it searches every locally reachable declared repo (the `CLAUDE.md` Sub-projects table merged with `docs/architecture/system.md` services) for other consuming surfaces, using casing variants, derived names and aliases, and reads the optional concept map `docs/domain/concept-consumers.md` (table: `| Concept | Aliases | Consumer | Repo |`, one row per consumer) — taking the union with the code search, flagging discrepancies by direction, and never editing the map. Each consumer found becomes a candidate scenario; a visible `🔎 Consumer check` outcome line is shown every session, unsearchable code is stated and asked about (never "none found"), and the result is recorded under `## Consumer check` in `requirements.md`. It is a completeness check, not a breakage assessment. Phase 2 then confirms each scenario in scope with examples (granularity: distinct if acceptance criteria differ); **Phase 3** analyzes requirements with traceability mapping. Roadmap precedence is per-field — board for status/ownership/existence, `docs/plans/*.md` for sequencing rationale; an unreachable board degrades to plans-only with the caveat recorded, never a failed phase. Reads `docs/architecture/constraints.md` at session start when present. Session-close pre-flight blocks groomed status if purpose, scope, scenarios, or the consumer-check record are incomplete; new scenarios in Phase 3 return to Phase 2. Scopes to minimal deliverable. Captures open questions with owners. Does not design solutions.
 
 ---
 
@@ -142,6 +142,17 @@ Reviews a feature's requirements for testability, produces a structured test pla
 
 ---
 
+### `/playwright` — Playwright Mode
+
+**Headspace:** Test automation  
+**Reads:** docs/features/\*/test-plan.md, docs/features/\*/requirements.md, CLAUDE.md, docs/decisions/  
+**Writes:** The project's e2e directory only (specs, Page Objects, fixtures, e2e config) — never app code or docs  
+**Switch to:** `/build` for product bugs (developer fixes), `/test` for plan gaps, `/groom` for requirements gaps
+
+Implements Playwright automation from a generated test plan — the automation counterpart of `/build` for test work. Generates specs (via Playwright MCP when available), one `test()` per automated case in Arrange–Act–Assert form, titled `[ticket·AC-k][TC-ID]`, using Page Objects, saved `storageState` sessions, per-test unique data, and hard assertions only. Classifies failures as test bug (fix in spec), product bug (report, never fix), or harness gap (report as blocked). Enforces a write boundary: the e2e directory only.
+
+---
+
 ### `/review` — Review Mode
 
 **Headspace:** Code review  
@@ -216,7 +227,7 @@ Git operations following the project's configured branching model. Covers commit
 
 ### `/board`
 
-Task management — create issues, move cards, assign work, close on ship. Also exposes `transition(mode)` (with `resolve_ticket()`): at close-out `/groom`, `/design`, `/build` and `/review` call it to move their ticket to the column mapped in `.claude/pai-orbit-config.md → ## Mode transitions` (written by `/setup`) — never backwards, never to Done from review, `no move` and missing-map cases reported in one line. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, Linear, and Jira.
+Task management — create issues, move cards, assign work, close on ship. Also exposes `transition(mode)` (with `resolve_ticket()`): at close-out `/groom`, `/design`, `/build` and `/review` call it to move their ticket to the column mapped in `.claude/pai-orbit-config.md → ## Mode transitions` (written by `/setup`) — never backwards, never to Done from review, `no move` and missing-map cases reported in one line. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab, and Azure DevOps.
 
 ---
 

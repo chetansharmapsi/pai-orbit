@@ -23,6 +23,10 @@ Before executing any board operation, check `.cursor/pai-orbit-config.md → ## 
 
 If an MCP call fails or the server is unreachable, fall back to the equivalent shell command and note the fallback: "MCP unavailable — using shell fallback."
 
+## Shell execution (all board types)
+
+Adapt CLI examples to the user's active shell. Bash line continuations, `/dev/null`, loops, and `||` must not be copied verbatim into Windows PowerShell 5.1; use single-line commands or native shell syntax. Check each command's exit status before using its output or reporting success. On failure, report the error and remedy, then stop the dependent operation. These rules also apply to CLI fallbacks from MCP.
+
 ## Procedure
 
 ### Creating an issue
@@ -46,6 +50,7 @@ Read the column flow from config. Common flows:
 - **Linear:** `linear issue update --state <state>`
 - **Jira:** `jira issue transition`
 - **GitLab:** boards are label-driven — each column maps to a label (scoped like `workflow::In Progress` or standalone like `To Do`). Moving a card means removing the current column label and adding the next one. Read the column→label map from `## Agile Board → columns` in config, then run the GitLab label resolution step below before applying any label.
+- **Azure DevOps:** `az boards work-item update --id <N> --state "<state>"` — read the column→state map from `## Agile Board → columns` in config first; run Azure preflight below before the first call of the session. Include the configured organisation in the command.
 
 **GitLab label resolution (always run before applying a label):**
 1. Build the match list: column→label entries from config + any label name the user stated verbatim.
@@ -122,6 +127,15 @@ glab issue update <N> --repo <namespace>/<project> \
   --remove-label "<current column label>" --label "<Column ID>"
 ```
 
+Azure DevOps (columns are work-item states; Column ID is the state name; run Azure preflight below first):
+```bash
+# Step 4 — current state and type
+az boards work-item show --id <N> --org "https://dev.azure.com/<org>" --query "fields.\"System.State\"" -o tsv
+# Step 6
+az boards work-item update --id <N> --state "<Column ID>" --org "https://dev.azure.com/<org>"
+```
+If several columns map to one state, a state-only update cannot place the card in the exact column — report that rather than claiming success.
+
 ### Closing on ship
 
 When a task ships:
@@ -178,6 +192,50 @@ glab issue close <issue-id> --repo <namespace>/<project>
 ```
 
 Column→label map is read from `## Agile Board → columns` in `.cursor/pai-orbit-config.md`. If the map is absent, ask the user to supply it before moving.
+
+**Azure DevOps:**
+
+Use this section and Azure preflight only when `## Agile Board → type` is **Azure DevOps**. Azure commands and fields must not be required for other board types. This integration uses the Azure CLI; there is no Azure MCP path configured here.
+
+Read organisation, project, work-item type, area path, and column→state mapping from the Azure config block. Use the roster's Azure DevOps identity for assignment; ask for missing values instead of guessing. `Team` identifies the team used to look up area settings in `/setup`; it is not a work-item field or a `--team` flag on create. Use the confirmed area path for creation, including the project root only if explicitly confirmed. For an older config without an area path, ask for it before creating and save the confirmed value.
+
+Run Azure preflight before the first Azure operation of the session (and again if organisation/project changes).
+
+```text
+# Create in the configured area
+az boards work-item create --title "<title>" --type "<work-item-type>" --org "https://dev.azure.com/<org>" --project "<project>" --area "<area-path-from-config>" --description "<body>" --assigned-to "<azure-identity-from-roster>"
+
+# Read current state and fields
+az boards work-item show --id <N> --org "https://dev.azure.com/<org>"
+
+# Move card (state transition)
+az boards work-item update --id <N> --state "<next-column-state>" --org "https://dev.azure.com/<org>"
+
+# Assign or hand off an existing item
+az boards work-item update --id <N> --assigned-to "<azure-identity-from-roster>" --org "https://dev.azure.com/<org>"
+
+# Comment
+az boards work-item update --id <N> --discussion "<text>" --org "https://dev.azure.com/<org>"
+
+# Close using the confirmed Closing state
+az boards work-item update --id <N> --state "<closing-state-from-config>" --org "https://dev.azure.com/<org>"
+```
+
+Before updating an existing item, read it and confirm its project and work-item type. If the type differs from the configured type, confirm its valid state mapping before a transition. Preserve its area and iteration during moves, comments, assignments, and closing unless the user explicitly requests a change. Do not derive an iteration from Team or Area path.
+
+Read `columns` and `Closing state` from `## Agile Board` in `.cursor/pai-orbit-config.md`. Ask for a missing mapping before moving; for an older config without `Closing state`, confirm it from the existing mapping or ask the user before closing. Do not infer a terminal state from the last active column. If several columns share a state, report the state change and explain that exact column placement may require a manual move.
+
+After a successful write, read the item back and verify the requested fields or discussion before reporting completion. If verification fails, report that the write succeeded but verification is incomplete; do not blindly retry creates or comments and produce duplicates.
+
+## Azure preflight
+
+Shared by `/setup` and `/board`, only for Azure DevOps. Run these checks in order and inspect each exit status before proceeding:
+
+1. Run `az --version`. If the executable is missing or fails, report the error and ask the user to install or repair Azure CLI, then retry.
+2. Run `az extension show --name azure-devops`. If the extension is missing, report `az extension add --name azure-devops` as the remedy and stop. For other errors, report the actual error rather than assuming the extension is absent.
+3. Probe access to the configured project with `az devops project show --org "https://dev.azure.com/<org>" --project "<project>" -o none`. A successful `az account show` alone does not prove Azure DevOps access. If the probe fails, stop and report the actual error. For a missing or expired credential, suggest `az devops login --organization "https://dev.azure.com/<org>"` or `AZURE_DEVOPS_EXT_PAT`; for permission, project, or network errors, ask the user to correct the corresponding access or configuration. Never request a token in chat or write one into project config.
+
+Use native exit-status handling, without Bash-only redirection or `|| echo`. Never report a board operation as applied after a failed preflight or command.
 
 ## Conventions (always apply)
 

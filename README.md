@@ -1,4 +1,4 @@
-# pai-orbit · v1.9.0
+# pai-orbit · v1.10.0
 
 A structured developer methodology harness for Claude Code, Cursor, GitHub Copilot, and OpenAI Codex (beta) — installed as a plugin in Claude Code and Cursor, and with one command for Copilot and Codex.
 
@@ -46,7 +46,7 @@ check issue      → read response or reviewer feedback
 
 Workflow skills (callable from any mode)
 /git             → commit, branch, PR — reads project branching model
-/board           → task creation, card movement, team assignment (GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab)
+/board           → task creation, card movement, team assignment (GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab, Azure DevOps)
 /analysis        → change impact and dependency analysis
 /data-model      → schema reference and migration management
 /simplify        → code simplification — remove over-engineering, dead code, abstractions
@@ -119,12 +119,14 @@ Workflow skills (`/git`, `/board`, `/analysis`, `/data-model`, `/simplify`) can 
 
 > **`/review security`** — the security-focused pass is a sub-mode of `/review`. Use `/review` for full code review, `/review security` for the OWASP checklist, or `/review full` for both in sequence. Critical and High findings block merge.
 
-> **Migrating to v1.9.0 — modes now move their own ticket.** `/groom`, `/design`, `/build` and `/review` move the ticket at close-out using a `## Mode transitions` map that `/setup` writes.
+> **Migrating to v1.10.0 — modes now move their own ticket.** `/groom`, `/design`, `/build` and `/review` move the ticket at close-out using a `## Mode transitions` map that `/setup` writes.
 > - Re-run `/setup` once — it adds `## Mode transitions` to `.claude/pai-orbit-config.md` (existing sections untouched).
 > - Until you do, those modes finish normally and print: "No mode-transition map — re-run /setup to enable automatic board moves."
 > - `/build` no longer closes the issue; it moves it (e.g. to In review). The issue closes on merge via `closes #N`.
 > - `/review` never moves the issue to Done by default. Done comes from the merge (your board's merge automation or `closes #N`). If your board has an "Approved" or "Ready to merge" column, an approving review moves the issue there.
 > - GitHub Projects: run `gh auth refresh -s project` if moves fail with a permission error.
+
+> **v1.9.0 — `/groom` checks other consumers of an existing signal.** When a change alters how an existing field, flag, or derived value is read, `/groom` Phase 2 now searches the code (and every declared, locally available repo) for other places that read it, plus an optional `docs/domain/concept-consumers.md` map, and proposes each one as a candidate scenario. The outcome is shown every session and recorded under a new `## Consumer check` section that the session-close audit enforces — so re-grooming a feature whose older `requirements.md` has no such section will return to Phase 2 until it is added. `/groom` also now reads `docs/architecture/constraints.md`. Update pai-orbit to pick it up (see [Updating](#updating)).
 
 > **v1.8.0 — `system_docs_repo` now redirects writes, not just reads.** Every mode/skill/agent that writes to `docs/` now resolves the target through a new shared `reference/docs-path-resolution.md`, shipped with every adapter (inlined into each prompt and skill for Copilot and Codex). If you installed pai-orbit before v1.8.0, update it (see [Updating](#updating)) to pick up both the new `reference/` directory and the fix — until then, `system_docs_repo` writes keep landing in the local repo instead of the configured docs repo.
 
@@ -219,12 +221,15 @@ After installing, run `/setup` in your project directory. It will:
    - **GitLab**: queries project boards first; presents the board list so you pick which one(s) define your workflow; derives column→label order directly from the board's lists. Falls back to querying all labels only if no boards are configured.
    - **GitHub Projects v2**: runs `gh project field-list` to read Status field options
    - **Linear**: runs `linear team list` to read workflow states
+   - **Azure DevOps**: checks Azure CLI, its `azure-devops` extension, and project access; confirms the team's area path and work-item type; discovers work-item states and asks you to confirm their board-column mapping and closing state. Failed or empty state discovery falls back to a manual mapping. Azure settings apply only to Azure boards.
    - **Jira / GitHub Issues / Notion**: prompts you to enter column names manually
 4. Generate `.claude/pai-orbit-config.md`, `.claude/team.md`, a `CLAUDE.md` stub, stack-specific agents, a `docs/` scaffold, and a `docs/architecture/` stub
 5. Create `.claude/hooks/`, write all safety hook scripts, wire them into `.claude/settings.json`, and validate each hook path — with a clear recovery message if anything is missing
 6. Tell you exactly what to fill in by hand
 
 Then run `/arch init` to complete your architecture declaration — a guided interview that writes `docs/architecture/system.md` (service map), `constraints.md` (enforcement rules), and `stack.md`. Once declared, `/build` reads the constraints before generating code and `/review` checks every diff against them.
+
+For a step-by-step Azure test using a disposable work item, see [Azure Boards verification](docs/azure-boards-verification.md).
 
 Re-run `/setup` anytime the stack, board configuration, or team changes significantly. The column→label table in `.claude/pai-orbit-config.md` includes a `# Re-run /setup` comment as a reminder when board labels drift.
 
