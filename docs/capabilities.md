@@ -49,11 +49,11 @@ Leads with the user's goal and context before discussing interface. Describes fl
 ### `/groom` — Groom Mode
 
 **Headspace:** Feature requirements  
-**Reads:** CLAUDE.md, docs/domain/, docs/features/ (existing), docs/epics/, ux.md; for new-feature issues also docs/domain/product-capabilities.md, docs/plans/, and the board  
+**Reads:** CLAUDE.md, docs/domain/, docs/features/ (existing), docs/epics/, ux.md; task board for ticketed story checks; for new-feature issues also docs/domain/product-capabilities.md and docs/plans/
 **Writes:** docs/features/*/requirements.md  
 **Switch to:** `/domain` for unresolved expert knowledge, `/design` when ready, `/plan` for priority decisions
 
-Before Phase 1, an entry gate resolves the session's ticket number: checks context for one already referenced, otherwise asks the user directly and waits for an answer. Standalone/exploratory grooming with no ticket requires an explicit, confirmed opt-out — never inferred from silence. A resolved ticket becomes the parent board issue used later for posting open questions and offering a column move; an opted-out session skips those two steps.
+Before Phase 1, an entry gate resolves the session's ticket number: checks context for one already referenced, otherwise asks the user directly and waits for an answer. For ticketed sessions, Groom checks open stories for requirement changes, overlaps, or duplicates before drafting and pauses for the developer to classify plausible matches. Standalone/exploratory grooming with no ticket requires an explicit, confirmed opt-out — never inferred from silence. A resolved ticket becomes the parent board issue used later for posting open questions and offering a column move; an opted-out session skips those two steps.
 
 Runs in three gated phases with explicit transitions, with a scope gate (Phase 1b) closing Phase 1. **Phase 1** classifies the issue first (new feature vs bug/small enhancement, from labels or by asking), reads product context to match — always CLAUDE.md, domain docs, `ux.md` and the parent epic; for new features also the capabilities registry (`docs/domain/product-capabilities.md`, falling back to `docs/features/*`) and both roadmap sources — then reasons about the *why* **before** drafting anything, asking direct why-questions when context is sparse and offering a stated-assumption-vs-open-question choice when it is genuinely undocumented. Overlaps and conflicts name the specific epic, feature, plan file, or board item and block until resolved. **Phase 1b** produces a discrete list of what will be changed or newly implemented and requires explicit confirmation. **Phase 2** opens with a **consumer check**: groom names each signal the change touches and classifies it New / Existing / Unclear (Unclear runs the check; only Unclear may be overridden, with a recorded reason). For Existing or Unclear signals it searches every locally reachable declared repo (the `CLAUDE.md` Sub-projects table merged with `docs/architecture/system.md` services) for other consuming surfaces, using casing variants, derived names and aliases, and reads the optional concept map `docs/domain/concept-consumers.md` (table: `| Concept | Aliases | Consumer | Repo |`, one row per consumer) — taking the union with the code search, flagging discrepancies by direction, and never editing the map. Each consumer found becomes a candidate scenario; a visible `🔎 Consumer check` outcome line is shown every session, unsearchable code is stated and asked about (never "none found"), and the result is recorded under `## Consumer check` in `requirements.md`. It is a completeness check, not a breakage assessment. Phase 2 then confirms each scenario in scope with examples (granularity: distinct if acceptance criteria differ); **Phase 3** analyzes requirements with traceability mapping. Roadmap precedence is per-field — board for status/ownership/existence, `docs/plans/*.md` for sequencing rationale; an unreachable board degrades to plans-only with the caveat recorded, never a failed phase. Reads `docs/architecture/constraints.md` at session start when present. Session-close pre-flight blocks groomed status if purpose, scope, scenarios, or the consumer-check record are incomplete; new scenarios in Phase 3 return to Phase 2. Scopes to minimal deliverable. Captures open questions with owners. Does not design solutions.
 
@@ -79,22 +79,22 @@ Four sub-modes:
 ### `/design` — Design Mode
 
 **Headspace:** Technical trade-offs  
-**Reads:** CLAUDE.md, docs/architecture/, docs/features/, docs/decisions/, docs/domain/  
+**Reads:** CLAUDE.md, docs/architecture/, docs/features/, docs/decisions/, docs/domain/; task board for ticketed design
 **Writes:** docs/features/*/design.md, docs/decisions/YYYY-MM-DD-*.md  
 **Switch to:** `/groom` for unclear requirements, `/arch` for system-level boundary changes, `/build` when ready to implement
 
-No implementation. Reads `requirements.md`'s open questions as a starting point, not a boundary — designs the feature comprehensively, surfacing decision areas grooming never raised. Drives the session in small interactions, one decision area at a time (mirroring `/groom`'s phased flow): presents 2–3 options with tradeoffs, recommends, and gets the user's pick before moving on. Flags irreversible decisions. Reads `docs/architecture/constraints.md` — design options that violate a constraint are flagged explicitly. Uses Mermaid diagrams. Ends every session by listing open questions with owners.
+Before design discussion for ticketed work, checks open stories for requirement changes, overlaps, or duplicates and pauses for the developer to classify plausible matches. No implementation. Reads `requirements.md`'s open questions as a starting point, not a boundary — designs the feature comprehensively, surfacing decision areas grooming never raised. Drives the session in small interactions, one decision area at a time (mirroring `/groom`'s phased flow): presents 2–3 options with tradeoffs, recommends, and gets the user's pick before moving on. Flags irreversible decisions. Reads `docs/architecture/constraints.md` — design options that violate a constraint are flagged explicitly. Uses Mermaid diagrams. Ends every session by listing open questions with owners.
 
 ---
 
 ### `/build` — Build Mode
 
 **Headspace:** Implementation  
-**Reads:** CLAUDE.md, docs/features/, docs/decisions/  
+**Reads:** CLAUDE.md, docs/features/, docs/decisions/; task board for ticketed builds
 **Writes:** Code (in sub-repos), docs/domain/product-capabilities.md  
 **Switch to:** `/design` for non-trivial design questions, `/groom` for unclear requirements, `/plan` for priority questions
 
-Reads CLAUDE.md and relevant docs before starting. Checks the task board. Spawns sub-agents per service for parallel work. Before switching modes mid-session, saves a handoff note to `docs/wip/session-capture-<date>.md`. After shipping: closes the board item, creates issues for newly discovered tasks, updates product-capabilities.md, records design choices as ADRs.
+Before branch setup and code edits for ticketed work, checks open stories for requirement changes, overlaps, or duplicates and pauses for the developer to classify plausible matches. Reads CLAUDE.md and relevant docs before starting. Checks the task board. Spawns sub-agents per service for parallel work. Before switching modes mid-session, saves a handoff note to `docs/wip/session-capture-<date>.md`. After shipping: closes the board item, creates issues for newly discovered tasks, updates product-capabilities.md, records design choices as ADRs.
 
 ---
 
@@ -134,11 +134,11 @@ Discovers repo structure and tech stack, asks targeted questions in one block, q
 ### `/test` — Test Mode
 
 **Headspace:** QA and test planning  
-**Reads:** docs/features/\*/requirements.md, CLAUDE.md, docs/decisions/  
+**Reads:** docs/features/\*/requirements.md, CLAUDE.md, docs/decisions/; task board for ticketed test planning and execution
 **Writes:** docs/features/\*/test-plan.md, docs/wip/test-failure-\*.md  
 **Switch to:** `/build` for code bug fixes, `/groom` for requirements gaps, `/design` for architecture issues
 
-Reviews a feature's requirements for testability, produces a structured test plan with test cases (happy path, edge cases, failure paths), maps each acceptance criterion to a test case ID, and distinguishes automated vs manual coverage. Runs a release readiness check. When a test run fails, classifies the failure (code bug / requirements gap / test setup) and hands off to `/build` or `/groom` with a failure doc as context.
+Before reading ticketed requirements as current or preparing/running tests, checks open stories for requirement changes, overlaps, or duplicates and pauses for the developer to classify plausible matches. Reviews a feature's requirements for testability, produces a structured test plan with test cases (happy path, edge cases, failure paths), maps each acceptance criterion to a test case ID, and distinguishes automated vs manual coverage. Runs a release readiness check. When a test run fails, classifies the failure (code bug / requirements gap / test setup) and hands off to `/build` or `/groom` with a failure doc as context.
 
 ---
 
@@ -227,7 +227,7 @@ Git operations following the project's configured branching model. Covers commit
 
 ### `/board`
 
-Task management — create issues, move cards, assign work, close on ship. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab, and Azure DevOps.
+Task management — scan open stories for requirement changes, overlaps, and duplicates before creating stories or starting/resuming ticketed workflows; create issues, move cards, assign work, and close on ship. Records scan checkpoints in stable per-board, per-ticket files and resumes incrementally when the board supports a reliable complete query, otherwise running a full scan. Reports candidate status, assignee, evidence, requirement delta, impacted acceptance criteria, and confidence. For confirmed requirement changes, routes to `/groom` to propose exact acceptance-criteria edits classified as retain, revise, remove, or add; waits for developer approval before updating tickets or linking/commenting. Reads board config from `.claude/pai-orbit-config.md → ## Agile Board` and team roster from `.claude/team.md`. Supports GitHub Issues, GitHub Projects v2, Linear, Jira, GitLab, and Azure DevOps.
 
 ---
 
