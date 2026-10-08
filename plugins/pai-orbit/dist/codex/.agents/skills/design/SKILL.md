@@ -19,6 +19,8 @@ Switch out when:
 
 ## Behaviour
 
+**At session start — related open-story gate:** For ticketed design work, run the board skill's Related open-story check before impact analysis or design discussion. Skip for standalone design work.
+
 **At session start — impact analysis gate (before any design discussion):**
 
 1. Scan `docs/wip/` for an existing `analysis-*.md` report relevant to the current change. If found, read and cite it — do not re-run `/analysis`.

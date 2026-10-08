@@ -1,6 +1,6 @@
 ---
 name: board
-description: Task management — create issues, move cards, transition a ticket at mode close-out, assign work, close on ship — using the project's configured board. Reads board config from .codex/pai-orbit-config.md and team roster from .codex/team.md. TRIGGER when creating a task or issue, moving a card, assigning work, closing a completed item, or asking about what's on the board. SKIP read-only board browsing (just use the browser or CLI directly).
+description: Task management — check related open stories, create issues, move cards, transition a ticket at mode close-out, assign work, and close on ship using the configured board. TRIGGER before creating a story or starting/resuming work tied to a ticket, and when moving or assigning work. SKIP read-only board browsing (use the browser or CLI directly). Reads board config from `.codex/pai-orbit-config.md` and team roster from `.codex/team.md`.
 ---
 
 # Agile Board
@@ -27,19 +27,42 @@ If an MCP call fails or the server is unreachable, fall back to the equivalent s
 
 Adapt CLI examples to the user's active shell. Bash line continuations, `/dev/null`, loops, and `||` must not be copied verbatim into Windows PowerShell 5.1; use single-line commands or native shell syntax. Check each command's exit status before using its output or reporting success. On failure, report the error and remedy, then stop the dependent operation. These rules also apply to CLI fallbacks from MCP.
 
+## Related open-story check
+
+Run this check before creating a new story and at the start or resumption of ticketed work in `/groom`, `/design`, `/build`, or `/test`. The goal is to catch a changed or overlapping requirement before the developer continues against stale assumptions.
+
+### Scan steps
+
+1. Resolve the in-hand ticket from the user's request or active feature context. Read its title, full description, current status, assignee, and relevant comments/history. For a proposed new story, use the proposed title and requirement as the in-hand request.
+2. Query the configured board/project for its open stories, including older and newer items. Do not limit the scan to items created recently, exact title matches, or items already linked to the in-hand ticket. Exclude completed/closed items. If the configured board is an issue tracker, search its open issues for the same project/repository.
+3. Resolve the docs root per `reference/docs-path-resolution.md`. Compare the actual behavior, constraints, and values in the requirements, not just shared keywords. Read candidate descriptions and relevant comments; inspect related `<docs root>/features/*` artifacts when they exist.
+4. Classify plausible candidates as a requirement change/conflict, a related but separate item, a possible duplicate, or unrelated. Report each candidate's issue number, title, status, assignee, evidence for the match, the concrete difference from the in-hand requirement, the acceptance criteria that match or conflict (quote or summarize them), and confidence (high/medium/low). If no candidates match, say the scan found none.
+5. If a candidate could change the in-hand requirement or scope, pause before drafting, designing, implementing, testing, or creating the proposed story. Ask the developer whether it is a change to the current story, separate related work, a duplicate, or unrelated. Do not infer the relationship from wording or chronology alone.
+6. After the developer confirms the relationship, agree on the disposition: update the existing story, keep separate stories linked, or treat the new story as a duplicate. For a confirmed requirement change, identify the canonical ticket and report which acceptance criteria, `requirements.md`, `design.md`, implementation, and `test-plan.md` may now be stale. If the current mode is not `/groom`, stop and hand off to `/groom`; do not draft replacement acceptance-criteria wording in another mode. In `/groom`, compare the old and new acceptance criteria and prepare an impact list classifying each as retain, revise, remove, or add, with exact proposed wording and a reason tied to the confirmed requirement. Show this proposal and wait for the developer's approval before changing acceptance criteria or other ticket content. After approval, update the relevant requirements first, then update design, implementation, and test artifacts through their normal modes before resuming work against the old requirement. Do not silently treat stale artifacts as current.
+7. Show proposed ticket edits and comment text before posting. With confirmation, update the canonical story's approved acceptance criteria, use the board's native relationship feature where available, or otherwise add reciprocal comments referencing both issue numbers. Keep a non-canonical story's disposition clear (related, superseded, or duplicate) without changing its acceptance criteria as if it were canonical. Do not close, merge, or mark a story duplicate without explicit confirmation. Do not @mention or notify an assignee unless the developer approves the notification.
+8. If the board cannot be queried, report the specific limitation and ask whether to continue without the check. Never imply the board was checked when it was not.
+
+### Resumption checkpoint
+
+- After each successful scan, save or refresh one checkpoint per board/project and in-hand ticket at `<docs root>/wip/related-open-story-checkpoints/<board-key>-<ticket-id>.md` (resolve `<docs root>` per `reference/docs-path-resolution.md`). Use a stable board key from the configured board/project identity and the ticket's stable ID, so the same checkpoint is found across dates and work sessions. Do not use a generic `session-capture-<date>.md` file for this scan state.
+- Record the board/project, in-hand ticket, scan start and completion times in UTC, whether the scan was full or incremental, and each candidate's ID, URL, status, and classification or unresolved decision. Keep the file focused on scan state; it is not a workflow handoff.
+- On resumption, read the matching checkpoint if present, but always reread the in-hand ticket and its current comments. Native changed-since query paths are available for GitHub Issues, GitLab, Linear, Jira, and Azure DevOps; GitHub Projects v2 uses its underlying issue tracker rather than a separate project-item changed-since query. Use an incremental scan only when the configured CLI or MCP supports the needed filter and can retrieve all matching pages for the configured board/project. Compare new or changed results, and don't repeat unchanged resolved candidates. Refresh the checkpoint after the scan.
+- If the checkpoint is missing or mismatched, or the board cannot reliably return all open stories created or updated since the checkpoint, run the full scan and replace the checkpoint. The checkpoint is only a scan optimization; it never substitutes for current ticket content.
+
 ## Procedure
 
 ### Creating an issue
 
 1. Read `.codex/pai-orbit-config.md` to determine board type and column structure
 2. Ask which board/project if there are multiple (e.g., Tech vs Ops, Engineering vs Product)
-3. Ask issue type to determine labels and starting column (per the config)
-4. Read `.codex/team.md` to propose a default assignee based on issue type and role
-5. Compose:
+3. Run the Related open-story check against the proposed requirement before creating anything. If the developer confirms the proposed story is a change or duplicate, follow the confirmed disposition instead of opening a disconnected issue.
+4. Ask issue type to determine labels and starting column (per the config)
+5. Read `.codex/team.md` to propose a default assignee based on issue type and role
+6. Compose:
    - **Title:** short, imperative, ≤ 72 chars — mirrors commit format
-   - **Body:** what + why; link to relevant docs (`docs/features/<feature>/requirements.md`, prior issues, ADRs); for features, include sub-tasks broken down by service
-6. Create the issue using the configured CLI (see board type below)
-7. Place on board: report the target column; attempt CLI placement if available, otherwise instruct the user to move the card manually
+   - **Body:** what + why; link to relevant docs (`<docs root>/features/<feature>/requirements.md`, prior issues, ADRs); for features, include sub-tasks broken down by service
+7. Create the issue using the configured CLI (see board type below)
+8. Place on board: report the target column; attempt CLI placement if available, otherwise instruct the user to move the card manually
 
 ### Moving a card
 
@@ -242,3 +265,37 @@ Use native exit-status handling, without Bash-only redirection or `|| echo`. Nev
 - `refs #N` in commits during development; `closes #N` in the final shipping commit only
 - One feature = one issue; sub-tasks go in the body unless they ship independently
 - Do not close issues autonomously without confirming with the user
+
+---
+
+## Appendix: docs path resolution
+
+Referenced above as `reference/docs-path-resolution.md` — inlined here since Codex skills are flat files with no sibling-file lookup:
+
+# Docs path resolution
+
+Shared by every mode, skill, and agent that reads or writes project docs. Resolve once per session, reuse for every read and write in that session.
+
+## Config
+
+Read `.codex/pai-orbit-config.md`. If a `## System Docs` section is present, it defines `system_docs_repo` and `system_docs_path` (default `.`).
+
+## Resolve the docs root
+
+- No `## System Docs` section → docs root is local `docs/`.
+- `system_docs_repo` is a relative path → check whether `<system_docs_repo>/<system_docs_path>` exists **and** contains at least one of the expected subdirectories (`architecture/`, `decisions/`, `domain/`, `features/`, `plans/`, `wip/`, `backlog/`, `reports/`, `epics/`, `ops/`). A directory that exists but holds none of these is a stale pointer, not a docs root.
+  - Passes → docs root is `<system_docs_repo>/<system_docs_path>`.
+  - Fails → warn once ("System docs path unreachable — continuing with local docs only") and docs root is local `docs/`.
+- `system_docs_repo` is a git URL → same check against a local clone at a resolvable path. Passes → docs root is `<clone-path>/<system_docs_path>`. Fails → warn once and docs root is local `docs/`.
+
+## Reads
+
+Add the resolved docs root to the doc read set before starting the session.
+
+## Writes
+
+Every write targets `<docs root>/<relative path>` — never a hardcoded `docs/…` literal, and never with an extra interpolated `docs/` segment. The docs root already *is* the docs directory, local or remote.
+
+Examples: `<docs root>/backlog/feature-ideas.md`, `<docs root>/features/<feature>/design.md`, `<docs root>/decisions/YYYY-MM-DD-<slug>.md`, `<docs root>/wip/session-capture-<date>.md`.
+
+When `system_docs_path: .` (a docs repo flattened to its root), `<docs root>` is the repo root itself — writes land at `<system_docs_repo>/decisions/…`, not `<system_docs_repo>/docs/decisions/…`.
